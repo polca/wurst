@@ -1,6 +1,6 @@
 # Wurst
 
-Wurst is a python package for linking and modifying industrial ecology models. In its initial development, we will link `ecoinvent <http://www.ecoinvent.org/>`__ to the `IMAGE integrated assessment model <http://www.pbl.nl/en/publications/integrated-assessment-of-global-environmental-change-with-IMAGE-3.0>`__. However, the intent of wurst is to be more generic, and not specific to life cycle assessment.
+Wurst is a python package for linking and modifying industrial ecology models. In its initial development, we will link [ecoinvent](http://www.ecoinvent.org/) to the [IMAGE integrated assessment model](http://www.pbl.nl/en/publications/integrated-assessment-of-global-environmental-change-with-IMAGE-3.0). However, the intent of wurst is to be more generic, and not specific to life cycle assessment.
 
 Wurst should provide the following:
 
