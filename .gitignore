@@ -1,0 +1,13 @@
+syntax:glob
+dist
+build
+docs/_build
+*.pyc
+*~
+MANIFEST
+*.sublime*
+*.egg-info
+*.pickle
+.cache
+.coverage
+~*.*
