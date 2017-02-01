@@ -1,0 +1,275 @@
+{
+  "Russia Region": [
+    "AM",
+    "AZ",
+    "GE",
+    "RU"
+  ],
+  "China Region": [
+    "CN",
+    "HK",
+    "MN",
+    "MO",
+    "TW"
+  ],
+  "Rest of Southern Africa": [
+    "AO",
+    "BW",
+    "LS",
+    "MW",
+    "MZ",
+    "NA",
+    "SZ",
+    "TZ",
+    "ZM",
+    "ZW"
+  ],
+  "Mexico": [
+    "MX"
+  ],
+  "Indonesia Region": [
+    "ID",
+    "PG",
+    "TL"
+  ],
+  "Japan": [
+    "JP"
+  ],
+  "Rest of South America": [
+    "AR",
+    "BO",
+    "CL",
+    "CO",
+    "EC",
+    "GF",
+    "GY",
+    "PE",
+    "PY",
+    "SR",
+    "UY",
+    "VE"
+  ],
+  "Western Africa": [
+    "BF",
+    "BJ",
+    "CF",
+    "CM",
+    "CV",
+    "CD",
+    "CG",
+    "CI",
+    "GA",
+    "GH",
+    "GN",
+    "GQ",
+    "GM",
+    "GW",
+    "LR",
+    "ML",
+    "MR",
+    "NE",
+    "NG",
+    "SL",
+    "SN",
+    "ST",
+    "SH",
+    "TD",
+    "TG"
+  ],
+  "Ukraine region": [
+    "BY",
+    "MD",
+    "UA"
+  ],
+  "India": [
+    "IN"
+  ],
+  "Middle east": [
+    "AE",
+    "BH",
+    "IL",
+    "IQ",
+    "IR",
+    "JO",
+    "KW",
+    "LB",
+    "OM",
+    "QA",
+    "SA",
+    "SY",
+    "YE"
+  ],
+  "Western Europe": [
+    "AD",
+    "AT",
+    "BE",
+    "CH",
+    "DE",
+    "DK",
+    "ES",
+    "FI",
+    "FR",
+    "FO",
+    "GB",
+    "GI",
+    "GR",
+    "IE",
+    "IS",
+    "IT",
+    "LI",
+    "LU",
+    "MC",
+    "MT",
+    "NL",
+    "NO",
+    "PT",
+    "SE",
+    "SM",
+    "VA"
+  ],
+  "Northern Africa": [
+    "DZ",
+    "EG",
+    "EH",
+    "LY",
+    "MA",
+    "TN"
+  ],
+  "Korea Region": [
+    "KP",
+    "KR"
+  ],
+  "Eastern Africa": [
+    "BI",
+    "DJ",
+    "ER",
+    "ET",
+    "KE",
+    "KM",
+    "MG",
+    "MU",
+    "RW",
+    "RE",
+    "SC",
+    "SD",
+    "SO",
+    "UG"
+  ],
+  "Central Asia": [
+    "KZ",
+    "KG",
+    "TJ",
+    "TM",
+    "UZ"
+  ],
+  "Central Europe": [
+    "AL",
+    "BA",
+    "BG",
+    "CS",
+    "CY",
+    "CZ",
+    "EE",
+    "HR",
+    "HU",
+    "LT",
+    "LV",
+    "MK",
+    "PL",
+    "RO",
+    "SI",
+    "SK"
+  ],
+  "Central America": [
+    "AI",
+    "AW",
+    "BB",
+    "BM",
+    "BZ",
+    "BS",
+    "CR",
+    "DM",
+    "DO",
+    "GD",
+    "GP",
+    "GT",
+    "HN",
+    "HT",
+    "JM",
+    "KY",
+    "MQ",
+    "MS",
+    "NI",
+    "AW",
+    "CW",
+    "SX",
+    "PA",
+    "PR",
+    "SV",
+    "KN",
+    "LC",
+    "VC",
+    "TT",
+    "TC",
+    "VG",
+    "VI"
+  ],
+  "Canada": [
+    "CA"
+  ],
+  "Rest of South Asia": [
+    "AF",
+    "BD",
+    "BT",
+    "LK",
+    "MV",
+    "NP",
+    "PK"
+  ],
+  "South Africa": [
+    "ZA"
+  ],
+  "Brazil": [
+    "BR"
+  ],
+  "Turkey": [
+    "TR"
+  ],
+  "Oceania": [
+    "AS",
+    "AU",
+    "CK",
+    "FJ",
+    "KI",
+    "MH",
+    "MP",
+    "FM",
+    "NC",
+    "NR",
+    "NU",
+    "NZ",
+    "PF",
+    "PW",
+    "SB",
+    "TK",
+    "TO",
+    "TV",
+    "VU",
+    "WS"
+  ],
+  "USA": [
+    "US",
+    "PM"
+  ],
+  "South Asia": [
+    "BN",
+    "KH",
+    "LA",
+    "MM",
+    "MY",
+    "PH",
+    "SG",
+    "TH",
+    "VN"
+  ]
+}

@@ -1,29 +1,32 @@
-REGIONS = [
-    "Canada",
-    "USA",
-    "Mexico",
-    "Central America",
-    "Brazil",
-    "Rest of South America",
-    "Western Europe",
-    "Central Europe",
-    "Ukraine region",
-    "Turkey",
-    "Northern Africa",
-    "Western Africa",
-    "Eastern Africa",
-    "South Africa",
-    "Rest of Souther Africa",
-    "Russia Region",
-    "Central Asia",
-    "Middle east",
-    "South Asia",
-    "Indonesia Region",
-    "India",
-    "Rest of South Asia",
-    "China Region",
-    "Korea Region",
-    "Japan",
-    "Oceania",
-    "World",
-]
+from ..ecoinvent import faces_filepath
+import json
+import os
+
+dirpath = os.path.dirname(__file__)
+
+REGIONS = json.load(open(os.path.join(dirpath, "metadata", "regions.json")))
+REGION_TOPOLOGY = json.load(open(os.path.join(dirpath, "metadata", "region-topolgy.json")))
+LOCATION_MAPPING = json.load(open(os.path.join(dirpath, "metadata", "location-mapping.json")))
+
+ecoinvent_faces = {x: set(y) for x, y in json.load(open(faces_filepath))['data']}
+IMAGE_REGION_FACES = {k: set.union(*[set(ecoinvent_faces[code]) for code in v])
+                      for k, v in REGION_TOPOLOGY.items()}
+
+
+def ecoinvent_to_image_locations(location):
+    if location in ('RoW', 'GLO'):
+        return ['World']
+    if location not in ecoinvent_faces:
+        raise KeyError("Can't find topo data for this location: {}".format(location))
+    covered = [
+        key for key, value in IMAGE_REGION_FACES.items()
+        if not ecoinvent_faces[location].difference(value)
+    ]
+    partial = [
+        key for key, value in IMAGE_REGION_FACES.items()
+        if ecoinvent_faces[location].intersection(value)
+    ]
+    if len(covered) == 1:
+        return covered
+    else:
+        return partial
