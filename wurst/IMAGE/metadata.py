@@ -15,7 +15,7 @@ IMAGE_REGION_FACES = {k: set.union(*[set(ecoinvent_faces[code]) for code in v])
 
 def ecoinvent_to_image_locations(location):
     if location in ('RoW', 'GLO'):
-        return 'World'
+        return ['World']
     if location not in ecoinvent_faces:
         raise KeyError("Can't find topo data for this location: {}".format(location))
     covered = [

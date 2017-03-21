@@ -118,7 +118,9 @@
   "CM": [
     "Western Africa"
   ],
-  "GLO": "World",
+  "GLO": [
+    "World"
+  ],
   "CN-ZJ": [
     "China Region"
   ],
@@ -262,7 +264,9 @@
   "NO": [
     "Western Europe"
   ],
-  "RoW": "World",
+  "RoW": [
+    "World"
+  ],
   "TW": [
     "China Region"
   ],
