@@ -3,5 +3,8 @@
 # Change energy efficiency of exchanges
 
 
-from .metadata import REGIONS
+from .metadata import (
+    REGIONS,
+    LOCATION_MAPPING,
+)
 from .io import load_image_data_file

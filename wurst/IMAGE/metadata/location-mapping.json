@@ -1,0 +1,526 @@
+{
+  "MA": [
+    "Northern Africa"
+  ],
+  "RO": [
+    "Central Europe"
+  ],
+  "IAI Area, Asia, without China and GCC": [
+    "Korea Region",
+    "Central Asia",
+    "Japan",
+    "Turkey",
+    "India",
+    "Middle east",
+    "Indonesia Region",
+    "Russia Region"
+  ],
+  "MX": [
+    "Mexico"
+  ],
+  "CN-BJ": [
+    "China Region"
+  ],
+  "CA-AB": [
+    "Canada"
+  ],
+  "NPCC, US only": [
+    "USA"
+  ],
+  "SI": [
+    "Central Europe"
+  ],
+  "IE": [
+    "Western Europe"
+  ],
+  "CN-HU": [
+    "China Region"
+  ],
+  "MY": [
+    "South Asia"
+  ],
+  "CN-HB": [
+    "China Region"
+  ],
+  "CENTREL": [
+    "Central Europe"
+  ],
+  "DE": [
+    "Western Europe"
+  ],
+  "CN-JS": [
+    "China Region"
+  ],
+  "UCTE without Germany": [
+    "Western Europe",
+    "Central Europe"
+  ],
+  "CN-AH": [
+    "China Region"
+  ],
+  "CN-JX": [
+    "China Region"
+  ],
+  "CN-SA": [
+    "China Region"
+  ],
+  "IN": [
+    "India"
+  ],
+  "RLA": [
+    "Central America",
+    "Brazil",
+    "Mexico",
+    "Rest of South America"
+  ],
+  "LT": [
+    "Central Europe"
+  ],
+  "CN-LN": [
+    "China Region"
+  ],
+  "CN-GZ": [
+    "China Region"
+  ],
+  "CN-TJ": [
+    "China Region"
+  ],
+  "CA-BC": [
+    "Canada"
+  ],
+  "IL": [
+    "Middle east"
+  ],
+  "SGCC": [
+    "China Region"
+  ],
+  "CH": [
+    "Western Europe"
+  ],
+  "CN-HE": [
+    "China Region"
+  ],
+  "CN-NM": [
+    "China Region"
+  ],
+  "CA-YK": [
+    "Canada"
+  ],
+  "CA-NF": [
+    "Canada"
+  ],
+  "CO": [
+    "Rest of South America"
+  ],
+  "JP": [
+    "Japan"
+  ],
+  "CM": [
+    "Western Africa"
+  ],
+  "GLO": "World",
+  "CN-ZJ": [
+    "China Region"
+  ],
+  "HU": [
+    "Central Europe"
+  ],
+  "IAI Area, EU27 & EFTA": [
+    "Western Europe",
+    "Central Europe"
+  ],
+  "CN-JL": [
+    "China Region"
+  ],
+  "CZ": [
+    "Central Europe"
+  ],
+  "CN-YN": [
+    "China Region"
+  ],
+  "CN": [
+    "China Region"
+  ],
+  "CY": [
+    "Central Europe"
+  ],
+  "RS": [
+    "Central Europe"
+  ],
+  "AT": [
+    "Western Europe"
+  ],
+  "CA-NT": [
+    "Canada"
+  ],
+  "FRCC": [
+    "USA"
+  ],
+  "Canada without Quebec": [
+    "Canada"
+  ],
+  "ES": [
+    "Western Europe"
+  ],
+  "CA-PE": [
+    "Canada"
+  ],
+  "BG": [
+    "Central Europe"
+  ],
+  "RNA": [
+    "Central America",
+    "USA",
+    "Canada"
+  ],
+  "CI": [
+    "Western Africa"
+  ],
+  "IT": [
+    "Western Europe"
+  ],
+  "IAI Area, North America, without Quebec": [
+    "USA",
+    "Canada"
+  ],
+  "TH": [
+    "South Asia"
+  ],
+  "CL": [
+    "Rest of South America"
+  ],
+  "SA": [
+    "Middle east"
+  ],
+  "BE": [
+    "Western Europe"
+  ],
+  "CN-SD": [
+    "China Region"
+  ],
+  "BR": [
+    "Brazil"
+  ],
+  "NZ": [
+    "Oceania"
+  ],
+  "LU": [
+    "Western Europe"
+  ],
+  "CN-XJ": [
+    "China Region"
+  ],
+  "RER w/o DE+NL+NO": [
+    "Western Europe",
+    "Central Europe",
+    "Ukraine region",
+    "Russia Region"
+  ],
+  "NORDEL": [
+    "Western Europe"
+  ],
+  "KE": [
+    "Eastern Africa"
+  ],
+  "CN-GD": [
+    "China Region"
+  ],
+  "RER w/o CH+DE": [
+    "Western Europe",
+    "Central Europe",
+    "Ukraine region",
+    "Russia Region"
+  ],
+  "CN-GX": [
+    "China Region"
+  ],
+  "SE": [
+    "Western Europe"
+  ],
+  "FI": [
+    "Western Europe"
+  ],
+  "TR": [
+    "Turkey"
+  ],
+  "CSG": [
+    "China Region"
+  ],
+  "CN-HL": [
+    "China Region"
+  ],
+  "US": [
+    "USA"
+  ],
+  "WECC": [
+    "USA",
+    "Canada"
+  ],
+  "DK": [
+    "Western Europe"
+  ],
+  "NO": [
+    "Western Europe"
+  ],
+  "RoW": "World",
+  "TW": [
+    "China Region"
+  ],
+  "CN-FJ": [
+    "China Region"
+  ],
+  "IAI Area, Africa": [
+    "Rest of Southern Africa",
+    "South Africa",
+    "Northern Africa",
+    "Western Africa"
+  ],
+  "CA-NS": [
+    "Canada"
+  ],
+  "CA": [
+    "Canada"
+  ],
+  "CA-NU": [
+    "Canada"
+  ],
+  "WECC, US only": [
+    "USA"
+  ],
+  "PH": [
+    "South Asia"
+  ],
+  "CN-GS": [
+    "China Region"
+  ],
+  "RAS": [
+    "Korea Region",
+    "Central Asia",
+    "Rest of South Asia",
+    "Japan",
+    "Central Europe",
+    "China Region",
+    "Turkey",
+    "India",
+    "Middle east",
+    "Indonesia Region",
+    "Russia Region",
+    "South Asia"
+  ],
+  "CN-HA": [
+    "China Region"
+  ],
+  "AR": [
+    "Rest of South America"
+  ],
+  "Europe without Switzerland": [
+    "Western Europe",
+    "Central Europe",
+    "Ukraine region",
+    "Russia Region"
+  ],
+  "TRE": [
+    "USA"
+  ],
+  "RME": [
+    "Middle east"
+  ],
+  "PE": [
+    "Rest of South America"
+  ],
+  "IS": [
+    "Western Europe"
+  ],
+  "IAI Area, Gulf Cooperation Council": [
+    "Middle east"
+  ],
+  "UN-OCEANIA": [
+    "Oceania",
+    "Indonesia Region"
+  ],
+  "RU": [
+    "Russia Region"
+  ],
+  "GR": [
+    "Western Europe"
+  ],
+  "IAI Area, Russia & RER w/o EU27 & EFTA": [
+    "Central Europe",
+    "Russia Region"
+  ],
+  "RAF": [
+    "Eastern Africa",
+    "Rest of Southern Africa",
+    "South Africa",
+    "Northern Africa",
+    "Western Africa"
+  ],
+  "PL": [
+    "Central Europe"
+  ],
+  "ASCC": [
+    "USA"
+  ],
+  "CR": [
+    "Central America"
+  ],
+  "FR": [
+    "Western Europe"
+  ],
+  "PG": [
+    "Indonesia Region"
+  ],
+  "BA": [
+    "Central Europe"
+  ],
+  "SPP": [
+    "USA"
+  ],
+  "CN-SX": [
+    "China Region"
+  ],
+  "EC": [
+    "Rest of South America"
+  ],
+  "TZ": [
+    "Rest of Southern Africa"
+  ],
+  "CN-XZ": [
+    "China Region"
+  ],
+  "CN-HN": [
+    "China Region"
+  ],
+  "IAI Area, South America": [
+    "Brazil",
+    "Rest of South America"
+  ],
+  "CN-NX": [
+    "China Region"
+  ],
+  "GH": [
+    "Western Africa"
+  ],
+  "NG": [
+    "Western Africa"
+  ],
+  "IR": [
+    "Middle east"
+  ],
+  "RFC": [
+    "USA"
+  ],
+  "CN-CQ": [
+    "China Region"
+  ],
+  "MG": [
+    "Eastern Africa"
+  ],
+  "LK": [
+    "Rest of South Asia"
+  ],
+  "UCTE": [
+    "Western Europe",
+    "Central Europe"
+  ],
+  "ID": [
+    "Indonesia Region"
+  ],
+  "CA-NB": [
+    "Canada"
+  ],
+  "CA-MB": [
+    "Canada"
+  ],
+  "LV": [
+    "Central Europe"
+  ],
+  "ENTSO-E": [
+    "Western Europe",
+    "Central Europe"
+  ],
+  "KR": [
+    "Korea Region"
+  ],
+  "SERC": [
+    "USA"
+  ],
+  "DZ": [
+    "Northern Africa"
+  ],
+  "GB": [
+    "Western Europe"
+  ],
+  "CA-QC": [
+    "Canada"
+  ],
+  "CA-ON": [
+    "Canada"
+  ],
+  "ZA": [
+    "South Africa"
+  ],
+  "RER": [
+    "Western Europe",
+    "Central Europe",
+    "Ukraine region",
+    "Russia Region"
+  ],
+  "UA": [
+    "Ukraine region"
+  ],
+  "EE": [
+    "Central Europe"
+  ],
+  "HN": [
+    "Central America"
+  ],
+  "MRO, US only": [
+    "USA"
+  ],
+  "MT": [
+    "Western Europe"
+  ],
+  "CA-SK": [
+    "Canada"
+  ],
+  "CN-SC": [
+    "China Region"
+  ],
+  "MK": [
+    "Central Europe"
+  ],
+  "NL": [
+    "Western Europe"
+  ],
+  "HICC": [
+    "USA"
+  ],
+  "HR": [
+    "Central Europe"
+  ],
+  "CN-QH": [
+    "China Region"
+  ],
+  "CN-SH": [
+    "China Region"
+  ],
+  "SK": [
+    "Central Europe"
+  ],
+  "TN": [
+    "Northern Africa"
+  ],
+  "AU": [
+    "Oceania"
+  ],
+  "PT": [
+    "Western Europe"
+  ],
+  "WEU": [
+    "Western Europe"
+  ],
+  "VN": [
+    "South Asia"
+  ]
+}
