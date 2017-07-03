@@ -22,9 +22,10 @@ setup(
     author_email="cmutel@gmail.com",
     license=open('LICENSE').read(),
     install_requires=[
-        "brightway2",
+        "appdirs",
         "numpy",
         "pandas",
+        "python-json-logger",
     ],
     url="https://github.com/cmutel/wurst",
     long_description=open('README.md').read(),

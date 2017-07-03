@@ -31,7 +31,3 @@ def convert_to_location_dictionary(array, locations=REGIONS):
             for index, loc in enumerate(locations)
             if index < size
         }
-
-
-
-Emissions|CH4|Energy Demand|Industry    Mt CH4/yr   preproc2RT\ImageEmis_RCP_CH4.dat    regional    [r,2]   [27,10] TgCH4
