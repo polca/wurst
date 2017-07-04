@@ -1,7 +1,10 @@
+Introduction
+############
+
 Internal data format
 ====================
 
-To ease interaction with Brightway2, the internal format for Wurst is a subset of the implied internal format for Brightway2.
+The internal data format for Wurst is a subset of the implied internal format for Brightway2.
 
 .. code-block:: python
 
@@ -17,7 +20,8 @@ To ease interaction with Brightway2, the internal format for Wurst is a subset o
                 'amount': float,
                 'categories': list,  # only for biosphere flows
                 'type': str,  # biosphere, techosphere, production
-                'name': str,
+                'activity': str,
+                'product': str,
                 'unit': str,
                 'location': str,
                 'input': tuple,  # only if from external database

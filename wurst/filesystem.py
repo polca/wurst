@@ -26,13 +26,21 @@ def get_base_directory():
     return create_dir(appdirs.user_data_dir("Wurst", "WurstTeam"))
 
 
-def get_log_filepath():
+def get_run_id():
+    return uuid.uuid4().hex
+
+
+def get_log_filepath(run_id):
     """Get filepath for Wurst run log"""
-    return os.path.join(get_base_directory(), uuid.uuid4().hex + ".log")
+    return os.path.join(get_base_directory(), run + ".wurst.log")
 
 
-def create_log(filepath):
+def create_log(run_id=None):
     """Create and setup a JSON logger"""
+    if not run_id:
+        run_id = get_run_id()
+    filepath = get_log_filepath(run_id)
+
     logger = logging.getLogger('wurst')
     logger.propagate = False
     handler = logging.FileHandler(filepath, encoding='utf-8')
@@ -40,6 +48,7 @@ def create_log(filepath):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+    return run_id, filepath
 
 
 def cleanup_data_directory():
