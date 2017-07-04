@@ -46,12 +46,23 @@ def add_exchanges_to_consumers(activities, exchange_qs):
 def add_input_info_for_indigenous_exchanges(activities, names):
     """Add details on exchange inputs if these activities are already available"""
     names = set(names)
+    lookup = {(o['database'], o['code']): o for o in activities}
+
+    for ds in activities:
+        for exc in ds['exchanges']:
+            if 'input' not in exc or exc['input'][0] in names:
+                continue
+            obj = lookup[exc['input']]
+            exc['name'] = obj.product
+            exc['unit'] = obj.unit
+            exc['location'] = obj.location
+            if exc['type'] == 'biosphere':
+                exc['categories'] = obj.data['categories']
 
 
 def add_input_info_for_external_exchanges(activities, names):
     """Add details on exchange inputs from other databases"""
     names = set(names)
-
     cache = {}
 
     for ds in activities:
@@ -60,8 +71,8 @@ def add_input_info_for_external_exchanges(activities, names):
                 continue
             if exc['input'] not in cache:
                 cache[exc['input']] = ActivityDataset.get(
-                    database=exc['input'][0],
-                    code=exc['input'][1],
+                    ActivityDatasetdatabase == exc['input'][0],
+                    ActivityDatasetcode == exc['input'][1],
                 )
             obj = cache[exc['input']]
             exc['name'] = obj.product
@@ -86,7 +97,7 @@ def extract_brightway2_databases(database_names):
     exchange_qs = ExchangeDataset.select().where(ExchangeDataset.output_database < database_names)
 
     # Retrieve all activity data
-    activities = {(obj['database'], obj['code']): obj for obj in activity_qs}
+    activities = list(activity_qs)
     # Add each exchange to the activity list of exchanges
     add_exchanges_to_activities(activities, exchange_qs)
     # Add details on exchanges which come from our databases

@@ -3,6 +3,7 @@ from pythonjsonlogger import jsonlogger
 import appdirs
 import logging
 import os
+import time
 import uuid
 
 
@@ -22,7 +23,7 @@ def get_base_directory():
     """Return base directory where cache and output data are saved.
 
     Creates directory if it is not already present."""
-    return create_dir(appdirs.user_data_dir("Wurst", "wurst_is_sausage"))
+    return create_dir(appdirs.user_data_dir("Wurst", "WurstTeam"))
 
 
 def get_log_filepath():
@@ -39,3 +40,26 @@ def create_log(filepath):
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
+
+
+def cleanup_data_directory():
+    base_dir = get_base_directory()
+    one_week, now, to_delete = 7 * 24 * 60 * 60, time.time(), []
+
+    print("\nCleaning up data directory {}".format(base_dir))
+    is_sausage = lambda x: x.endswith(".wurst.log")
+    for file in filter(is_sausage, os.listdir(base_dir)):
+        filepath = os.path.join(base_dir, file)
+        created = os.path.getctime(filepath)
+        if created < now - one_week:
+            to_delete.append(filepath)
+
+    if not to_delete:
+        print("\nNo old runs to delete!\n")
+        return
+
+    to_delete.sort()
+    print("Deleting {count} runs".format(len(to_delete)))
+
+    for filepath in to_delete:
+        os.remove(filepath)

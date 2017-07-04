@@ -1,4 +1,4 @@
-from bw2io.base_lci import LCIImporter
+from bw2io.importers.base_lci import LCIImporter
 from bw2data import databases
 
 

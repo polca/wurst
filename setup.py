@@ -23,10 +23,16 @@ setup(
     license=open('LICENSE').read(),
     install_requires=[
         "appdirs",
+        "docopt",
         "numpy",
         "pandas",
         "python-json-logger",
     ],
+    entry_points = {
+        'console_scripts': [
+            'wurst-cli = wurst.bin.wurst_cli:main',
+        ]
+    },
     url="https://github.com/cmutel/wurst",
     long_description=open('README.md').read(),
     description=('Wurst is a python package for linking and modifying '

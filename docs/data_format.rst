@@ -16,7 +16,6 @@ To ease interaction with Brightway2, the internal format for Wurst is a subset o
             {
                 'amount': float,
                 'categories': list,  # only for biosphere flows
-                'comment': str,
                 'type': str,  # biosphere, techosphere, production
                 'name': str,
                 'unit': str,
