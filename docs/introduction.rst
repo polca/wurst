@@ -65,12 +65,13 @@ The internal data format for Wurst is a subset of the implied internal format fo
 .. code-block:: python
 
     {
+        'database': str,
+        'code': str,
+        'name': str,
+        'location': str,
+        'unit': str,
         'classifications': [tuple],
         'comment': str,
-        'location': str,
-        'name': str,
-        'reference product': str,
-        'unit': str,
         'exchanges': [
             {
                 'amount': float,

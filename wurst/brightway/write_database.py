@@ -1,5 +1,6 @@
-from bw2io.importers.base_lci import LCIImporter
+from ..linking import link_internal, change_db_name, check_internal_linking
 from bw2data import databases
+from bw2io.importers.base_lci import LCIImporter
 
 
 class WurstImporter(LCIImporter):
@@ -16,4 +17,7 @@ class WurstImporter(LCIImporter):
 
 
 def write_brightway2_database(data, name):
+    data = change_db_name(data, name)
+    data = link_internal(data)
+    data = check_internal_linking(data)
     WurstImporter(data, name).write_database()

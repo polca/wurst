@@ -64,3 +64,17 @@ def technosphere(ds, *funcs):
 def biosphere(ds, *funcs):
     """Get all biosphere exchanges in ``ds`` that pass filtering functions ``funcs``"""
     return _exchanges(ds, 'biosphere', *funcs)
+
+
+def reference_product(ds):
+    """Get single reference product exchange from a dataset.
+
+    Raises ``wurst.errors.NoResults`` or ``wurst.errors.MultipleResults`` if zero or multiple results are returned."""
+    excs = [exc for exc in ds['exchanges']
+            if exc['amount']
+            and exc['type'] == 'production']
+    if not excs:
+        raise NoResults("No suitable production exchanges founds")
+    elif len(excs) > 1:
+        raise MultipleResults("Multiple production exchanges found")
+    return excs[0]

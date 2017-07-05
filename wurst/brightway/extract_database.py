@@ -14,7 +14,6 @@ def extract_activity(proxy):
         'database': proxy.database,
         'code': proxy.code,
         'name': proxy.name,
-        'reference product': proxy.product,
         'unit': proxy.data.get('unit', ''),
         'exchanges': []
     }

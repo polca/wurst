@@ -6,3 +6,8 @@ class MultipleResults(Exception):
 class NoResults(Exception):
     """No results found when some were expected"""
     pass
+
+
+class InvalidLink(Exception):
+    """Exchange link is to a missing activity"""
+    pass
