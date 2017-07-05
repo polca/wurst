@@ -1,4 +1,4 @@
-from ..ecoinvent import faces_filepath
+from ..ecoinvent import ecoinvent_faces
 import json
 import os
 
@@ -8,7 +8,6 @@ REGIONS = json.load(open(os.path.join(dirpath, "metadata", "regions.json")))
 REGION_TOPOLOGY = json.load(open(os.path.join(dirpath, "metadata", "region-topolgy.json")))
 LOCATION_MAPPING = json.load(open(os.path.join(dirpath, "metadata", "location-mapping.json")))
 
-ecoinvent_faces = {x: set(y) for x, y in json.load(open(faces_filepath))['data']}
 IMAGE_REGION_FACES = {k: set.union(*[set(ecoinvent_faces[code]) for code in v])
                       for k, v in REGION_TOPOLOGY.items()}
 
