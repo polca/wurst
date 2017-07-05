@@ -19,4 +19,4 @@ install: "python setup.py install"
 script:
   - pwd; ls; py.test --cov=wurst
 after_success:
-  - then coveralls
+  - coveralls

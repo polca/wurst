@@ -21,6 +21,8 @@ def get_many(data, funcs):
 
 def get_one(data, funcs):
     results = list(get_many(data, funcs))
+    if not results:
+        raise NoResults
     if not len(results) == 1:
         raise MultipleResults
     return results[0]
