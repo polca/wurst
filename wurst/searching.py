@@ -2,6 +2,7 @@ from .errors import MultipleResults, NoResults
 
 
 def equals(field, value):
+    """Return function where input ``field`` value is equal to ``value``"""
     return lambda x: x[field] == value
 
 
@@ -20,6 +21,10 @@ def get_many(data, funcs):
 
 
 def get_one(data, funcs):
+    """Apply filter functions ``funcs`` to ``data``, and return exactly one result.
+
+    Raises ``wurst.errors.NoResults`` or ``wurst.errors.MultipleResults`` if zero or multiple results are returned.
+    """
     results = list(get_many(data, funcs))
     if not results:
         raise NoResults

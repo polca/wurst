@@ -11,6 +11,7 @@ Welcome to wurst's documentation!
    :caption: Contents:
 
    introduction
+   technical
 
 Indices and tables
 ==================
