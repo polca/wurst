@@ -54,3 +54,8 @@ def change_db_name(data, name):
             if exc.get('input') and exc['input'][0] in old_names:
                 exc['input'] = (name, exc['input'][1])
     return data
+
+
+def check_duplicate_codes(data):
+    """Check that there won't be duplicate codes when activities are merged to new, common database"""
+    pass
