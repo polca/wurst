@@ -24,6 +24,11 @@ def exclude(func):
     return lambda x: not func(x)
 
 
+def doesnt_contain_any(field, values):
+    """Exclude all dataset whose ``field`` contains any of ``values``"""
+    return lambda x: all(exclude(contains(field, value))(x) for value in values)
+
+
 def get_many(data, *funcs):
     """Apply all filter functions ``funcs`` to ``data``"""
     for fltr in funcs:
@@ -42,3 +47,20 @@ def get_one(data, *funcs):
     if not len(results) == 1:
         raise MultipleResults
     return results[0]
+
+
+def _exchanges(ds, kind, *funcs):
+    return get_many(
+        filter(lambda x: x['type'] == kind, ds['exchanges']),
+        *funcs
+    )
+
+
+def technosphere(ds, *funcs):
+    """Get all technosphere exchanges in ``ds`` that pass filtering functions ``funcs``"""
+    return _exchanges(ds, 'technosphere', *funcs)
+
+
+def biosphere(ds, *funcs):
+    """Get all biosphere exchanges in ``ds`` that pass filtering functions ``funcs``"""
+    return _exchanges(ds, 'biosphere', *funcs)
