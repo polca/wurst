@@ -15,8 +15,8 @@ before_install:
   - conda install -q -c conda-forge -c cmutel -c haasad brightway2 jupyter numpy pandas toolz cytoolz python-json-logger tqdm
   - echo $(python --version)
   - pip install pytest pytest-cov python-coveralls
-install: "python setup.py install"
+install: "python setup.py develop"
 script:
-  - pwd; ls; py.test --cov=wurst
+  - pwd; pytest --cov=wurst
 after_success:
   - coveralls
