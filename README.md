@@ -1,6 +1,8 @@
 # Wurst
 
-[![Build Status](https://travis-ci.org/cmutel/wurst.svg?branch=master)](https://travis-ci.org/cmutel/wurst) [![Docs](https://readthedocs.org/projects/wurst/badge/?version=latest)](https://wurst.readthedocs.io/)
+[![Build Status](https://travis-ci.org/cmutel/wurst.svg?branch=master)](https://travis-ci.org/cmutel/wurst) [![Coverage Status](https://coveralls.io/repos/github/cmutel/wurst/badge.svg?branch=master)](https://coveralls.io/github/cmutel/wurst?branch=master) [![Docs](https://readthedocs.org/projects/wurst/badge/?version=latest)](https://wurst.readthedocs.io/)
+
+Show how the sausage is made!
 
 Wurst is a python package for linking and modifying industrial ecology models. In its initial development, we will link [ecoinvent](http://www.ecoinvent.org/) to the [IMAGE integrated assessment model](http://www.pbl.nl/en/publications/integrated-assessment-of-global-environmental-change-with-IMAGE-3.0). However, the intent of wurst is to be more generic, and not specific to life cycle assessment.
 

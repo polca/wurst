@@ -28,13 +28,14 @@ Wurst provides :ref:`helper functions <tech-searching>` to make searching and fi
 
 .. code-block:: python
 
-    nuclear_generation = get_many(lci_database, [
+    nuclear_generation = get_many(
+        lci_database,
         contains('name', 'nuclear'),
         contains('name', 'electricity'),
         equals('unit', 'kilowatt hour'),
         exclude(contains('name', 'aluminium')),
         exclude(contains('name', 'import'))
-    ])
+    )
 
 It is also OK to write a generator function that does the same thing:
 

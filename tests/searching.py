@@ -24,15 +24,27 @@ def test_startswith():
     with pytest.raises(KeyError):
         func({'m': 'foo'})
 
+def test_exclude():
+    func = equals('n', 'foo')
+    assert func({'n': 'foo'})
+    func = exclude(equals('n', 'foo'))
+    assert not func({'n': 'foo'})
+
+def test_either():
+    func1 = equals('n', 'foo')
+    func2 = equals('n', 'bar')
+    assert either(func1, func2)({'n': 'bar'})
+    assert not either(func1, func2)({'n': 'foobar'})
+
 def test_get_one():
     func = equals('n', 'foo')
-    assert get_one([{'n': 'foo'}], [func]) == {'n': 'foo'}
+    assert get_one([{'n': 'foo'}], func) == {'n': 'foo'}
     with pytest.raises(MultipleResults):
-        get_one([{'n': 'foo'}, {'n': 'foo'}], [func])
+        get_one([{'n': 'foo'}, {'n': 'foo'}], func)
     with pytest.raises(NoResults):
-        get_one([{'n': 'bar'}, {'n': 'bar'}], [func])
+        get_one([{'n': 'bar'}, {'n': 'bar'}], func)
 
 def test_get_many():
     func = equals('n', 'foo')
-    assert list(get_many([{'n': 'foo'}, {'n': 'foo'}], [func])) == [{'n': 'foo'}, {'n': 'foo'}]
-    assert list(get_many([{'n': 'bar'}], [func])) == []
+    assert list(get_many([{'n': 'foo'}, {'n': 'foo'}], func)) == [{'n': 'foo'}, {'n': 'foo'}]
+    assert list(get_many([{'n': 'bar'}], func)) == []
