@@ -11,3 +11,4 @@ MANIFEST
 .cache
 .coverage
 ~*.*
+*/.ipynb_checkpoints

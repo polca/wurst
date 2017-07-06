@@ -27,6 +27,7 @@ setup(
         "numpy",
         "pandas",
         "python-json-logger",
+        "tqdm",
     ],
     entry_points = {
         'console_scripts': [

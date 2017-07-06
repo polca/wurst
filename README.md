@@ -4,13 +4,15 @@
 
 Show how the sausage is made!
 
-Wurst is a python package for linking and modifying industrial ecology models. In its initial development, we will link [ecoinvent](http://www.ecoinvent.org/) to the [IMAGE integrated assessment model](http://www.pbl.nl/en/publications/integrated-assessment-of-global-environmental-change-with-IMAGE-3.0). However, the intent of wurst is to be more generic, and not specific to life cycle assessment.
+Wurst is a python package for linking and modifying industrial ecology models, with a focus on sparse matrices in life cycle assessment. It provides the following:
 
-Wurst should provide the following:
+* Helper functions to filter activities and exchanges
+* Helper functions to link exchanges
+* Transformation functions to change markets, change input efficiencies, and change emissions
+* Data IO with [Brightway2](https://brightwaylca.org/)
+* Logging framework and a log browser
 
-* Metadata for linking different models, such as tables equating names or industry classifications
-* A framework for defining data transformation functions
-* Code and data examples
+See an [example notebook](https://github.com/cmutel/wurst/blob/master/docs/notebooks/marginal-mixes.ipynb) in the docs.
 
 ## License
 
