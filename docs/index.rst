@@ -13,6 +13,13 @@ Welcome to wurst's documentation!
    introduction
    technical
 
+Models
+------
+
+.. toctree::
+
+    marginals
+
 Indices and tables
 ==================
 

@@ -11,3 +11,8 @@ class NoResults(Exception):
 class InvalidLink(Exception):
     """Exchange link is to a missing activity"""
     pass
+
+
+class NonuniqueCode(Exception):
+    """Codes should be unique, but these aren't"""
+    pass

@@ -68,6 +68,7 @@ The internal data format for Wurst is a subset of the implied internal format fo
         'database': str,
         'code': str,
         'name': str,
+        'reference product': str,
         'location': str,
         'unit': str,
         'classifications': [tuple],

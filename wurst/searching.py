@@ -78,3 +78,19 @@ def reference_product(ds):
     elif len(excs) > 1:
         raise MultipleResults("Multiple production exchanges found")
     return excs[0]
+
+
+def best_geo_match(possibles, ordered_locations):
+    """Pick the dataset from ``possibles`` whose location is first in ``ordered_locations``.
+
+    ``possibles`` is an interable with the field ``location``.
+
+    ``ordered_locations`` is a list of locations in sorting order.
+
+    Returns an element from ``possibles``, or ``None``.
+    """
+    weights = {y: x for x, y in enumerate(ordered_locations)}
+    filtered = (obj for obj in possibles if obj['location'] in weights)
+    ordered = sorted(filtered, key=lambda x: weights[x['location']])
+    if ordered:
+        return ordered[0]
