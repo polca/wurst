@@ -48,3 +48,89 @@ def test_get_many():
     func = equals('n', 'foo')
     assert list(get_many([{'n': 'foo'}, {'n': 'foo'}], func)) == [{'n': 'foo'}, {'n': 'foo'}]
     assert list(get_many([{'n': 'bar'}], func)) == []
+
+def test_doesnt_contain_any():
+    func = doesnt_contain_any('n', ['foo', 'bar'])
+    assert func({'n': 'chicken'})
+    assert not func({'n': 'barfoo'})
+    assert not func({'n': 'ffffooooo'})
+
+def test_technosphere():
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'technosphere', 'n': 'bar'},
+        ]
+    }
+    expected = [{'type': 'technosphere', 'n': 'bar'}]
+    assert list(technosphere(given)) == expected
+
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'technosphere', 'n': 'bar'},
+            {'type': 'technosphere', 'n': 'foo'},
+        ]
+    }
+    expected = [{'type': 'technosphere', 'n': 'bar'}]
+    assert list(technosphere(given, equals('n', 'bar'))) == expected
+
+def test_biosphere():
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'biosphere', 'n': 'bar'},
+        ]
+    }
+    expected = [{'type': 'biosphere', 'n': 'bar'}]
+    assert list(biosphere(given)) == expected
+
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'biosphere', 'n': 'bar'},
+            {'type': 'biosphere', 'n': 'foo'},
+        ]
+    }
+    expected = [{'type': 'biosphere', 'n': 'bar'}]
+    assert list(biosphere(given, equals('n', 'bar'))) == expected
+
+def test_reference_product():
+    given = {'exchanges': [
+        {'type': 'production', 'n': 'foo', 'amount': 1},
+        {'type': 'production', 'n': 'bar', 'amount': 0},
+        {'type': 'not production', 'n': 'foobar', 'amount': 1},
+    ]}
+    expected = {'type': 'production', 'n': 'foo', 'amount': 1}
+    assert reference_product(given) == expected
+
+    given = {'exchanges': [
+        {'type': 'production', 'n': 'bar', 'amount': 0},
+        {'type': 'not production', 'n': 'foobar', 'amount': 1},
+    ]}
+    with pytest.raises(NoResults):
+        reference_product(given)
+
+    given = {'exchanges': [
+        {'type': 'production', 'n': 'foo', 'amount': 1},
+        {'type': 'production', 'n': 'bar', 'amount': 1},
+        {'type': 'not production', 'n': 'foobar', 'amount': 1},
+    ]}
+    with pytest.raises(MultipleResults):
+        reference_product(given)
+
+def test_best_geo_match():
+    given = [
+        {'location': 'one'},
+        {'location': 'two'},
+        {'location': 'three'},
+        {'location': 'four'},
+        {'location': 'five'},
+        {'location': 'six'},
+        {'location': 'seven'},
+    ]
+    order = ['foo', 'bar', 'four', 'seven', 'one', 'july']
+    assert best_geo_match(given, order) == {'location': 'four'}
+
+    order = ['foo', 'bar', 'july']
+    assert best_geo_match(given, order) is None
