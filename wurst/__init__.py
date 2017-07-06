@@ -16,3 +16,4 @@ from .searching import (
     startswith,
     technosphere,
 )
+from .ecoinvent import ECOINVENT_ORDERED_GEO

@@ -1,1 +1,1 @@
-from .cleaning import delete_zero_a_production_exchanges
+from .cleaning import delete_zero_amount_exchanges

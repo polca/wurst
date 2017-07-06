@@ -14,14 +14,26 @@ def ecoinvent_within(data, location):
 
 
 def get_ordered_geo_relationships():
-    """"""
+    """Construct a dictionary with ecoinvent location codes as keys, and a list of ecoinvent location codes which contain that key in order of increasing size as values.
+
+    Size is approximated using the number of topological faces in each location.
+
+    Example output:
+
+    .. code-block:: python
+
+        'UZ': ['UZ', 'Central Asia', 'FSU', 'Asia without China', 'UN-ASIA', 'RAS', 'RoW', 'GLO']
+
+    """
     _ = lambda x: [y[1] for y in x] + ['RoW', 'GLO']
 
     res = {region: [region] + _(sorted([(len(b), a)
         for a, b in ecoinvent_faces.items()
         if a not in (region, '__all__')
-        and not faces.difference(b)
-    ])) for region, faces in ecoinvent_faces.items()}
+        and not faces.difference(b)]))
+    for region, faces in ecoinvent_faces.items()
+    if region != "__all__"}
+
     res['RoW'] = ['RoW', 'GLO']
     res['GLO'] = ['GLO', 'RoW']
     return res
