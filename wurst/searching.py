@@ -50,6 +50,8 @@ def get_one(data, *funcs):
 
 
 def _exchanges(ds, kind, *funcs):
+    if funcs == [None]:
+        funcs = []
     return get_many(
         filter(lambda x: x['type'] == kind, ds['exchanges']),
         *funcs

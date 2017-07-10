@@ -134,6 +134,11 @@ See the :ref:`API documentation for searching <tech-searching>`, and: `itertools
 Exchange iterators
 ------------------
 
+Transformations
+===============
+
+.. autofunction:: wurst.transformations.activity.change_exchanges_by_constant_factor
+
 Re-linking
 ==========
 

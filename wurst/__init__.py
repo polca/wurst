@@ -17,3 +17,8 @@ from .searching import (
     technosphere,
 )
 from .ecoinvent import ECOINVENT_ORDERED_GEO
+from .transformations import (
+    change_exchanges_by_constant_factor,
+    delete_zero_amount_exchanges,
+    rescale_exchange,
+)
