@@ -33,9 +33,10 @@ def change_exchanges_by_constant_factor(ds, value,
             w.either(w.contains('name', 'coal'), w.contains('name', 'lignite')),
             w.contains('name', 'electricity'),
             w.equals('unit', 'kilowatt hour'),
-            w.exclude(w.contains('name', 'market')),
-            w.exclude(w.contains('name', 'aluminium industry')),
-            w.exclude(w.contains('name', 'coal, carbon capture and storage')),
+            w.doesnt_contain_any('name', [
+                'market', 'aluminium industry',
+                'coal, carbon capture and storage'
+            ])
         ]
 
         fuel_independent = w.doesnt_contain_any('name', (
