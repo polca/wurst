@@ -12,6 +12,7 @@ from .searching import (
     equals,
     get_many,
     get_one,
+    production,
     reference_product,
     startswith,
     technosphere,

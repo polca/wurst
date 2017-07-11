@@ -3,15 +3,15 @@ from .errors import MultipleResults, NoResults
 
 def equals(field, value):
     """Return function where input ``field`` value is equal to ``value``"""
-    return lambda x: x[field] == value
+    return lambda x: x.get(field) == value
 
 
 def contains(field, value):
-    return lambda x: value in x[field]
+    return lambda x: value in x.get(field)
 
 
 def startswith(field, value):
-    return lambda x: x[field].startswith(value)
+    return lambda x: x.get(field, '').startswith(value)
 
 
 def either(*funcs):
@@ -66,6 +66,11 @@ def technosphere(ds, *funcs):
 def biosphere(ds, *funcs):
     """Get all biosphere exchanges in ``ds`` that pass filtering functions ``funcs``"""
     return _exchanges(ds, 'biosphere', *funcs)
+
+
+def production(ds, *funcs):
+    """Get all production exchanges in ``ds`` that pass filtering functions ``funcs``"""
+    return _exchanges(ds, 'production', *funcs)
 
 
 def reference_product(ds):

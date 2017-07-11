@@ -17,4 +17,3 @@ def ecoinvent_market(ds):
         ds['name'].startswith("market group")
         # or market_like(ds)
     )
-

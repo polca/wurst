@@ -44,7 +44,7 @@ def change_exchanges_by_constant_factor(ds, value,
             'Nitrogen oxides', 'Dinitrogen monoxide', 'Particulates'
         ))
 
-        for ds in w.get_many(generation_filters):
+        for ds in w.get_many(data, generation_filters):
             change_exchanges_by_constant_factor(
                 ds,
                 0.8,  # Or whatever from input data
@@ -56,14 +56,9 @@ def change_exchanges_by_constant_factor(ds, value,
     assert isinstance(ds, dict), "Must pass dataset dictionary document"
     assert isinstance(value, Number), "Constant factor ``value`` must be a number"
 
-    for exc in technosphere(ds, technosphere_filters or []):
+    for exc in technosphere(ds, *(technosphere_filters or [])):
         rescale_exchange(exc, value)
-    for exc in biosphere(ds, biosphere_filters_filters or []):
+    for exc in biosphere(ds, *(biosphere_filters or [])):
         rescale_exchange(exc, value)
 
     return ds
-
-
-# Tests: Scale exhange
-# Tests: pass None to technosphere, biosphere
-# Tests: rescale_exchange

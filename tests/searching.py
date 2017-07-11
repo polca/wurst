@@ -7,22 +7,16 @@ def test_contains():
     func = contains('n', 'foo')
     assert func({'n': 'foobar'})
     assert not func({'n': 'bar'})
-    with pytest.raises(KeyError):
-        func({'m': 'foobar'})
 
 def test_equals():
     func = equals('n', 'foo')
     assert func({'n': 'foo'})
     assert not func({'n': 'foobar'})
-    with pytest.raises(KeyError):
-        func({'m': 'foo'})
 
 def test_startswith():
     func = startswith('n', 'foo')
     assert func({'n': 'foobar'})
     assert not func({'n': 'barfoo'})
-    with pytest.raises(KeyError):
-        func({'m': 'foo'})
 
 def test_exclude():
     func = equals('n', 'foo')
@@ -69,6 +63,15 @@ def test_technosphere():
         'exchanges': [
             {'type': 'nope', 'n': 'foo'},
             {'type': 'technosphere', 'n': 'bar'},
+        ]
+    }
+    expected = [{'type': 'technosphere', 'n': 'bar'}]
+    assert list(technosphere(given, None)) == expected
+
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'technosphere', 'n': 'bar'},
             {'type': 'technosphere', 'n': 'foo'},
         ]
     }
@@ -94,6 +97,26 @@ def test_biosphere():
     }
     expected = [{'type': 'biosphere', 'n': 'bar'}]
     assert list(biosphere(given, equals('n', 'bar'))) == expected
+
+def test_production():
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'production', 'n': 'bar'},
+        ]
+    }
+    expected = [{'type': 'production', 'n': 'bar'}]
+    assert list(production(given)) == expected
+
+    given = {
+        'exchanges': [
+            {'type': 'nope', 'n': 'foo'},
+            {'type': 'production', 'n': 'bar'},
+            {'type': 'production', 'n': 'foo'},
+        ]
+    }
+    expected = [{'type': 'production', 'n': 'bar'}]
+    assert list(production(given, equals('n', 'bar'))) == expected
 
 def test_reference_product():
     given = {'exchanges': [
