@@ -92,7 +92,11 @@ def add_input_info_for_external_exchanges(activities, names):
 
 
 def extract_brightway2_databases(database_names):
-    """Extract a Brightway2 SQLiteBackend database to the Wurst internal format"""
+    """Extract a Brightway2 SQLiteBackend database to the Wurst internal format.
+
+    ``database_names`` is a list of database names. You should already be in the correct project.
+
+    Returns a list of dataset documents."""
     ERROR = "Must pass list of database names"
     assert isinstance(database_names, (list, tuple)), ERROR
 

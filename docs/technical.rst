@@ -31,6 +31,8 @@ Exchange iterators
 
 .. autofunction:: wurst.searching.biosphere
 
+.. autofunction:: wurst.searching.production
+
 .. autofunction:: wurst.searching.reference_product
 
 Geo functions
@@ -50,6 +52,11 @@ Linking
 .. autofunction:: wurst.linking.change_db_name
 
 .. autofunction:: wurst.linking.check_duplicate_codes
+
+Transformations
+---------------
+
+.. autofunction:: wurst.transformations.activity.change_exchanges_by_constant_factor
 
 Brightway2 IO
 -------------

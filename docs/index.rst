@@ -142,6 +142,13 @@ Transformations
 Re-linking
 ==========
 
+Brightway2 IO
+=============
+
+.. autofunction:: wurst.brightway.extract_database.extract_brightway2_databases
+
+.. autofunction:: wurst.brightway.write_database.write_brightway2_database
+
 Built-in models
 ===============
 
