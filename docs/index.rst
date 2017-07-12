@@ -134,13 +134,25 @@ See the :ref:`API documentation for searching <tech-searching>`, and: `itertools
 Exchange iterators
 ------------------
 
+The ``technosphere``, ``biosphere``, and ``production`` functions will return generators for exchanges with their respective exchange types.
+
+Wurst also provides ``reference_product(dataset)``, which will return the single reference product for a dataset. If zero or multiple products are available, it will raise an error.
+
 Transformations
 ===============
 
 .. autofunction:: wurst.transformations.activity.change_exchanges_by_constant_factor
 
-Re-linking
-==========
+Unlinking and Re-linking
+========================
+
+Exchanges are considered "linked" if their input flows are already resolved to point to a certain producing activity. In Brightway2, this link is the field "input", whose value takes the form ``('database name', 'unique code')``. Wurst uses the same convention - the ``input`` field is used to uniquely identify an activity that produces the exchange flow (biosphere flows are also considered activities).
+
+The ``output`` field is not needed - this is the activity in question, which consumes the input flow. Production exchanges will have the same value in ``input`` and ``output``.
+
+The default Brightway2 importer will remove the ``input`` field for exchanges which are provided by another activity in the same set of input datasets. Instead of an ``input`` field, the exchange will have an activity name, a flow name, a location, and a unit. This metadata is useful if you want to edit or create new exchange links.
+
+The Brightway2 exporter will automatically re-link (i.e. find the correct ``input`` values) exchanges when writing a new database. You can also manually create ``input`` values - no ``input`` value will be overwritten. In the database component of the ``input`` field, you can either use the name of the new database to be written, or the name of one of the input databases (it will be updated automatically).
 
 Brightway2 IO
 =============
