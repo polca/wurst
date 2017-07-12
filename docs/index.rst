@@ -28,7 +28,7 @@ In general, a modification function will include the following steps:
 Documents versus matrices
 =========================
 
-Inventory matrices can be modified by multiplying or adding vectors, as in the [Themis methodology paper](http://pubs.acs.org/doi/abs/10.1021/acs.est.5b01558). Wurst takes a different approach - it treats each activity (column in the technosphere matrix) as a document with metadata and a list of exchanges which can be modified as desired. This approach allows for both flexibility (e.g. the number of rows and columns are not fixed) and simpler code (no need for an indirection layer to row and column indices). So, instead of constructing a vector and using it directly, wurst would prefer to write a function like:
+Inventory matrices can be modified by multiplying or adding vectors, as in the `Themis methodology paper <http://pubs.acs.org/doi/abs/10.1021/acs.est.5b01558>`__. Wurst takes a different approach - it treats each activity (column in the technosphere matrix) as a document with metadata and a list of exchanges which can be modified as desired. This approach allows for both flexibility (e.g. the number of rows and columns are not fixed) and simpler code (no need for an indirection layer to row and column indices). So, instead of constructing a vector and using it directly, wurst would prefer to write a function like:
 
 .. code-block:: python
 
