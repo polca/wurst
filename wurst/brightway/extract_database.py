@@ -26,7 +26,12 @@ def extract_exchange(proxy):
 
     uncertainty_fields = ('uncertainty type', 'loc', 'scale', 'shape',
                           'minimum', 'maximum', 'amount', 'pedigree')
-    data = {key: proxy.data.get(key) for key in uncertainty_fields}
+    data = {key: proxy.data[key] for key in uncertainty_fields
+            if key in proxy.data}
+    assert 'amount' in data, "Exchange has no `amount` field"
+    if 'uncertainty type' not in data:
+        data['uncertainty type'] = 0
+        data['loc'] = data['amount']
     data['type'] = proxy.type
     data['production volume'] = proxy.data.get("production volume")
     data['input'] = (proxy.input_database, proxy.input_code)
@@ -98,7 +103,9 @@ def extract_brightway2_databases(database_names):
 
     Returns a list of dataset documents."""
     ERROR = "Must pass list of database names"
-    assert isinstance(database_names, (list, tuple)), ERROR
+    if isinstance(database_names, str):
+        database_names = [database_names]
+    assert isinstance(database_names, (list, tuple, set)), ERROR
 
     databases = [DatabaseChooser(name) for name in database_names]
     ERROR = "Wrong type of database object (must be SQLiteBackend)"
