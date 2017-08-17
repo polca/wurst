@@ -26,7 +26,7 @@ def get_base_directory():
     return create_dir(appdirs.user_data_dir("Wurst", "WurstTeam"))
 
 
-def get_run_id():
+def get_uuid():
     return uuid.uuid4().hex
 
 
@@ -38,7 +38,7 @@ def get_log_filepath(run_id):
 def create_log(run_id=None):
     """Create and setup a JSON logger"""
     if not run_id:
-        run_id = get_run_id()
+        run_id = get_uuid()
     filepath = get_log_filepath(run_id)
 
     logger = logging.getLogger('wurst')

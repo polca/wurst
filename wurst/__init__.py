@@ -23,3 +23,13 @@ from .transformations import (
     delete_zero_amount_exchanges,
     rescale_exchange,
 )
+
+
+import logging
+logger = logging.getLogger('wurst')
+
+def log(message, ds):
+    FIELDS = ('database', 'code', 'name', 'reference product',
+              'unit', 'location')
+    message.update({key: ds.get(key) for key in FIELDS})
+    logger.info(message)
