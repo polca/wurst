@@ -1,4 +1,4 @@
-from . import log
+from .. import log
 from ..ecoinvent import ecoinvent_faces
 from ..IMAGE.metadata import IMAGE_REGION_FACES
 from ..searching import reference_product
@@ -17,7 +17,7 @@ def copy_to_new_location(ds, location):
     log({
         'function': 'copy_to_new_location',
         'message': MESSAGE.format(old=ds['location'], new=location)
-    })
+    }, ds)
 
     cp = copy_dataset(ds)
     cp['location'] = location
@@ -49,10 +49,11 @@ def relink_technosphere_exchanges(ds, data, include_row_cutoff=3):
     faces = get_faces(ds['location'])
     inside = lambda x: not get_faces(x['location']).difference(faces)
     drop_row_global = lambda lst: [o for o in lst if o['location'] not in ('RoW', 'GLO')]
-
+    MESSAGE = "Relinked technosphere exchange of {}/{}/{} from {}/{} to {}/{}."
     new_exchanges = []
+    technosphere = lambda x: x['type'] == 'technosphere'
 
-    for exc in ds['exchanges'] if exc['type'] == 'technosphere':
+    for exc in filter(technosphere, ds['exchanges']):
         possibles = sorted(
             [obj for obj in get_possibles(exc, data) if inside(obj)],
             key=len(get_faces(obj['location'])),
@@ -64,7 +65,14 @@ def relink_technosphere_exchanges(ds, data, include_row_cutoff=3):
             usable = drop_row_global(usable)
         allocated = allocate_inputs(exc, usable)
 
-        # Some logging here
+        for obj in allocated:
+            log({
+                'function': 'relink_technosphere_exchanges',
+                'message': MESSAGE.format(
+                    exc['name'], exc['product'], exc['unit'], exc['amount'],
+                    ds['location'], obj['amount'], obj['location']
+                )
+            }, ds)
 
         new_exchanges.extend(allocated)
 
