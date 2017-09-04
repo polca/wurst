@@ -1,7 +1,7 @@
 from .. import log
 from ..ecoinvent import ecoinvent_faces
 from ..IMAGE.metadata import IMAGE_REGION_FACES
-from ..searching import reference_product
+from ..searching import reference_product, get_many, equals
 from .uncertainty import rescale_exchange
 from .utils import copy_dataset
 from copy import deepcopy
@@ -142,3 +142,11 @@ def get_faces(location):
         return IMAGE_REGION_FACES[location]
     else:
         raise KeyError("Can't find location {} in ecoinvent or IMAGE".format(location))
+
+def default_global_location(database):
+    """Set missing locations to ```GLO``` for datasets in ``database``.
+
+    Changes location if ``location`` is missing or ``None``. Will add key ``location`` if missing."""
+    for ds in get_many(database, *[equals('location', None) ]):
+        ds['location'] = 'GLO'
+    return database

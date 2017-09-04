@@ -204,3 +204,22 @@ def test_relink_technosphere_exchanges():
 
 def test_relink_technosphere_exchanges_row_cutoff():
     pass
+
+def test_default_global_location():
+    given = [{
+        'location': 'something',
+    }, {
+        'location': None
+    }, {
+        'foo': 'bar'
+    }]
+    expected = [{
+        'location': 'something',
+    }, {
+        'location': 'GLO'
+    }, {
+        'foo': 'bar',
+        'location': 'GLO'
+    }]
+    problem = [{'foo': 'bar'}]
+    assert default_global_location(given) == expected
