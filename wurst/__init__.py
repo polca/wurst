@@ -1,6 +1,16 @@
 __version__ = (0, 1, "dev")
 
 
+import logging
+logger = logging.getLogger('wurst')
+
+def log(message, ds):
+    FIELDS = ('database', 'code', 'name', 'reference product',
+              'unit', 'location')
+    message.update({key: ds.get(key) for key in FIELDS})
+    logger.info(message)
+
+
 from .brightway import extract_brightway2_databases, write_brightway2_database
 from .filesystem import create_log, create_dir
 from .searching import (
@@ -20,16 +30,7 @@ from .searching import (
 from .ecoinvent import ECOINVENT_ORDERED_GEO
 from .transformations import (
     change_exchanges_by_constant_factor,
+    default_global_location,
     delete_zero_amount_exchanges,
     rescale_exchange,
 )
-
-
-import logging
-logger = logging.getLogger('wurst')
-
-def log(message, ds):
-    FIELDS = ('database', 'code', 'name', 'reference product',
-              'unit', 'location')
-    message.update({key: ds.get(key) for key in FIELDS})
-    logger.info(message)
