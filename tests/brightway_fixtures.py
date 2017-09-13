@@ -42,7 +42,10 @@ try:
             'location': 'CA',
             'name': 'lunch',
             'type': 'process',
-            'unit': 'kg'
+            'unit': 'kg',
+            'parameters':   {
+                'losses_gross_net': {'amount': 0.01}
+                },
             },
         ("food", '2'): {
             'categories': ['stuff', 'meals'],

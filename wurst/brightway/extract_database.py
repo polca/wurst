@@ -16,7 +16,9 @@ def extract_activity(proxy):
         'name': proxy.name,
         'reference product': proxy.product,
         'unit': proxy.data.get('unit', ''),
-        'exchanges': []
+        'exchanges': [],
+        'parameters': {key: value['amount'] for
+                       key, value in proxy.data.get('parameters', {}).items()}
     }
 
 

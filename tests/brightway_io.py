@@ -34,7 +34,8 @@ if test_bw2_database is not None:
                 'location': 'CA',
                 'name': 'lunch',
                 'reference product': 'stuff',
-                'unit': 'kg'
+                'unit': 'kg',
+                'parameters': {'losses_gross_net': 0.01}
             }, {
                 'classifications': [],
                 'code': '2',
@@ -61,11 +62,12 @@ if test_bw2_database is not None:
                 'location': 'CH',
                 'name': 'dinner',
                 'reference product': None,
-                'unit': 'kg'
+                'unit': 'kg',
+                'parameters': {},
             }
         ]
 
-        extract_brightway2_databases("food") == expected
+        assert extract_brightway2_databases("food") == expected
 
     @bw2test
     def test_extraction_missing_database():
