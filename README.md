@@ -1,6 +1,6 @@
 # Wurst
 
-[![Build Status](https://travis-ci.org/cmutel/wurst.svg?branch=master)](https://travis-ci.org/cmutel/wurst) [![Coverage Status](https://coveralls.io/repos/github/cmutel/wurst/badge.svg?branch=master)](https://coveralls.io/github/cmutel/wurst?branch=master) [![Docs](https://readthedocs.org/projects/wurst/badge/?version=latest)](https://wurst.readthedocs.io/)
+[![Build Status](https://travis-ci.org/IndEcol/wurst.svg?branch=master)](https://travis-ci.org/IndEcol/wurst) [![Coverage Status](https://coveralls.io/repos/github/IndEcol/wurst/badge.svg?branch=master)](https://coveralls.io/github/IndEcol/wurst?branch=master) [![Docs](https://readthedocs.org/projects/wurst/badge/?version=latest)](https://wurst.readthedocs.io/)
 
 Show how the sausage is made!
 
