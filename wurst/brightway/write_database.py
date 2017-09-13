@@ -39,6 +39,12 @@ def write_brightway2_database(data, name):
     Doesn't return anything."""
     assert name not in databases, "This database already exists"
 
+    # Restore parameters to Brightway2 format which allows for uncertainty and comments
+    for ds in data:
+        if 'parameters' in ds:
+            ds['parameters'] = {name: {'amount': amount}
+                                for name, amount in ds['parameters'].items()}
+
     change_db_name(data, name)
     link_internal(data)
     check_internal_linking(data)
