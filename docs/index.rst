@@ -66,7 +66,7 @@ The internal data format for Wurst is a subset of the implied internal format fo
                 'amount': float,
                 'categories': list,  # only for biosphere flows
                 'type': str,  # biosphere, techosphere, production
-                'activity': str,
+                'name': str,
                 'product': str,
                 'unit': str,
                 'location': str,

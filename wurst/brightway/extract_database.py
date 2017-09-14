@@ -65,7 +65,7 @@ def add_input_info_for_indigenous_exchanges(activities, names):
                 continue
             obj = lookup[exc['input']]
             exc['product'] = obj['reference product']
-            exc['activity'] = obj['name']
+            exc['name'] = obj['name']
             exc['unit'] = obj['unit']
             exc['location'] = obj['location']
             if exc['type'] == 'biosphere':
@@ -88,7 +88,7 @@ def add_input_info_for_external_exchanges(activities, names):
                     ActivityDataset.code == exc['input'][1],
                 )
             obj = cache[exc['input']]
-            exc['activity'] = obj.name
+            exc['name'] = obj.name
             exc['product'] = obj.product
             exc['unit'] = obj.data['unit']
             exc['location'] = obj.location
