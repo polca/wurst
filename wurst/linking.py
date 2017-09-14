@@ -6,7 +6,7 @@ from pprint import pformat
 get_input_databases = lambda data: {ds['database'] for ds in data}
 
 
-def link_internal(data, fields=('activity', 'product', 'location', 'unit')):
+def link_internal(data, fields=('name', 'product', 'location', 'unit')):
     """Link internal exchanges by ``fields``. Creates ``input`` field in newly-linked exchanges."""
     input_databases = get_input_databases(data)
     get_tuple = lambda exc: tuple([exc[f] for f in fields])

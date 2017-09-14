@@ -110,7 +110,7 @@ all_providers = high_voltage_providers.union(medium_voltage_providers).union(low
 
 def set_conversion_to_one_kwh(ds, conversion):
     for exc in ds['exchanges']:
-        if exc['activity'] == conversion:
+        if exc['name'] == conversion:
             exc['amount'] = 1
 
 
@@ -119,7 +119,7 @@ def empty_low_voltage_markets(data):
 
     for ds in get_many(data, is_low_voltage):
         ds['exchanges'] = [exc for exc in ds['exchanges']
-                           if exc['activity'] not in all_providers]
+                           if exc['name'] not in all_providers]
         set_conversion_to_one_kwh(ds, medium_voltage_transformation)
     return data
 
@@ -129,7 +129,7 @@ def empty_medium_voltage_markets(data):
 
     for ds in get_many(data, is_medium_voltage):
         ds['exchanges'] = [exc for exc in ds['exchanges']
-                           if exc['activity'] not in all_providers]
+                           if exc['name'] not in all_providers]
         set_conversion_to_one_kwh(ds, high_voltage_transformation)
     return data
 
@@ -139,5 +139,5 @@ def empty_high_voltage_markets(data):
 
     for ds in get_many(data, is_high_voltage):
         ds['exchanges'] = [exc for exc in ds['exchanges']
-                           if exc['activity'] not in all_providers]
+                           if exc['name'] not in all_providers]
     return data

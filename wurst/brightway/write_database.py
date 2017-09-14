@@ -29,7 +29,7 @@ def write_brightway2_database(data, name):
     This function will do the following:
 
     * Change the database name for all activities and internal exchanges to ``name``. All activities will have the new ``name``, even if the original data came from multiple databases.
-    * Relink exchanges using the default fields: ``('activity', 'product', 'location', 'unit')``.
+    * Relink exchanges using the default fields: ``('name', 'product', 'location', 'unit')``.
     * Check that all internal links resolve to actual activities, If the ``input`` value is ``('foo', 'bar')``, there must be an activity with the code ``bar``.
     * Check to make sure that all activity codes are unique
     * Write the data to a new Brightway2 SQLite
