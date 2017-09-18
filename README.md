@@ -22,3 +22,9 @@ BSD 2-clause license. Contributions are welcome!
 
 * Chris Mutel
 * Brian Cox
+
+## TODO
+
+* Review BW2 IO code to make sure all needed fields are present in newly-created and modified databases
+* Parameterized exchanges (e.g. electricity sector)
+* Log browser web app
