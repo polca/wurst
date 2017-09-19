@@ -5,7 +5,7 @@ Show how the sausage is made!
 
 Wurst is a python package for linking and modifying industrial ecology models, with a focus on sparse matrices in life cycle assessment. Current development focuses on modifying the ecoinvent LCI database with scenario data from various data sources, using Brightway2 as the data backend.
 
-See an `example notebook <https://github.com/cmutel/wurst/blob/master/docs/notebooks/marginal-mixes.ipynb>`__ to see a typical use case for wurst.
+See also the separate `wurst examples <https://github.com/IndEcol/wurst-examples>`__ repository.
 
 A wurst model run will typically consist of the following steps:
 
@@ -15,9 +15,10 @@ A wurst model run will typically consist of the following steps:
 
 Wurst supports the following generic modification types:
 
-* Change the input material efficiency and associated emissions
+* Change the input material efficiency and associated emissions (``change_exchanges_by_constant_factor``)
 * Change specific emissions separate from general efficiency improvements
 * Change the relative shares of inputs (including adding new inputs) into markets
+* Separate a global dataset into separate regions
 
 In general, a modification function will include the following steps:
 
