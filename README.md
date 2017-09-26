@@ -16,10 +16,10 @@ See also the separate [wurst examples](https://github.com/IndEcol/wurst-examples
 
 ## Installation
 
-Wurst can be installed in its development version using Anaconda. First, follow the [Brightway2 installation instructions](https://docs.brightwaylca.org/installation.html#quickstart). Then, in the *same environment*, do the following:
+Wurst can be installed in its development version using Anaconda. First, follow the [Brightway2 installation instructions](https://docs.brightwaylca.org/installation.html#quickstart). Then, in the *same environment as Brightway*, do the following:
 
-conda install -c cmutel -c conda-forge constructive_geometries
-pip install https://github.com/IndEcol/wurst/archive/master.zip
+    conda install -c cmutel -c conda-forge constructive_geometries
+    pip install https://github.com/IndEcol/wurst/archive/master.zip
 
 ## License
 
