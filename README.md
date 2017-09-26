@@ -14,6 +14,13 @@ Wurst is a python package for linking and modifying industrial ecology models, w
 
 See also the separate [wurst examples](https://github.com/IndEcol/wurst-examples) repository.
 
+## Installation
+
+Wurst can be installed in its development version using Anaconda. First, follow the [Brightway2 installation instructions](https://docs.brightwaylca.org/installation.html#quickstart). Then, in the *same environment*, do the following:
+
+conda install -c cmutel -c conda-forge constructive_geometries
+pip install https://github.com/IndEcol/wurst/archive/master.zip
+
 ## License
 
 BSD 2-clause license. Contributions are welcome!
