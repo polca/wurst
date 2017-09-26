@@ -1,8 +1,9 @@
 import os
 import json
+from constructive_geometries import ConstructiveGeometries
 
-faces_filepath = os.path.join(os.path.dirname(__file__), "metadata", "faces.json")
-ecoinvent_faces = {x: set(y) for x, y in json.load(open(faces_filepath))['data']}
+cg = ConstructiveGeometries()
+ecoinvent_faces = {x: set(y) for x, y in cg.data.items() if x != "__all__"}
 
 
 def ecoinvent_within(data, location):
@@ -29,10 +30,9 @@ def get_ordered_geo_relationships():
 
     res = {region: [region] + _(sorted([(len(b), a)
         for a, b in ecoinvent_faces.items()
-        if a not in (region, '__all__')
+        if a != region
         and not faces.difference(b)]))
-    for region, faces in ecoinvent_faces.items()
-    if region != "__all__"}
+    for region, faces in ecoinvent_faces.items()}
 
     res['RoW'] = ['RoW', 'GLO']
     res['GLO'] = ['GLO', 'RoW']

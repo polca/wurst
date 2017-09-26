@@ -1,3 +1,4 @@
+from constructive_geometries import ConstructiveGeometries
 from wurst.transformations.geo import *
 import pytest
 
@@ -164,12 +165,12 @@ def test_get_possibles():
     assert list(get_possibles(exc, given)) == expected
 
 def test_get_faces():
+    cg = ConstructiveGeometries()
+
     assert get_faces("RoW") == set()
     assert get_faces("GLO") == set()
-    assert get_faces("AS") == {3969,3972,3978,3979,3980}
-    japan = get_faces("Japan")
-    assert not {1837,1838,1839,1840}.difference(japan)
-    assert len(japan) == 282
+    assert get_faces("AS") == set(cg.data['AS'])
+    assert get_faces("Japan") == set(cg.data['JP'])
 
     with pytest.raises(KeyError):
         get_faces("Nope")

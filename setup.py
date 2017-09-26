@@ -23,11 +23,13 @@ setup(
     license=open('LICENSE').read(),
     install_requires=[
         "appdirs",
+        "constructive_geometries",
         "docopt",
         "numpy",
         "pandas",
         "python-json-logger",
         "tqdm",
+        "wrapt",
     ],
     entry_points = {
         'console_scripts': [
