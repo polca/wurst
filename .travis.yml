@@ -12,7 +12,7 @@ before_install:
   - conda info -a
   - conda create -q -n test-environment python=3.6
   - source activate test-environment
-  - conda install -q -c conda-forge -c cmutel -c haasad brightway2 jupyter numpy pandas toolz cytoolz python-json-logger tqdm
+  - conda install -q -c conda-forge -c cmutel -c haasad brightway2 jupyter numpy pandas toolz cytoolz python-json-logger tqdm constructive_geometries
   - echo $(python --version)
   - pip install pytest pytest-cov python-coveralls
 install: "python setup.py develop"
