@@ -108,7 +108,10 @@ high_voltage_mix = 'market for electricity, high voltage'
 
 all_providers = high_voltage_providers.union(medium_voltage_providers).union(low_voltage_providers)
 
-include_filter = lambda x: 'import from' not in x['name'] and x['name'] not in all_providers
+
+def include_filter(exc):
+    return exc['unit'] != 'kilowatt hour' or (
+        'import from' not in exc['name'] and exc['name'] not in all_providers)
 
 
 def set_conversion_to_one_kwh(ds, conversion):
