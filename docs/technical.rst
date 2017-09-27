@@ -58,6 +58,16 @@ Transformations
 
 .. autofunction:: wurst.transformations.activity.change_exchanges_by_constant_factor
 
+.. autofunction:: wurst.transformations.copy_to_new_location
+
+.. autofunction:: wurst.transformations.relink_technosphere_exchanges
+
+.. autofunction:: wurst.transformations.delete_zero_amount_exchanges
+
+.. autofunction:: wurst.transformations.rescale_exchange
+
+.. autofunction:: wurst.transformations.default_global_location
+
 Brightway2 IO
 -------------
 

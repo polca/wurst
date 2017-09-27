@@ -30,7 +30,9 @@ from .searching import (
 from .ecoinvent import ECOINVENT_ORDERED_GEO
 from .transformations import (
     change_exchanges_by_constant_factor,
+    copy_to_new_location,
     default_global_location,
     delete_zero_amount_exchanges,
+    relink_technosphere_exchanges,
     rescale_exchange,
 )
