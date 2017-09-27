@@ -25,6 +25,7 @@ MOCK_MODULES = [
   "tqdm",
   "pythonjsonlogger",
   "appdirs",
+  "numpy",
   # "fiona.crs",
   # "numpy",
   # "pyproj",
