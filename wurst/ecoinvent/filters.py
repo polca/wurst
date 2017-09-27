@@ -1,78 +1,60 @@
 from ..searching import *
 
+_combined_cycle = contains('name', 'combined cycle')
+_electricity = contains('name', 'electricity')
+_heat_and_power = contains('name', 'heat and power')
+_kwh = equals('unit', 'kilowatt hour')
+_nuclear = contains('name', 'nuclear')
+_oil = contains('name', ' oil')
+_wood_biomass = either(contains('name', ' wood'), contains('name', 'bio'))
+_coal = either(contains('name', 'hard coal'), contains('name', 'lignite'))
+_ng = contains('name', 'natural gas')
+
 coal_electricity = [
-    either(contains('name', 'hard coal'), contains('name', 'lignite')),
-    contains('name', 'electricity'),  # Do we need this?
-    equals('unit', 'kilowatt hour'),
+    _coal, _electricity, _kwh
 ]
 
 coal_chp_electricity = [
-    either(contains('name', 'hard coal'), contains('name', 'lignite')),
-    contains('name', 'heat and power'),
-    equals('unit', 'kilowatt hour')
+    _coal, _heat_and_power, _kwh
 ]
 
 gas_open_cycle_electricity = [
-    contains('name', 'natural gas'),
-    contains('name', 'electricity'),
-    equals('unit', 'kilowatt hour'),
-    exclude(contains('name', 'combined cycle')),
+    _ng, _electricity, _kwh, _combined_cycle
 ]
 
 gas_combined_cycle_electricity = [
     contains('name', 'electricity production, natural gas, combined cycle power plant'),
-    contains('name', 'electricity'),
-    equals('unit', 'kilowatt hour'),
+    _electricity, _kwh
 ]
 
 gas_chp_electricity = [
-    contains('name', 'natural gas'),
-    contains('name', 'heat and power'),
-    equals('unit', 'kilowatt hour'),
+    _ng, _heat_and_power, _kwh
 ]
 
 oil_open_cycle_electricity = [
-    contains('name', 'oil'),
-    contains('name', 'electricity'),
-    equals('unit', 'kilowatt hour'),
-    exclude(contains('name', 'combined cycle')),
+    _oil, _electricity, _kwh, exclude(_combined_cycle),
 ]
 
 oil_combined_cycle_electricity = [
-    contains('name', 'oil'),
-    contains('name', 'electricity'),
-    equals('unit', 'kilowatt hour'),
-    contains('name', 'combined cycle'),
+    _oil, _kwh, _electricity, _combined_cycle,
 ]
 
 oil_chp_electricity = [
-    contains('name', 'oil'),
-    contains('name', 'heat and power'),
-    equals('unit', 'kilowatt hour'),
+    _oil, _heat_and_power, _kwh
 ]
 
 biomass_electricity = [
-    either(contains('name', 'wood'), contains('name', 'bio')),
-    contains('name', 'electricity'),
-    equals('unit', 'kilowatt hour')
+    _wood_biomass, _electricity, _kwh
 ]
 
 biomass_chp_electricity = [
-    either(contains('name', 'wood'), contains('name', 'bio')),
-    contains('name', 'heat and power'),
-    equals('unit', 'kilowatt hour'),
-    exclude(contains('name', 'combined cycle')),
+    _wood_biomass, _heat_and_power, _kwh, _combined_cycle
 ]
 
 biomass_combined_cycle_electricity = [
-    either(contains('name', 'wood'), contains('name', 'bio')),
-    contains('name', 'electricity'),
-    contains('name', 'combined cycle'),
-    equals('unit', 'kilowatt hour'),
+    _wood_biomass, _electricity, _kwh, _combined_cycle
 ]
 
 nuclear_electricity = [
-    contains('name', 'nuclear'),
-    contains('name', 'electricity'),
-    equals('unit', 'kilowatt hour')
+    _nuclear, _electricity, _kwh
 ]
