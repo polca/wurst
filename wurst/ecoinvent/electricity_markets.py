@@ -1,4 +1,5 @@
-from ..searching import get_many
+from ..searching import get_many, equals
+from functools import partial
 
 
 def get_generators_in_mix(db, name="market for electricity, high voltage"):
@@ -107,6 +108,8 @@ high_voltage_mix = 'market for electricity, high voltage'
 
 all_providers = high_voltage_providers.union(medium_voltage_providers).union(low_voltage_providers)
 
+include_filter = lambda x: 'import from' not in x['name'] and x['name'] not in all_providers
+
 
 def set_conversion_to_one_kwh(ds, conversion):
     for exc in ds['exchanges']:
@@ -114,30 +117,18 @@ def set_conversion_to_one_kwh(ds, conversion):
             exc['amount'] = 1
 
 
-def empty_low_voltage_markets(data):
-    is_low_voltage = lambda x: x['name'] == low_voltage_mix
+def _empty(data, kind):
+    for ds in get_many(data, equals('name', kind)):
+        ds['exchanges'] = list(filter(include_filter, ds['exchanges']))
 
-    for ds in get_many(data, is_low_voltage):
-        ds['exchanges'] = [exc for exc in ds['exchanges']
-                           if exc['name'] not in all_providers]
-        set_conversion_to_one_kwh(ds, medium_voltage_transformation)
+        if kind == low_voltage_mix:
+            set_conversion_to_one_kwh(ds, medium_voltage_transformation)
+        elif kind == medium_voltage_mix:
+            set_conversion_to_one_kwh(ds, high_voltage_transformation)
+
     return data
 
 
-def empty_medium_voltage_markets(data):
-    is_medium_voltage = lambda x: x['name'] == medium_voltage_mix
-
-    for ds in get_many(data, is_medium_voltage):
-        ds['exchanges'] = [exc for exc in ds['exchanges']
-                           if exc['name'] not in all_providers]
-        set_conversion_to_one_kwh(ds, high_voltage_transformation)
-    return data
-
-
-def empty_high_voltage_markets(data):
-    is_high_voltage = lambda x: x['name'] == high_voltage_mix
-
-    for ds in get_many(data, is_high_voltage):
-        ds['exchanges'] = [exc for exc in ds['exchanges']
-                           if exc['name'] not in all_providers]
-    return data
+empty_low_voltage_markets = partial(_empty, kind=low_voltage_mix)
+empty_medium_voltage_markets = partial(_empty, kind=medium_voltage_mix)
+empty_high_voltage_markets = partial(_empty, kind=high_voltage_mix)
