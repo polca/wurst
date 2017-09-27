@@ -68,6 +68,8 @@ Transformations
 
 .. autofunction:: wurst.transformations.default_global_location
 
+.. autofunction:: wurst.transformations.empty_market_dataset
+
 Brightway2 IO
 -------------
 
