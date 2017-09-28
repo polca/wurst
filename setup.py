@@ -24,6 +24,7 @@ setup(
     install_requires=[
         "appdirs",
         "constructive_geometries",
+        "country_converter",
         "docopt",
         "numpy",
         "pandas",

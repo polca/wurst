@@ -27,7 +27,6 @@ from .searching import (
     startswith,
     technosphere,
 )
-from .ecoinvent import ECOINVENT_ORDERED_GEO
 from .transformations import (
     change_exchanges_by_constant_factor,
     copy_to_new_location,

@@ -131,7 +131,7 @@ The difference between the styles is ultimately a question of personal preferenc
 * Always manually check the results of your filtering functions before using them! The world is a complicated place, and our data sources reflect that complexity with unexpected or inconsistent elements.
 * It is strongly recommended to use generator instead of list comprehensions, i.e. ``(x for x in foo)`` instead of ``[x for x in foo]``.
 
-See the :ref:`API documentation for searching <tech-searching>`, and: `itertools <https://docs.python.org/3/library/itertools.html>`__, `functools <https://docs.python.org/3/library/functools.html>`__, `toolz <https://toolz.readthedocs.io/en/latest/index.html>`__.
+For more information, see the `introduction notebook <FIXME>`__, :ref:`API documentation for searching <tech-searching>`, and: `itertools <https://docs.python.org/3/library/itertools.html>`__, `functools <https://docs.python.org/3/library/functools.html>`__, `toolz <https://toolz.readthedocs.io/en/latest/index.html>`__ libraries.
 
 Exchange iterators
 ------------------
@@ -155,6 +155,18 @@ The ``output`` field is not needed - this is the activity in question, which con
 The default Brightway2 importer will remove the ``input`` field for exchanges which are provided by another activity in the same set of input datasets. Instead of an ``input`` field, the exchange will have an activity name, a flow name, a location, and a unit. This metadata is useful if you want to edit or create new exchange links.
 
 The Brightway2 exporter will automatically re-link (i.e. find the correct ``input`` values) exchanges when writing a new database. You can also manually create ``input`` values - no ``input`` value will be overwritten. In the database component of the ``input`` field, you can either use the name of the new database to be written, or the name of one of the input databases (it will be updated automatically).
+
+Spatial relationships
+=====================
+
+.. figure:: media/topology.png
+    :align: center
+
+    Topological faces in Northeastern Canada, showing both political and geographical divisions.
+
+Wurst uses the `constructive_geometries <https://bitbucket.org/cmutel/py-constructive-geometries>`__ library to make spatial calculations easy. As shown above, ``constructive_geometries`` splits the world into a consistent set of `topological faces <https://postgis.net/docs/manual-2.2/Topology.html>`__, identified by integer ID values. This means that we can skip GIS functions like intersects, overlaps, etc. and instead use set algebra.
+
+``constructive_geometries`` is based on the `natural earth database <https://www.naturalearthdata.com>`__, and includes all countries, `UN regions and subregions <https://unstats.un.org/unsd/methodology/m49/>`__, some disputed areas, and a number of ecoinvent-specific regions; for full documentation, ; see the `ecoinvent report <https://geography.ecoinvent.org/report/>`__ for a complete list. Countries are identified by their two-letter `ISO 3166-2 codes <https://en.wikipedia.org/wiki/ISO_3166-2>`__.
 
 Brightway2 IO
 =============
