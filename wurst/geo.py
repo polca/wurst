@@ -34,12 +34,12 @@ class Geomatcher:
             for x, y in sorted([
                     k, len(v.intersection(faces))
                     for k, v in self.topology.items()
-                    if v.intersection(faces)
+                    if faces.intersection(v)
                 ], reverse=True, key=lambda x: x[1])
         ])
 
-    def contains(self, key, include_self=True):
-        """Get all locations that contain this location, in order of number of faces (lowest first)"""
+    def contained(self, key, include_self=True):
+        """Get all locations contained by this location, in order of number of faces (highest first)"""
         def _(answer):
             if not include_self:
                 answer.pop(answer.index(key))
@@ -51,14 +51,14 @@ class Geomatcher:
         faces = self.topology(self.as_valid_key(key))
         return  _([x
             for x, y in sorted([
-                    k, len(v.intersection(faces))
+                    k, len(v)
                     for k, v in self.topology.items()
-                    if v.intersection(faces)
-                ], reverse=True, key=lambda x: x[1])
+                    if faces.issuperset(v)
+                ], key=lambda x: x[1])
         ])
 
     def within(self, key, include_self=True):
-        """Get all locations that are contained by this location, in order of number of faces (highest first)"""
+        """Get all locations that are contained by this location, in order of number of faces (lowest first)"""
         def _(answer):
             if not include_self:
                 answer.pop(answer.index(key))
@@ -70,20 +70,20 @@ class Geomatcher:
         faces = self.topology(self.as_valid_key(key))
         return  _([x
             for x, y in sorted([
-                    k, len(v.intersection(faces))
+                    k, len(v)
                     for k, v in self.topology.items()
-                    if v.intersection(faces)
+                    if faces.issubset(v)
                 ], reverse=True, key=lambda x: x[1])
         ])
 
     def split_face(self, face, number=None, ids=None):
         """Split a topological face into a number of small faces.
 
-    * ``face``: The face to split. Must be in the topology.
-    * ``number``: Number of new faces to create. Optional, can be inferred from ``ids``. Default is 2 new faces.
-    * ``ids``: Iterable of new face ids. Optional, default is the maximum integer in the existing topology plus one. ``ids`` don't have to be integers. If ``ids`` is specified, ``number`` is ignored.
+        * ``face``: The face to split. Must be in the topology.
+        * ``number``: Number of new faces to create. Optional, can be inferred from ``ids``. Default is 2 new faces.
+        * ``ids``: Iterable of new face ids. Optional, default is the maximum integer in the existing topology plus one. ``ids`` don't have to be integers. If ``ids`` is specified, ``number`` is ignored.
 
-    Returns the new face ids.
+        Returns the new face ids.
 
         """
         assert face in self.faces
@@ -104,6 +104,28 @@ class Geomatcher:
 
         return ids
 
+    def add_definitions(self, data, relative=True):
+        """Add new topological definitions to ``self.topology``.
+
+        If ``relative`` is true, then ``data`` is defined relative to the existing locations already in ``self.topology``, e.g. IMAGE:
+
+        .. code-block:: python
+
+            {"Russia Region": [
+                "AM",
+                "AZ",
+                "GE",
+                "RU"
+            ]}
+
+        Otherwise, ``data`` is a dictionary with integer topology face ids.
+
+        """
+        if not relative:
+            self.topology.update(data)
+        else:
+            for key, v in data.items():
+                pass
 
 
 geomatcher = Geomatcher()
