@@ -4,85 +4,112 @@ import country_converter as coco
 
 
 class Geomatcher:
-    def __init__(self, topology='ecoinvent'):
+    __seen = set()
+
+    def __init__(self, topology='ecoinvent', default_namespace=None):
         if topology == 'ecoinvent':
+            def ns(x):
+                if len(x) == 2 or x in {'RoW', 'GLO'}:
+                    return x
+                else:
+                    return ('ecoinvent', x)
+
             cg = ConstructiveGeometries()
-            self.topology = {x: set(y) for x, y in cg.data.items()
+            self.topology = {ns(x): set(y) for x, y in cg.data.items()
                              if x != "__all__"}
+            self.default_namespace = 'ecoinvent'
         else:
             self.topology = topology
+            self.default_namespace = default_namespace
         self.faces = set.union(*[set(x) for x in self.topology.values()])
 
     def __getitem__(self, key):
-        if key in {'RoW', 'GLO'}:
+        if key in {"RoW", "GLO"}:
             return set()
-        return self.topology[self._as_valid_key(key)]
+        return self.topology[self._actual_key(key)]
 
-    def _as_valid_key(self, key):
-        key = coco.convert(names=[key], to='ISO2', not_found=None)
-        if not isinstance(key, str):
-            key = key[0]
-        if key in self.topology:
+    def _actual_key(self, key):
+        if key in {"RoW", "GLO"}:
             return key
-        else:
-            raise KeyError("Can't find this location")
+        elif key in self.topology:
+            return key
+        elif (self.default_namespace, key) in self.topology:
+            return (self.default_namespace, key)
 
-    def intersects(self, key, include_self=True):
-        """Get all locations that intersect this location, in order of number of faces (highest first)"""
-        def _(answer):
-            if not include_self:
-                answer.pop(answer.index(key))
-            return answer
+        if isinstance(key, str):
+            new = coco.convert(names=[key], to='ISO2', not_found=None)
+            if new in self.topology:
+                if new not in self.__seen:
+                    self.__seen.add(key)
+                    print("Geomatcher: Used '{}' for '{}'".format(new, key))
+                return new
 
+        raise KeyError("Can't find this location")
+
+    def _finish_filter(self, lst, key, include_self, exclusive, biggest_first):
+        key = self._actual_key(key)
+        if not include_self:
+            lst.pop(lst.index(key))
+        lst.sort(key=lambda x: x[1], reverse=biggest_first)
+        lst = [x for x, y in lst]
+        if exclusive:
+            removed, remaining = set(), []
+            while lst:
+                current = lst.pop(0)
+                faces = self[current]
+                if not faces.intersection(removed):
+                    removed.update(faces)
+                    remaining.append(current)
+            lst = remaining
+        return lst
+
+    def intersects(self, key, include_self=False, exclusive=False, biggest_first=True):
+        """Get all locations that intersect this location."""
         if key in ('RoW', 'GLO'):
-            return _(['GLO', 'RoW'])
+            return self._finish_filter(
+                [("GLO", 2), ("RoW", 1)],
+                key, include_self, exclusive, biggest_first
+            )
 
         faces = self[key]
-        return  _([x
-            for x, y in sorted([
-                    (k, len(v.intersection(faces)))
-                    for k, v in self.topology.items()
-                    if faces.intersection(v)
-                ], reverse=True, key=lambda x: x[1])
-        ])
+        lst = [
+            (k, len(v.intersection(faces)))
+            for k, v in self.topology.items()
+            if faces.intersection(v)
+        ]
+        return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
-    def contained(self, key, include_self=True):
-        """Get all locations contained by this location, in order of number of faces (highest first)"""
-        def _(answer):
-            if not include_self:
-                answer.pop(answer.index(key))
-            return answer
-
+    def contained(self, key, include_self=True, exclusive=False, biggest_first=True):
+        """Get all locations contained by this location."""
         if key in ('RoW', 'GLO'):
-            return _(['GLO', 'RoW'])
+            return self._finish_filter(
+                [("GLO", 2), ("RoW", 1)],
+                key, include_self, exclusive, biggest_first
+            )
 
         faces = self[key]
-        return  _([x
-            for x, y in sorted([
-                    (k, len(v))
-                    for k, v in self.topology.items()
-                    if faces.issuperset(v)
-                ], key=lambda x: x[1])
-        ])
+        lst = [
+            (k, len(v))
+            for k, v in self.topology.items()
+            if faces.issuperset(v)
+        ]
+        return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
-    def within(self, key, include_self=True):
-        """Get all locations that are contained by this location, in order of number of faces (lowest first)"""
-        def _(answer):
-            if not include_self:
-                answer.pop(answer.index(key))
-            return answer
-
+    def within(self, key, include_self=True, exclusive=False):
+        """Get all locations that are contained by this location."""
         if key in ('RoW', 'GLO'):
-            return _(['GLO', 'RoW'])
+            return self._finish_filter(
+                [("GLO", 2), ("RoW", 1)],
+                key, include_self, exclusive, biggest_first
+            )
 
         faces = self[key]
-        return  _([x
-            for x, y in sorted([
-                    (k, len(v))
-                    for k, v in self.topology.items()
-                    if faces.issubset(v)
-                ], reverse=True, key=lambda x: x[1])
-        ])
+        lst = [
+            (k, len(v))
+            for k, v in self.topology.items()
+            if faces.issubset(v)
+        ]
+        return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
     def split_face(self, face, number=None, ids=None):
         """Split a topological face into a number of small faces.
@@ -112,7 +139,7 @@ class Geomatcher:
 
         return ids
 
-    def add_definitions(self, data, relative=True):
+    def add_definitions(self, data, namespace, relative=True):
         """Add new topological definitions to ``self.topology``.
 
         If ``relative`` is true, then ``data`` is defined relative to the existing locations already in ``self.topology``, e.g. IMAGE:
@@ -130,11 +157,13 @@ class Geomatcher:
 
         """
         if not relative:
-            self.topology.update(data)
+            self.topology.update({(namespace, k): v for k, v in data.items()})
         else:
-            for key, v in data.items():
-                pass
+            self.topology.update({
+                (namespace, k): set.union(*[self[o] for o in v])
+                for k, v in data.items()
+            })
 
 
 geomatcher = Geomatcher()
-geomatcher.add_definitions(IMAGE_TOPOLOGY, relative=True)
+geomatcher.add_definitions(IMAGE_TOPOLOGY, "IMAGE", relative=True)
