@@ -1,6 +1,5 @@
 from .. import log
-from ..ecoinvent import ecoinvent_faces
-from ..IMAGE.metadata import IMAGE_REGION_FACES
+from ..geo import geomatcher
 from ..searching import reference_product, get_many, equals
 from .uncertainty import rescale_exchange
 from .utils import copy_dataset
@@ -46,8 +45,8 @@ def relink_technosphere_exchanges(ds, data, include_row_cutoff=3):
     * Allocate inputs using normalized production volumes, if a) all inputs have positive production volumes, and b) ``RoW`` or ``GLO`` are not in the list of inputs. Otherwise, use equal allocation among inputs.
 
     Modifies the dataset in place; returns the modified dataset."""
-    faces = get_faces(ds['location'])
-    inside = lambda x: not get_faces(x['location']).difference(faces)
+    faces = geomatcher[ds['location']]
+    inside = lambda x: not geomatcher[x['location']].difference(faces)
     drop_row_global = lambda lst: [o for o in lst if o['location'] not in ('RoW', 'GLO')]
     MESSAGE = "Relinked technosphere exchange of {}/{}/{} from {}/{} to {}/{}."
     new_exchanges = []
@@ -56,7 +55,7 @@ def relink_technosphere_exchanges(ds, data, include_row_cutoff=3):
     for exc in filter(technosphere, ds['exchanges']):
         possibles = sorted(
             [obj for obj in get_possibles(exc, data) if inside(obj)],
-            key=len(get_faces(obj['location'])),
+            key=len(geomatcher[obj['location']]),
             reverse=True
         )
 
@@ -111,9 +110,9 @@ def iteratively_choose_inputs(lst, remaining_faces):
     new = []
     while lst:
         possible = lst.pop(0)
-        if not get_faces(possible['location']).difference(remaining_faces):
+        if not geomatcher[possible['location']].difference(remaining_faces):
             new.append(deepcopy(possible))
-            remaining_faces = remaining_faces.difference(get_faces(possible['location']))
+            remaining_faces = remaining_faces.difference(geomatcher[possible['location']])
             if not remaining_faces:
                 # Don't include RoW, etc. if nothing is left
                 break
@@ -129,19 +128,6 @@ def get_possibles(exchange, data):
         if (ds['name'], ds['reference product'], ds['unit']) == key:
             yield ds
 
-
-def get_faces(location):
-    """Return a set of integers identifying the topological faces defining ``location``.
-
-    Works with both ecoinvent and IMAGE locations."""
-    if location in ('RoW', 'GLO'):
-        return set()
-    elif location in ecoinvent_faces:
-        return ecoinvent_faces[location]
-    elif location in IMAGE_REGION_FACES:
-        return IMAGE_REGION_FACES[location]
-    else:
-        raise KeyError("Can't find location {} in ecoinvent or IMAGE".format(location))
 
 def default_global_location(database):
     """Set missing locations to ```GLO``` for datasets in ``database``.

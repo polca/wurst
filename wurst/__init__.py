@@ -36,3 +36,4 @@ from .transformations import (
     relink_technosphere_exchanges,
     rescale_exchange,
 )
+from .geo import geomatcher

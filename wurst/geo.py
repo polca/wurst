@@ -1,3 +1,4 @@
+from .IMAGE import IMAGE_TOPOLOGY
 from constructive_geometries import ConstructiveGeometries
 import country_converter as coco
 
@@ -10,10 +11,17 @@ class Geomatcher:
                              if x != "__all__"}
         else:
             self.topology = topology
-        self.faces = set.union(set(x) for x in self.topology.values())
+        self.faces = set.union(*[set(x) for x in self.topology.values()])
 
-    def as_valid_key(self, key):
-        key = coco.convert(names=[key], to='ISO2', not_found=None)[0]
+    def __getitem__(self, key):
+        if key in {'RoW', 'GLO'}:
+            return set()
+        return self.topology[self._as_valid_key(key)]
+
+    def _as_valid_key(self, key):
+        key = coco.convert(names=[key], to='ISO2', not_found=None)
+        if not isinstance(key, str):
+            key = key[0]
         if key in self.topology:
             return key
         else:
@@ -29,10 +37,10 @@ class Geomatcher:
         if key in ('RoW', 'GLO'):
             return _(['GLO', 'RoW'])
 
-        faces = self.topology(self.as_valid_key(key))
+        faces = self[key]
         return  _([x
             for x, y in sorted([
-                    k, len(v.intersection(faces))
+                    (k, len(v.intersection(faces)))
                     for k, v in self.topology.items()
                     if faces.intersection(v)
                 ], reverse=True, key=lambda x: x[1])
@@ -48,10 +56,10 @@ class Geomatcher:
         if key in ('RoW', 'GLO'):
             return _(['GLO', 'RoW'])
 
-        faces = self.topology(self.as_valid_key(key))
+        faces = self[key]
         return  _([x
             for x, y in sorted([
-                    k, len(v)
+                    (k, len(v))
                     for k, v in self.topology.items()
                     if faces.issuperset(v)
                 ], key=lambda x: x[1])
@@ -67,10 +75,10 @@ class Geomatcher:
         if key in ('RoW', 'GLO'):
             return _(['GLO', 'RoW'])
 
-        faces = self.topology(self.as_valid_key(key))
+        faces = self[key]
         return  _([x
             for x, y in sorted([
-                    k, len(v)
+                    (k, len(v))
                     for k, v in self.topology.items()
                     if faces.issubset(v)
                 ], reverse=True, key=lambda x: x[1])
@@ -129,4 +137,4 @@ class Geomatcher:
 
 
 geomatcher = Geomatcher()
-geomatcher.add_definitions(IMAGE, relative=True)
+geomatcher.add_definitions(IMAGE_TOPOLOGY, relative=True)
