@@ -1,226 +1,241 @@
 from constructive_geometries import ConstructiveGeometries
-from wurst.transformations.geo import *
+from copy import deepcopy
+from wurst import geomatcher
+from wurst.geo import Geomatcher
 import pytest
 
 
-def test_copy_to_new_location():
-    given = {
-        'foo': 'bar',
-        'location': 'here',
-        'exchanges': [{
-            'type': 'technosphere'
-        }, {
-            'type': 'production'
-        }]
-    }
-    expected = {
-        'foo': 'bar',
-        'location': 'here',
-        'exchanges': [{
-            'type': 'technosphere'
-        }, {
-            'type': 'production',
-            'location': 'here'
-        }]
-    }
-    result = copy_to_new_location(given, 'here')
-    expected['code'] = result['code']
-    assert result == expected
-
-def test_allocate_inputs_equal():
-    given = [{
-        'location': 'here',
-        'exchanges': [{
-            'type': 'production',
-            'amount': 1,
-        }],
-    }, {
-        'location': 'there',
-        'exchanges': [{
-            'type': 'production',
-            'production volume': 7,
-            'amount': 1,
-        }],
-    }]
-    exc = {'amount': 1}
-    expected = [{
-        'location': 'here',
-        'amount': 0.5,
-        'loc': 0.5,
-        'uncertainty type': 0,
-    }, {
-        'location': 'there',
-        'amount': 0.5,
-        'loc': 0.5,
-        'uncertainty type': 0,
-    }]
-    assert allocate_inputs(exc, given) == expected
-    assert exc == {'amount': 1}
-
-def test_allocate_inputs_equal_row():
-    given = [{
-        'location': 'RoW',
-        'exchanges': [{
-            'type': 'production',
-            'production volume': 20,
-            'amount': 1,
-        }],
-    }, {
-        'location': 'there',
-        'exchanges': [{
-            'type': 'production',
-            'production volume': 10,
-            'amount': 1,
-        }],
-    }]
-    exc = {'amount': 3}
-    expected = [{
-        'location': 'RoW',
-        'amount': 1.5,
-        'loc': 1.5,
-        'uncertainty type': 0,
-    }, {
-        'location': 'there',
-        'amount': 1.5,
-        'loc': 1.5,
-        'uncertainty type': 0,
-    }]
-    assert allocate_inputs(exc, given) == expected
-    assert exc == {'amount': 3}
-
-def test_allocate_inputs_pv():
-    given = [{
-        'location': 'there',
-        'exchanges': [{
-            'type': 'production',
-            'production volume': 30,
-            'amount': 1,
-        }],
-    }, {
-        'location': 'there',
-        'exchanges': [{
-            'type': 'production',
-            'production volume': 10,
-            'amount': 1,
-        }],
-    }]
-    exc = {'amount': 2}
-    expected = [{
-        'location': 'there',
-        'amount': 1.5,
-        'loc': 1.5,
-        'uncertainty type': 0,
-    }, {
-        'location': 'there',
-        'amount': 0.5,
-        'loc': 0.5,
-        'uncertainty type': 0,
-    }]
-    assert allocate_inputs(exc, given) == expected
-    assert exc == {'amount': 2}
-
-def test_get_possibles():
-    exc = {
-        'name': 'one',
-        'product': 'two',
-        'unit': 'three'
-    }
-    given = [{
-        'name': 'one',
-        'reference product': 'two',
-        'unit': 'three',
-        'code': 1,
-    }, {
-        'name': 'one',
-        'reference product': '2',
-        'unit': 'three',
-        'code': 2,
-    }, {
-        'name': 'one',
-        'reference product': 'two',
-        'unit': '3',
-        'code': 3,
-    }, {
-        'name': 'one',
-        'reference product': 'two',
-        'unit': 'three',
-        'code': 4,
-    }, {
-        'name': '1',
-        'reference product': 'two',
-        'unit': 'three',
-        'code': 5,
-    }]
-    expected = [{
-        'name': 'one',
-        'reference product': 'two',
-        'unit': 'three',
-        'code': 1,
-    }, {
-        'name': 'one',
-        'reference product': 'two',
-        'unit': 'three',
-        'code': 4,
-    }]
-    assert list(get_possibles(exc, given)) == expected
-
-def test_get_faces():
+def test_default_setup():
     cg = ConstructiveGeometries()
 
-    assert get_faces("RoW") == set()
-    assert get_faces("GLO") == set()
-    assert get_faces("AS") == set(cg.data['AS'])
-    assert get_faces("Japan") == set(cg.data['JP'])
+    assert geomatcher["RoW"] == set()
+    assert geomatcher["GLO"] == set()
+    assert geomatcher["AS"] == set(cg.data['AS'])
+    assert geomatcher[('ecoinvent', 'Russia (Europe)')] == set(cg.data['Russia (Europe)'])
+    assert geomatcher["Japan"] == set(cg.data['JP'])
 
     with pytest.raises(KeyError):
-        get_faces("Nope")
+        geomatcher["Nope"]
 
-def test_iterative_choose_inputs(monkeypatch):
-    FACES = {
-        'Red': {1,2,3},
-        'Green': {4,5,6},
-        'Blue': {7,8,9},
-        'Bluegreen': {5,6,7,8},
-        'Pink': {0,},
-        'Purple': {3,4},
-        'Magenta': {3,},
+def test_image_added():
+    g = Geomatcher()
+    with pytest.raises(KeyError):
+        g["Oceania"]
+
+    assert len(geomatcher[("IMAGE", "Oceania")])
+
+def test_provide_topology():
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
     }
-    get_faces = lambda x: FACES[x]
-    monkeypatch.setattr(
-        'wurst.transformations.geo.get_faces',
-        get_faces
-    )
+    g = Geomatcher(given.copy())
+    assert g.topology == given
 
-    places = ['Bluegreen', 'Red', 'Green', 'Blue', 'Purple', 'Pink', 'Magenta']
-    given = [{'location': k} for k in places]
+def test_split_faces():
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+    }
+    expected = {
+        'A': {1, 2, 5, 6},
+        'B': {2, 5, 6, 4},
+    }
+    g = Geomatcher(given)
+    g.split_face(3)
+    assert g.topology == expected
+    assert 3 not in g.faces
+    assert 5 in g.faces
+
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+    }
+    expected = {
+        'A': {1, 2, 5, 6, 7},
+        'B': {2, 5, 6, 7, 4},
+    }
+    g = Geomatcher(given)
+    g.split_face(3, number=3)
+    assert g.topology == expected
+
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+    }
+    expected = {
+        'A': {1, 2, 10, 11},
+        'B': {2, 10, 11, 4},
+    }
+    g = Geomatcher(given)
+    g.split_face(3, ids={10, 11})
+    assert g.topology == expected
+
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+    }
+    expected = {
+        'A': {1, 2, 10, 11},
+        'B': {2, 10, 11, 4},
+    }
+    g = Geomatcher(given)
+    g.split_face(3, number=5, ids={10, 11})
+    assert g.topology == expected
+
+def test_empty_topology():
+    g = Geomatcher({})
+    assert g.topology == {}
+    assert g.faces == set()
+
+def test_add_definitions():
+    g = Geomatcher({})
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+    }
+    g.add_definitions(given, "foo", False)
+    assert ("foo", "A") in g.topology
+    assert g.faces == {1, 2, 3, 4}
+
+def test_add_definitions_relative():
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+    }
+    extra = {
+        'C': ['A', 'B']
+    }
+    g = Geomatcher(given)
+    g.add_definitions(extra, "foo")
+    assert g.topology[("foo", "C")] == {1, 2, 3, 4}
+    assert 'A' in g.topology
+
+def test_actual_key():
+    given = {
+        'A': {1, 2, 3},
+        ('silly', 'B'): {2, 3, 4},
+    }
+    g = Geomatcher(given, 'silly')
+    assert g['A']
+    assert g['B']
+    assert g['B']
+    assert g[('silly', 'B')]
+
+    with pytest.raises(KeyError):
+        g[('silly', 'A')]
+
+    assert g._actual_key('RoW') == 'RoW'
+    assert g._actual_key('GLO') == 'GLO'
+
+def test_actual_key_coco():
+    given = {
+        'AT': {1, 2},
+    }
+    g = Geomatcher(given, 'silly')
+
+    assert g['AT']
+    assert g['Austria']
+
+    g = Geomatcher(given, 'silly', use_coco=False)
+    assert g['AT']
+    with pytest.raises(KeyError):
+        g['Austria']
+
+def test_finish_filter():
+    g = Geomatcher({'A': {1, 2}})
+    given = [('A', 4), ('B', 6), ('C', 3)]
+    assert g._finish_filter(deepcopy(given), 'A', True, False, True) == ['B', 'A', 'C']
+    assert g._finish_filter(deepcopy(given), 'A', True, False, False) == ['C', 'A', 'B']
+    assert g._finish_filter(deepcopy(given), 'A', False, False, True) == ['B', 'C']
+    assert g._finish_filter(deepcopy(given), 'A', False, False, False) == ['C', 'B']
+
+def test_finish_filter_exclusive():
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+        'C': {3, 4, 5},
+        'D': {10, 11},
+        'E': {5, 6, 10},
+    }
+    g = Geomatcher(given)
+    lst = [('A', 5), ('B', 6), ('C', 7), ('D', 8), ('E', 9)]
+    result = g._finish_filter(lst, 'A', True, True, True)
+    # Start with E (biggest), then B (next possible)
+    assert result == ["E", "B"]
+    result = g._finish_filter(lst, 'A', True, True, False)
+    # Start with A (smallest), then D (next possible)
+    assert result == ['A', 'D']
+
+def test_intersects():
+    g = Geomatcher()
     expected = [
-        {'location': 'Bluegreen'},
-        {'location': 'Red'},
-        {'location': 'Pink'},
+        ('ecoinvent', 'UN-AMERICAS'),
+        ('ecoinvent', 'RLA'),
+        ('ecoinvent', 'UN-CARIBBEAN'),
     ]
-    assert iteratively_choose_inputs(given, set(range(10))) == expected
+    assert geomatcher.intersects("CU") == expected
+    assert geomatcher.intersects("CU", exclusive=True) == [('ecoinvent', 'UN-AMERICAS')]
+    expected = [
+        ('ecoinvent', 'UN-CARIBBEAN'),
+        ('ecoinvent', 'RLA'),
+        ('ecoinvent', 'UN-AMERICAS'),
+    ]
+    assert geomatcher.intersects("CU", biggest_first=False) == expected
 
-def test_relink_technosphere_exchanges():
-    pass
+def test_contained():
+    g = Geomatcher()
+    expected = [
+        'US',
+        ('ecoinvent', 'US-ASCC'),
+        ('ecoinvent', 'US-NPCC'),
+        ('ecoinvent', 'US-HICC'),
+        ('ecoinvent', 'US-WECC'),
+        ('ecoinvent', 'US-SERC'),
+        ('ecoinvent', 'US-RFC'),
+        ('ecoinvent', 'US-FRCC'),
+        ('ecoinvent', 'US-MRO'),
+        ('ecoinvent', 'US-SPP')
+    ]
+    assert g.contained("US")[:5] == expected[:5]
+    expected.pop(0)
+    assert g.contained("US", include_self=False)[:5] == expected[:5]
+    assert g.contained("US", include_self=False, exclusive=True)[:5] == expected[:5]
+    assert g.contained("US", biggest_first=False, include_self=False)[-1] == ('ecoinvent', 'US-ASCC')
 
-def test_relink_technosphere_exchanges_row_cutoff():
-    pass
+def test_within():
+    g = Geomatcher()
+    expected = [
+        ('ecoinvent', 'UN-EUROPE'),
+        ('ecoinvent', 'FSU'),
+        ('ecoinvent', 'UN-EEUROPE'),
+        ('ecoinvent', 'IAI Area, Europe outside EU & EFTA'),
+        'RU',
+    ]
+    assert g.within("RU") == expected
+    expected.pop(-1)
+    assert g.within("RU", include_self=False) == expected
+    assert g.within("RU", exclusive=True) == [('ecoinvent', 'UN-EUROPE')]
+    expected = [
+        'RU',
+        ('ecoinvent', 'IAI Area, Europe outside EU & EFTA'),
+        ('ecoinvent', 'UN-EEUROPE'),
+        ('ecoinvent', 'FSU'),
+        ('ecoinvent', 'UN-EUROPE'),
+    ]
+    assert g.within("RU", biggest_first=False) == expected
 
-def test_default_global_location():
-    given = [{
-        'location': 'something',
-    }, {
-        'location': None
-    }, {
-        'foo': 'bar'
-    }]
-    expected = [{
-        'location': 'something',
-    }, {
-        'location': 'GLO'
-    }, {
-        'foo': 'bar',
-        'location': 'GLO'
-    }]
-    problem = [{'foo': 'bar'}]
-    assert default_global_location(given) == expected
+def test_intersects_glo_row():
+    g = Geomatcher()
+    assert len(geomatcher.intersects("GLO")) > 400
+    assert geomatcher.intersects("RoW") == []
+
+def test_contained_glo_row():
+    g = Geomatcher()
+    assert len(geomatcher.contained("GLO")) > 400
+    assert geomatcher.contained("RoW") == []
+
+def test_within_glo_row():
+    g = Geomatcher()
+    assert geomatcher.within("GLO") == []
+    assert geomatcher.within("RoW") == []

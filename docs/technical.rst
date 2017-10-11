@@ -35,12 +35,13 @@ Exchange iterators
 
 .. autofunction:: wurst.searching.reference_product
 
+.. _geom:
+
 Geo functions
 -------------
 
-.. autofunction:: wurst.ecoinvent.get_ordered_geo_relationships
-
-.. autofunction:: wurst.searching.best_geo_match
+.. autoclass:: wurst.geo.Geomatcher
+    :members:
 
 Linking
 -------

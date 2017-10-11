@@ -67,7 +67,8 @@ if test_bw2_database is not None:
             }
         ]
 
-        assert extract_brightway2_databases("food") == expected
+        assert sorted(extract_brightway2_databases("food"), key=lambda x: x['code']) == \
+          sorted(expected, key=lambda x: x['code'])
 
     @bw2test
     def test_extraction_missing_database():

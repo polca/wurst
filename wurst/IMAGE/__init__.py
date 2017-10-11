@@ -1,10 +1,10 @@
-# Change emissions based on percentage change in IMAGE results (trust ecoinvent absolute numbers)
-# Change relative shares of technology in mixes
-# Change energy efficiency of exchanges
+import json
+import os
 
-
-from .metadata import (
-    REGIONS,
-    LOCATION_MAPPING,
-)
 from .io import load_image_data_file
+
+IMAGE_TOPOLOGY = json.load(open(os.path.join(
+    os.path.dirname(__file__),
+    "metadata",
+    "region-topolgy.json"
+)))

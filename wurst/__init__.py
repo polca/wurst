@@ -1,5 +1,32 @@
 __version__ = (0, 1, "dev")
 
+__all__ = (
+    "best_geo_match",
+    "biosphere",
+    "change_exchanges_by_constant_factor",
+    "contains",
+    "copy_to_new_location",
+    "create_dir",
+    "create_log",
+    "default_global_location",
+    "delete_zero_amount_exchanges",
+    "doesnt_contain_any",
+    "either",
+    "empty_market_dataset",
+    "equals",
+    "extract_brightway2_databases",
+    "geomatcher",
+    "get_many",
+    "get_one",
+    "log",
+    "production",
+    "reference_product",
+    "relink_technosphere_exchanges",
+    "rescale_exchange",
+    "startswith",
+    "technosphere",
+    "write_brightway2_database",
+)
 
 import logging
 logger = logging.getLogger('wurst')
@@ -27,7 +54,6 @@ from .searching import (
     startswith,
     technosphere,
 )
-from .ecoinvent import ECOINVENT_ORDERED_GEO
 from .transformations import (
     change_exchanges_by_constant_factor,
     copy_to_new_location,
@@ -37,3 +63,4 @@ from .transformations import (
     relink_technosphere_exchanges,
     rescale_exchange,
 )
+from .geo import geomatcher
