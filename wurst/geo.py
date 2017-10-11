@@ -4,9 +4,39 @@ import country_converter as coco
 
 
 class Geomatcher:
+    """Object managing spatial relationships using the a world topology.
+
+    ``Geomatcher`` takes as its base data a definition of the world split into topological faces. This definition is provided by the `constructive_geometries <>`__ library. A toplogical face is a polygon which does not overlap any other topological face. In ``constructive_geometries``, these faces are defined by integer ids, so e.g. Ireland is:
+
+    .. code-block:: python
+
+        >>> from constructive_geometries import ConstructiveGeometries
+        >>> cg = ConstructiveGeometries()
+        >>> cg.data['IE']
+        [325, 327, 328, 334, 336, 337, 338, 345, 346, 347, 348, 350, 374, 2045]
+
+    By default, Geomatcher is populated with all world countries, and all ecoinvent regions. The instance of Geomatcher created in this file also includes the IMAGE world regions.
+
+    Geospatial definitions are namespaced, except for countries. Countries are therefore defined by their ISO two-letter codes, but other data should be referenced by a tuple of its namespace and identifier, e.g. ``('ecoinvent', 'NAFTA')``. You can also set a default namespace, either in instantiation (``Geomatcher(default_namespace="foo")``) or afterwards (``geomatcher_instance.default_namespace = 'foo'``). The default namespace is ``'ecoinvent'``.
+
+    Geomatcher supports the following operations:
+
+        * Retrieving face ids for a given location, acting as a dictionary (``geomatcher['foo']``)
+        * Adding new geospatial definitions, either directly with face ids or relative to existing definitions
+        * Splitting faces to allow for finer-scale regionalization
+        * Intersection, contained, and within calculations with several configuration options.
+
+    Initialization arguments:
+
+        * ``topology``: A dictionary of ``{str: set}`` labels to faces ids. Default is ``ecoinvent``, which loads the world and ecoinvent definitions from ``constructive_geometries``.
+        * ``default_namespace``: String defining the default search namespace. Default is ``'ecoinvent'``.
+        * ``use_coco``: Boolean, default ``True``. Use the `country_converter <>`__ library to fuzzy match country identifiers, e.g. "Austria" instead of "AT".
+
+    """
     __seen = set()
 
-    def __init__(self, topology='ecoinvent', default_namespace=None):
+    def __init__(self, topology='ecoinvent', default_namespace=None, use_coco=True):
+        self.coco = use_coco
         if topology == 'ecoinvent':
             def ns(x):
                 if len(x) == 2 or x in {'RoW', 'GLO'}:
@@ -21,7 +51,10 @@ class Geomatcher:
         else:
             self.topology = topology
             self.default_namespace = default_namespace
-        self.faces = set.union(*[set(x) for x in self.topology.values()])
+        if self.topology:
+            self.faces = set.union(*[set(x) for x in self.topology.values()])
+        else:
+            self.faces = set()
 
     def __getitem__(self, key):
         if key in {"RoW", "GLO"}:
@@ -29,6 +62,7 @@ class Geomatcher:
         return self.topology[self._actual_key(key)]
 
     def _actual_key(self, key):
+        """Translate provided key into the key used in the topology. Tries the unmodified key, the key with the default namespace, and the country converter. Raises a ``KeyError`` if none of these finds a suitable definition in ``self.topology``."""
         if key in {"RoW", "GLO"}:
             return key
         elif key in self.topology:
@@ -36,7 +70,7 @@ class Geomatcher:
         elif (self.default_namespace, key) in self.topology:
             return (self.default_namespace, key)
 
-        if isinstance(key, str):
+        if isinstance(key, str) and self.coco:
             new = coco.convert(names=[key], to='ISO2', not_found=None)
             if new in self.topology:
                 if new not in self.__seen:
@@ -47,9 +81,10 @@ class Geomatcher:
         raise KeyError("Can't find this location")
 
     def _finish_filter(self, lst, key, include_self, exclusive, biggest_first):
+        """Finish filtering a GIS operation. Can optionally exclude the input key, sort results, and exclude overlapping results. Internal function, not normally called directly."""
         key = self._actual_key(key)
-        if not include_self:
-            lst.pop(lst.index(key))
+        if not include_self and key not in {"RoW", "GLO"}:
+            lst.pop([x[0] for x in lst].index(key))
         lst.sort(key=lambda x: x[1], reverse=biggest_first)
         lst = [x for x, y in lst]
         if exclusive:
@@ -61,31 +96,45 @@ class Geomatcher:
                     removed.update(faces)
                     remaining.append(current)
             lst = remaining
+        if key == "GLO":
+            index = 0 if biggest_first else -1
+            lst.insert(index, "GLO")
+        if key == "RoW":
+            index = -1 if biggest_first else 0
+            lst.insert(index, "RoW")
         return lst
 
     def intersects(self, key, include_self=False, exclusive=False, biggest_first=True):
-        """Get all locations that intersect this location."""
-        if key in ('RoW', 'GLO'):
-            return self._finish_filter(
-                [("GLO", 2), ("RoW", 1)],
-                key, include_self, exclusive, biggest_first
-            )
+        """Get all locations that intersect this location.
+
+        Note that sorting is done by first by number of faces intersecting ``key``; the total number of faces in the intersected region is only used to break sorting ties.
+
+        ``.intersects("GLO")`` return all regions. ``.intersects("RoW")`` returns an empty list.
+
+        """
+        if key == 'GLO':
+            return self._finish_filter(list(self.topology), "GLO", include_self, exclusive, biggest_first)
+        if key == 'RoW':
+            return []
 
         faces = self[key]
         lst = [
-            (k, len(v.intersection(faces)))
+            (k, (len(v.intersection(faces)), len(v)))
             for k, v in self.topology.items()
             if faces.intersection(v)
         ]
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
     def contained(self, key, include_self=True, exclusive=False, biggest_first=True):
-        """Get all locations contained by this location."""
-        if key in ('RoW', 'GLO'):
-            return self._finish_filter(
-                [("GLO", 2), ("RoW", 1)],
-                key, include_self, exclusive, biggest_first
-            )
+        """Get all locations that are completely within this location.
+
+        ``.contained("GLO")`` return all regions. ``.contained("RoW")`` returns an empty list.
+
+        """
+        if key == 'GLO':
+            return self._finish_filter(list(self.topology), "GLO", include_self, exclusive, biggest_first)
+        if key == 'RoW':
+            return []
 
         faces = self[key]
         lst = [
@@ -95,13 +144,12 @@ class Geomatcher:
         ]
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
-    def within(self, key, include_self=True, exclusive=False):
-        """Get all locations that are contained by this location."""
+    def within(self, key, include_self=True, exclusive=False, biggest_first=True):
+        """Get all locations that are completely contain this location.
+
+        Return an empty list when called with either ``GLO`` or ``RoW``."""
         if key in ('RoW', 'GLO'):
-            return self._finish_filter(
-                [("GLO", 2), ("RoW", 1)],
-                key, include_self, exclusive, biggest_first
-            )
+            return []
 
         faces = self[key]
         lst = [
@@ -127,7 +175,7 @@ class Geomatcher:
             ids = set(ids)
         else:
             max_int = max(x for x in self.faces if isinstance(x, int))
-            ids = set(range(max_int + 1, max_int + 2 + (number or 2)))
+            ids = set(range(max_int + 1, max_int + 1 + (number or 2)))
 
         for obj in self.topology.values():
             if face in obj:
@@ -153,11 +201,19 @@ class Geomatcher:
                 "RU"
             ]}
 
-        Otherwise, ``data`` is a dictionary with integer topology face ids.
+        Otherwise, ``data`` is a dictionary with string keys and values of integer topology face id sets:
+
+        .. code-block:: python
+
+            {
+                'A': {1, 2, 3},
+                'B': {2, 3, 4},
+            }
 
         """
         if not relative:
             self.topology.update({(namespace, k): v for k, v in data.items()})
+            self.faces.update(set.union(*data.values()))
         else:
             self.topology.update({
                 (namespace, k): set.union(*[self[o] for o in v])

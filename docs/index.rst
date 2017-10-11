@@ -168,6 +168,8 @@ Wurst uses the `constructive_geometries <https://bitbucket.org/cmutel/py-constru
 
 ``constructive_geometries`` is based on the `natural earth database <https://www.naturalearthdata.com>`__, and includes all countries, `UN regions and subregions <https://unstats.un.org/unsd/methodology/m49/>`__, some disputed areas, and a number of ecoinvent-specific regions; for full documentation, ; see the `ecoinvent report <https://geography.ecoinvent.org/report/>`__ for a complete list. Countries are identified by their two-letter `ISO 3166-2 codes <https://en.wikipedia.org/wiki/ISO_3166-2>`__.
 
+For documentation on the usage of the ``geomatcher``, see the :ref:`technical documentation <geom>` and TODO:Example notebook
+
 Brightway2 IO
 =============
 
