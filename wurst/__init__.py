@@ -1,4 +1,4 @@
-__version__ = (0, 1, "dev")
+__version__ = (0, 1, "dev2")
 
 __all__ = (
     "best_geo_match",
