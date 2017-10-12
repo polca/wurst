@@ -35,6 +35,3 @@ BSD 2-clause license. Contributions are welcome!
 * Review BW2 IO code to make sure all needed fields are present in newly-created and modified databases
 * Parameterized exchanges (e.g. electricity sector)
 * Log browser web app
-* Create a basic example notebook with common tasks
-* Function and examples for changing specific emissions separate from general efficiency improvements
-* Function and examples for separating a global dataset into separate regions

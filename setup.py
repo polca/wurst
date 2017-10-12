@@ -21,6 +21,9 @@ setup(
     author="Chris Mutel",
     author_email="cmutel@gmail.com",
     license=open('LICENSE').read(),
+    package_data={'wurst': [
+        "IMAGE/metadata/*.*",
+    ]},
     install_requires=[
         "appdirs",
         "constructive_geometries",
