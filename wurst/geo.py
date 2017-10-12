@@ -145,7 +145,7 @@ class Geomatcher:
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
     def within(self, key, include_self=True, exclusive=False, biggest_first=True):
-        """Get all locations that are completely contain this location.
+        """Get all locations that completely contain this location.
 
         Return an empty list when called with either ``GLO`` or ``RoW``."""
         if key in ('RoW', 'GLO'):
