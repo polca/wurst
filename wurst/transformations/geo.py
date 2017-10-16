@@ -1,4 +1,5 @@
 from .. import log
+from ..errors import InvalidLink
 from ..geo import geomatcher
 from ..searching import reference_product, get_many, equals
 from .uncertainty import rescale_exchange
@@ -27,42 +28,68 @@ def copy_to_new_location(ds, location):
     return cp
 
 
-def relink_technosphere_exchanges(ds, data, include_row_cutoff=3):
-    """Find new exchange(s) based on the location of the dataset.
+def relink_technosphere_exchanges(ds, data, exclusive=True,
+        drop_invalid=False, biggest_first=False, contained=True):
+    """Find new technosphere providers based on the location of the dataset.
 
-    Designed to be used when the dataset's location changes.
+    Designed to be used when the dataset's location changes, or when new datasets are added.
 
     Uses the name, reference product, and unit of the exchange to filter possible inputs. These must match exactly. Searches in the list of datasets ``data``.
 
-    This function will search for the input with the largest area which lies within the dataset location; it will then iteratively add additional inputs if they are contained in the remaining area (i.e. the dataset location minus the area of the largest input).
+    Will only search for providers contained within the location of ``ds``, unless ``contained`` is set to ``False``, all providers whose location intersects the location of ``ds`` will be used.
 
-    Input choice algorithm logic:
+    If no providers can be found, will try to use a ``RoW`` or ``GLO`` provider, in that order. If there are still no valid providers, a ``InvalidLink`` exception is raised, unless ``drop_invalid`` is ``True``, in which case the exchange will be deleted.
 
-    * If only a global (``GLO``) or Rest-of-World (``RoW``) input is available, use this input.
-    * Otherwise, sort available inputs by their size, from largest to smallest. ``GLO`` and ``RoW`` are at the end of this list.
-    * Iteratively take inputs, removing their areas from the remaining available area. Each subsequent input must fit completely inside the available area.
-    * Only include ``GLO`` or ``RoW`` inputs if the number of region-specific inputs is less than ``include_row_cutoff`` (default is 3).
-    * Allocate inputs using normalized production volumes, if a) all inputs have positive production volumes, and b) ``RoW`` or ``GLO`` are not in the list of inputs. Otherwise, use equal allocation among inputs.
+    A ``RoW`` provider will be added if there is a single topological face in the location of ``ds`` which isn't covered by the location of any providing activity.
+
+    Allocation between providers is done using ``allocate_inputs``; results seem strange if ``contained=False``, as production volumes for large regions would be used as allocation factors.
+
+    Input arguments:
+
+        * ``ds``: The dataset whose technosphere exchanges will be modified.
+        * ``data``: The list of datasets to search for technosphere product providers.
+        * ``exclusive``: Bool, default is ``True``. Don't allow overlapping locations in input providers.
+        * ``drop_invalid``: Bool, default is ``False``. Delete exchanges for which no valid provider is available.
+        * ``biggest_first``: Bool, default is ``False``. Determines search order when selecting provider locations. Only relevant is ``exclusive`` is ``True``.
+        * ``contained``: Bool, default is ``True``. If ture, only use providers whose location is completely within the ``ds`` location; otherwise use all intersecting locations.
 
     Modifies the dataset in place; returns the modified dataset."""
-    faces = geomatcher[ds['location']]
-    inside = lambda x: not geomatcher[x['location']].difference(faces)
-    drop_row_global = lambda lst: [o for o in lst if o['location'] not in ('RoW', 'GLO')]
     MESSAGE = "Relinked technosphere exchange of {}/{}/{} from {}/{} to {}/{}."
+    DROPPED = "Dropped technosphere exchange of {}/{}/{}; no valid providers."
     new_exchanges = []
     technosphere = lambda x: x['type'] == 'technosphere'
 
     for exc in filter(technosphere, ds['exchanges']):
-        possibles = sorted(
-            [obj for obj in get_possibles(exc, data) if inside(obj)],
-            key=len(geomatcher[obj['location']]),
-            reverse=True
-        )
+        possibles = list(get_possibles(exc, data))
+        only = [obj['location'] for obj in possibles]
+        func = geomatcher.contained if contained else geomatcher.intersects
+        locations = func(ds['location'], include_self=True, exclusive=exclusive,
+            biggest_first=biggest_first, only=only)
 
-        usable = iteratively_choose_inputs(possibles, faces.copy())
-        if len(usable) >= include_row_cutoff:
-            usable = drop_row_global(usable)
-        allocated = allocate_inputs(exc, usable)
+        if not locations or geomatcher[ds['location']].difference(set.union(
+                *[geomatcher[o] for o in locations])):
+            # Missing faces in providers, add RoW if present
+            locations.append('RoW')
+
+        kept = [ds for ds in possibles if ds['location'] in locations]
+
+        for place in ("RoW", "GLO"):
+            if not kept:
+                kept = [ds for ds in possibles if ds['location'] == place]
+
+        if not kept:
+            if drop_invalid:
+                log({
+                    'function': 'relink_technosphere_exchanges',
+                    'message': DROPPED.format(
+                        exc['name'], exc['product'], exc['unit']
+                    )
+                }, ds)
+                continue
+            else:
+                raise InvalidLink
+
+        allocated = allocate_inputs(exc, kept)
 
         for obj in allocated:
             log({
@@ -83,7 +110,9 @@ def relink_technosphere_exchanges(ds, data, include_row_cutoff=3):
 
 
 def allocate_inputs(exc, lst):
-    """Allocate the input exchanges in ``lst`` to ``exc``, using production volumes where possible, and equal splitting otherwise."""
+    """Allocate the input exchanges in ``lst`` to ``exc``, using production volumes where possible, and equal splitting otherwise.
+
+    Always uses equal splitting if ``RoW`` is present."""
     has_row = any((x['location'] in ('RoW', 'GLO') for x in lst))
     pvs = [reference_product(o).get('production volume') or 0 for o in lst]
     if all((x > 0 for x in pvs)) and not has_row:
@@ -99,24 +128,14 @@ def allocate_inputs(exc, lst):
         cp['location'] = location
         return rescale_exchange(cp, factor)
 
+    def _(factor, total):
+        print(factor, total)
+        return factor / total
+
     return [
-        new_exchange(exc, obj['location'], factor / total)
+        new_exchange(exc, obj['location'], _(factor, total))
         for obj, factor in zip(lst, pvs)
     ]
-
-
-def iteratively_choose_inputs(lst, remaining_faces):
-    """Return a list of inputs which are inside ``remaining_faces`` but don't overlap."""
-    new = []
-    while lst:
-        possible = lst.pop(0)
-        if not geomatcher[possible['location']].difference(remaining_faces):
-            new.append(deepcopy(possible))
-            remaining_faces = remaining_faces.difference(geomatcher[possible['location']])
-            if not remaining_faces:
-                # Don't include RoW, etc. if nothing is left
-                break
-    return new
 
 
 def get_possibles(exchange, data):

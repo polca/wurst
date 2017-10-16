@@ -83,10 +83,22 @@ class Geomatcher:
     def _finish_filter(self, lst, key, include_self, exclusive, biggest_first):
         """Finish filtering a GIS operation. Can optionally exclude the input key, sort results, and exclude overlapping results. Internal function, not normally called directly."""
         key = self._actual_key(key)
-        if not include_self and key not in {"RoW", "GLO"}:
-            lst.pop([x[0] for x in lst].index(key))
+        given = [x[0] for x in lst]
+
+        has_row = "RoW" in given
+        if has_row:
+            lst.pop(given.index("RoW"))
+            given.pop(given.index("RoW"))
+        has_glo = "GLO" in given
+        if has_glo:
+            lst.pop(given.index("GLO"))
+            given.pop(given.index("GLO"))
+
+        if not include_self and key in given:
+            lst.pop(given.index(key))
         lst.sort(key=lambda x: x[1], reverse=biggest_first)
         lst = [x for x, y in lst]
+
         if exclusive:
             removed, remaining = set(), []
             while lst:
@@ -96,65 +108,102 @@ class Geomatcher:
                     removed.update(faces)
                     remaining.append(current)
             lst = remaining
-        if key == "GLO":
-            index = 0 if biggest_first else -1
-            lst.insert(index, "GLO")
-        if key == "RoW":
-            index = -1 if biggest_first else 0
-            lst.insert(index, "RoW")
+
+            # No faces left to be covered by global datasets
+            if not self[key].difference(removed):
+                has_row = has_glo = False
+
+        if has_row and (key != 'RoW' or include_self):
+            if biggest_first:
+                lst.insert(0, "RoW")
+            else:
+                lst.insert(-1, "RoW")
+        if has_glo and (key != 'GLO' or include_self):
+            if biggest_first:
+                lst.insert(0, "GLO")
+            else:
+                lst.insert(-1, "GLO")
         return lst
 
-    def intersects(self, key, include_self=False, exclusive=False, biggest_first=True):
+    def intersects(self, key, include_self=False, exclusive=False, biggest_first=True, only=None):
         """Get all locations that intersect this location.
 
         Note that sorting is done by first by number of faces intersecting ``key``; the total number of faces in the intersected region is only used to break sorting ties.
 
-        ``.intersects("GLO")`` return all regions. ``.intersects("RoW")`` returns an empty list.
+        ``.intersects("GLO")`` return all regions. ``.intersects("RoW")`` returns a list with with ``RoW`` or nothing.
 
         """
+        possibles = {k: self[k] for k in (only or [])} or self.topology
+
         if key == 'GLO':
-            return self._finish_filter(list(self.topology), "GLO", include_self, exclusive, biggest_first)
+            return self._finish_filter(
+                [(k, len(v)) for k, v in possibles.items()],
+                "GLO", include_self, exclusive, biggest_first
+            )
         if key == 'RoW':
-            return []
+            return ['RoW'] if 'RoW' in possibles else []
 
         faces = self[key]
         lst = [
             (k, (len(v.intersection(faces)), len(v)))
-            for k, v in self.topology.items()
-            if faces.intersection(v)
+            for k, v in possibles.items()
+            if (faces.intersection(v) or k in ("GLO", "RoW"))
         ]
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
-    def contained(self, key, include_self=True, exclusive=False, biggest_first=True):
+    def contained(self, key, include_self=True, exclusive=False, biggest_first=True, only=None):
         """Get all locations that are completely within this location.
 
-        ``.contained("GLO")`` return all regions. ``.contained("RoW")`` returns an empty list.
+        ``.contained("GLO")`` return all regions. ``.contained("RoW")`` returns a list with with ``RoW`` or nothing.
+
+        "RoW" and "GLO" are not normally in ``self.topology``, but if they are, or are passed in ``only``, here are the rules for handling them:
+
+            * GLO contains RoW and GLO
+            * RoW contains RoW
+
+        Note that both ``GLO`` and ``RoW`` could be removed if ``exclusive`` is true.
 
         """
+        # GLO and RoW make my head hurt
+        ALLOWED = {("RoW", "GLO"), ("GLO", "GLO"), ("RoW", "RoW")}
+        row_filter = lambda x: x not in ("GLO", "RoW") or (x, key) in ALLOWED
+        possibles = {
+            k: self[k] for k in (only or []) if row_filter(k)
+        } or self.topology
+
         if key == 'GLO':
-            return self._finish_filter(list(self.topology), "GLO", include_self, exclusive, biggest_first)
+            return self._finish_filter(
+                [(k, len(v)) for k, v in possibles.items()],
+                "GLO", include_self, exclusive, biggest_first
+            )
         if key == 'RoW':
-            return []
+            return ['RoW'] if 'RoW' in possibles else []
 
         faces = self[key]
         lst = [
             (k, len(v))
-            for k, v in self.topology.items()
+            for k, v in possibles.items()
             if faces.issuperset(v)
         ]
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
-    def within(self, key, include_self=True, exclusive=False, biggest_first=True):
+    def within(self, key, include_self=True, exclusive=False, biggest_first=True, only=None):
         """Get all locations that completely contain this location.
 
-        Return an empty list when called with either ``GLO`` or ``RoW``."""
-        if key in ('RoW', 'GLO'):
-            return []
+        When called with GLO or RoW, returns a list which can only have GLO or RoW inside, if either are passed in ``only`` or added to ``self.topology``. Otherwise returns an empty list.
+
+        """
+        possibles = {k: self[k] for k in (only or [])} or self.topology
+
+        if key == 'GLO':
+            return [x for x in possibles if x in ("GLO",)]
+        if key == 'RoW':
+            return [x for x in possibles if x in ("RoW", "GLO")]
 
         faces = self[key]
         lst = [
             (k, len(v))
-            for k, v in self.topology.items()
+            for k, v in possibles.items()
             if faces.issubset(v)
         ]
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)

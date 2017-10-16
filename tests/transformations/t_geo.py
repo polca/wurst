@@ -163,36 +163,6 @@ def test_get_possibles():
     }]
     assert list(get_possibles(exc, given)) == expected
 
-def test_iterative_choose_inputs(monkeypatch):
-    FACES = {
-        'Red': {1,2,3},
-        'Green': {4,5,6},
-        'Blue': {7,8,9},
-        'Bluegreen': {5,6,7,8},
-        'Pink': {0,},
-        'Purple': {3,4},
-        'Magenta': {3,},
-    }
-    monkeypatch.setattr(
-        'wurst.transformations.geo.geomatcher',
-        FACES
-    )
-
-    places = ['Bluegreen', 'Red', 'Green', 'Blue', 'Purple', 'Pink', 'Magenta']
-    given = [{'location': k} for k in places]
-    expected = [
-        {'location': 'Bluegreen'},
-        {'location': 'Red'},
-        {'location': 'Pink'},
-    ]
-    assert iteratively_choose_inputs(given, set(range(10))) == expected
-
-def test_relink_technosphere_exchanges():
-    pass
-
-def test_relink_technosphere_exchanges_row_cutoff():
-    pass
-
 def test_default_global_location():
     given = [{
         'location': 'something',

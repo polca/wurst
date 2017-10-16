@@ -167,6 +167,35 @@ def test_finish_filter_exclusive():
     # Start with A (smallest), then D (next possible)
     assert result == ['A', 'D']
 
+def test_finish_filter_row_exclude_self():
+    given = {
+        'A': {1, 2, 3},
+        'B': {2, 3, 4},
+        'C': {3, 4, 5},
+        'D': {10, 11},
+        'E': {5, 6, 10},
+    }
+    g = Geomatcher(given)
+    lst = [('A', 5), ('B', 6), ('RoW', 7), ('D', 8), ('E', 9)]
+    result = g._finish_filter(lst, 'RoW', False, False, True)
+    assert "RoW" not in result
+
+def test_finish_filter_row_ordering():
+    given = {
+        'A': set(range(10)),
+        'B': {2, 3, 4},
+        'C': {3, 4, 5},
+        'D': {10, 11},
+        'E': {5, 6, 10},
+    }
+    g = Geomatcher(given)
+    lst = [('B', 6), ('RoW', 7), ('D', 8), ('E', 9)]
+    result = g._finish_filter(lst, 'A', False, True, True)
+    assert result[0] == 'RoW'
+    # result = g._finish_filter(lst, 'A', False, True, False)
+    # print(result)
+    # assert result[-1] == 'RoW'
+
 def test_intersects():
     g = Geomatcher()
     expected = [
@@ -182,6 +211,16 @@ def test_intersects():
         ('ecoinvent', 'UN-AMERICAS'),
     ]
     assert geomatcher.intersects("CU", biggest_first=False) == expected
+
+    only = [
+        ('ecoinvent', 'RLA'),
+        ('ecoinvent', 'UN-AMERICAS'),
+    ]
+    expected = [
+        ('ecoinvent', 'UN-AMERICAS'),
+        ('ecoinvent', 'RLA'),
+    ]
+    assert geomatcher.intersects("CU", only=only) == expected
 
 def test_contained():
     g = Geomatcher()
@@ -202,6 +241,22 @@ def test_contained():
     assert g.contained("US", include_self=False)[:5] == expected[:5]
     assert g.contained("US", include_self=False, exclusive=True)[:5] == expected[:5]
     assert g.contained("US", biggest_first=False, include_self=False)[-1] == ('ecoinvent', 'US-ASCC')
+
+    expected = [
+        'US',
+        ('ecoinvent', 'US-ASCC'),
+        ('ecoinvent', 'US-NPCC'),
+        ('ecoinvent', 'US-HICC'),
+        ('ecoinvent', 'US-WECC'),
+    ]
+    only = [
+        ('ecoinvent', 'US-WECC'),
+        'US',
+        ('ecoinvent', 'US-NPCC'),
+        ('ecoinvent', 'US-ASCC'),
+        ('ecoinvent', 'US-HICC'),
+    ]
+    assert g.contained("US", only=only) == expected
 
 def test_within():
     g = Geomatcher()
@@ -225,17 +280,56 @@ def test_within():
     ]
     assert g.within("RU", biggest_first=False) == expected
 
-def test_intersects_glo_row():
-    g = Geomatcher()
-    assert len(geomatcher.intersects("GLO")) > 400
-    assert geomatcher.intersects("RoW") == []
+    expected = [
+        ('ecoinvent', 'UN-EUROPE'),
+        ('ecoinvent', 'FSU'),
+        ('ecoinvent', 'UN-EEUROPE'),
+    ]
+    only = [
+        ('ecoinvent', 'UN-EUROPE'),
+        ('ecoinvent', 'FSU'),
+        ('ecoinvent', 'UN-EEUROPE'),
+    ]
+    assert g.within("RU", only=only) == expected
 
-def test_contained_glo_row():
+def test_intersects_glo():
     g = Geomatcher()
-    assert len(geomatcher.contained("GLO")) > 400
-    assert geomatcher.contained("RoW") == []
+    assert len(g.intersects("GLO")) > 400
+    assert "GLO" not in g.intersects("GLO")
+    assert "RoW" not in g.intersects("GLO")
+    assert g.intersects("GLO", include_self=True, only=("RoW", "GLO", "NO")) == ["GLO", "RoW", "NO"]
+    assert g.intersects("GLO", include_self=False, only=("RoW", "GLO", "NO")) == ["RoW", "NO"]
 
-def test_within_glo_row():
+def test_intersects_row():
     g = Geomatcher()
-    assert geomatcher.within("GLO") == []
-    assert geomatcher.within("RoW") == []
+    assert g.intersects("RoW") == []
+    assert g.intersects("RoW", include_self=True) == []
+    assert g.intersects("RoW", include_self=True, only=["RoW"]) == ["RoW"]
+    assert "RoW" not in g.intersects("GLO")
+    assert g.intersects(('ecoinvent', 'NORDEL'), only=["NO", "RoW"]) == ["RoW", "NO"]
+    assert g.intersects("NO", only=["NO", "RoW"], include_self=True, exclusive=True) == ["NO"]
+    assert g.intersects("NO", only=["NO", "RoW"], include_self=True, exclusive=False) == ["RoW", "NO"]
+    assert g.intersects(('ecoinvent', 'BALTSO'), include_self=False, exclusive=True, only=['RoW', 'EE', 'LT', 'LV']) == ['EE', 'LT', 'LV']
+
+def test_contained_glo():
+    g = Geomatcher()
+    assert len(g.contained("GLO")) > 400
+    assert "GLO" not in g.contained("GLO")
+    assert g.contained("GLO", include_self=True, only=['GLO']) == ['GLO']
+    assert g.contained("GLO", include_self=True, only=['RO', 'GLO']) == ['GLO', 'RO']
+    assert g.contained("GLO", include_self=True, only=['RoW', 'RO', 'GLO']) == ['GLO', 'RoW', 'RO']
+    assert g.contained("GLO", include_self=True, exclusive=True, only=['RoW', 'RO', 'GLO']) == ['GLO']
+
+def test_contained_row():
+    g = Geomatcher()
+    assert g.contained("RoW") == []
+    assert g.contained("RoW", include_self=True, only=["RoW"]) == ["RoW"]
+    assert "RoW" not in g.contained("GLO")
+
+def test_within_glo():
+    g = Geomatcher()
+    assert g.within("GLO") == []
+    assert g.within("RoW") == []
+
+def test_within_row():
+    pass
