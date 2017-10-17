@@ -23,6 +23,7 @@ __all__ = (
     "reference_product",
     "relink_technosphere_exchanges",
     "rescale_exchange",
+    "resolved_row",
     "startswith",
     "technosphere",
     "write_brightway2_database",
@@ -64,3 +65,4 @@ from .transformations import (
     rescale_exchange,
 )
 from .geo import geomatcher
+from constructive_geometries import resolved_row
