@@ -1,5 +1,7 @@
 from .IMAGE import IMAGE_TOPOLOGY
 from constructive_geometries import ConstructiveGeometries
+from contextlib import contextmanager
+from functools import reduce
 import country_converter as coco
 
 
@@ -39,7 +41,7 @@ class Geomatcher:
         self.coco = use_coco
         if topology == 'ecoinvent':
             def ns(x):
-                if len(x) == 2 or x in {'RoW', 'GLO'}:
+                if len(x) == 2 or x == 'RoW':
                     return x
                 else:
                     return ('ecoinvent', x)
@@ -47,23 +49,28 @@ class Geomatcher:
             cg = ConstructiveGeometries()
             self.topology = {ns(x): set(y) for x, y in cg.data.items()
                              if x != "__all__"}
+            self.topology['GLO'] = reduce(set.union, self.topology.values())
             self.default_namespace = 'ecoinvent'
         else:
             self.topology = topology
             self.default_namespace = default_namespace
-        if self.topology:
-            self.faces = set.union(*[set(x) for x in self.topology.values()])
-        else:
+        if not self.topology:
+            self.topology = {}
             self.faces = set()
+        else:
+            self.faces = reduce(set.union, self.topology.values())
+
+    def __contains__(self, key):
+        return key in self.topology
 
     def __getitem__(self, key):
-        if key in {"RoW", "GLO"}:
+        if key == 'RoW' and 'RoW' not in self.topology:
             return set()
         return self.topology[self._actual_key(key)]
 
     def _actual_key(self, key):
         """Translate provided key into the key used in the topology. Tries the unmodified key, the key with the default namespace, and the country converter. Raises a ``KeyError`` if none of these finds a suitable definition in ``self.topology``."""
-        if key in {"RoW", "GLO"}:
+        if key == "RoW":
             return key
         elif key in self.topology:
             return key
@@ -83,19 +90,11 @@ class Geomatcher:
     def _finish_filter(self, lst, key, include_self, exclusive, biggest_first):
         """Finish filtering a GIS operation. Can optionally exclude the input key, sort results, and exclude overlapping results. Internal function, not normally called directly."""
         key = self._actual_key(key)
-        given = [x[0] for x in lst]
+        locations = [x[0] for x in lst]
 
-        has_row = "RoW" in given
-        if has_row:
-            lst.pop(given.index("RoW"))
-            given.pop(given.index("RoW"))
-        has_glo = "GLO" in given
-        if has_glo:
-            lst.pop(given.index("GLO"))
-            given.pop(given.index("GLO"))
+        if not include_self and key in locations:
+            lst.pop(locations.index(key))
 
-        if not include_self and key in given:
-            lst.pop(given.index(key))
         lst.sort(key=lambda x: x[1], reverse=biggest_first)
         lst = [x for x, y in lst]
 
@@ -109,20 +108,15 @@ class Geomatcher:
                     remaining.append(current)
             lst = remaining
 
-            # No faces left to be covered by global datasets
-            if not self[key].difference(removed):
-                has_row = has_glo = False
+            # Remove RoW when there are no topo faces for it to occupy
+            if ('RoW' not in self and 'RoW' in lst
+                and not self[key].difference(removed)):
+                lst.pop(lst.index('RoW'))
 
-        if has_row and (key != 'RoW' or include_self):
-            if biggest_first:
-                lst.insert(0, "RoW")
-            else:
-                lst.insert(-1, "RoW")
-        if has_glo and (key != 'GLO' or include_self):
-            if biggest_first:
-                lst.insert(0, "GLO")
-            else:
-                lst.insert(-1, "GLO")
+        # If RoW not resolved, make it the smallest
+        if 'RoW' not in self and 'RoW' in lst:
+            lst[-1 if biggest_first else 0] = lst.pop(lst.index('RoW'))
+
         return lst
 
     def intersects(self, key, include_self=False, exclusive=False, biggest_first=True, only=None):
@@ -130,54 +124,35 @@ class Geomatcher:
 
         Note that sorting is done by first by number of faces intersecting ``key``; the total number of faces in the intersected region is only used to break sorting ties.
 
-        ``.intersects("GLO")`` return all regions. ``.intersects("RoW")`` returns a list with with ``RoW`` or nothing.
+        If the ``resolved_row`` context manager is not used, ``RoW`` doesn't have a spatial definition. Therefore, ``.intersects("RoW")`` returns a list with with ``RoW`` or nothing.
 
         """
-        possibles = {k: self[k] for k in (only or [])} or self.topology
-
-        if key == 'GLO':
-            return self._finish_filter(
-                [(k, len(v)) for k, v in possibles.items()],
-                "GLO", include_self, exclusive, biggest_first
-            )
-        if key == 'RoW':
+        if key == 'RoW' and 'RoW' not in self:
             return ['RoW'] if 'RoW' in possibles else []
+
+        possibles = self.topology if only is None else {k: self[k] for k in only}
 
         faces = self[key]
         lst = [
             (k, (len(v.intersection(faces)), len(v)))
             for k, v in possibles.items()
-            if (faces.intersection(v) or k in ("GLO", "RoW"))
+            if (faces.intersection(v))
         ]
         return self._finish_filter(lst, key, include_self, exclusive, biggest_first)
 
     def contained(self, key, include_self=True, exclusive=False, biggest_first=True, only=None):
         """Get all locations that are completely within this location.
 
-        ``.contained("GLO")`` return all regions. ``.contained("RoW")`` returns a list with with ``RoW`` or nothing.
-
-        "RoW" and "GLO" are not normally in ``self.topology``, but if they are, or are passed in ``only``, here are the rules for handling them:
-
-            * GLO contains RoW and GLO
-            * RoW contains RoW
-
-        Note that both ``GLO`` and ``RoW`` could be removed if ``exclusive`` is true.
+        If the ``resolved_row`` context manager is not used, ``RoW`` doesn't have a spatial definition. Therefore, ``.contained("RoW")`` returns a list with either ``RoW`` or nothing.
 
         """
-        # GLO and RoW make my head hurt
-        ALLOWED = {("RoW", "GLO"), ("GLO", "GLO"), ("RoW", "RoW")}
-        row_filter = lambda x: x not in ("GLO", "RoW") or (x, key) in ALLOWED
-        possibles = {
-            k: self[k] for k in (only or []) if row_filter(k)
-        } or self.topology
+        if 'RoW' not in self:
+            if key == 'RoW':
+                return ['RoW'] if 'RoW' in (only or []) else []
+            elif only and 'RoW' in only:
+                only.pop(only.index('RoW'))
 
-        if key == 'GLO':
-            return self._finish_filter(
-                [(k, len(v)) for k, v in possibles.items()],
-                "GLO", include_self, exclusive, biggest_first
-            )
-        if key == 'RoW':
-            return ['RoW'] if 'RoW' in possibles else []
+        possibles = self.topology if only is None else {k: self[k] for k in only}
 
         faces = self[key]
         lst = [
@@ -190,15 +165,15 @@ class Geomatcher:
     def within(self, key, include_self=True, exclusive=False, biggest_first=True, only=None):
         """Get all locations that completely contain this location.
 
-        When called with GLO or RoW, returns a list which can only have GLO or RoW inside, if either are passed in ``only`` or added to ``self.topology``. Otherwise returns an empty list.
+        If the ``resolved_row`` context manager is not used, ``RoW`` doesn't have a spatial definition. Therefore, ``RoW`` can only be contained by ``GLO`` and ``RoW``.
 
         """
-        possibles = {k: self[k] for k in (only or [])} or self.topology
+        _ = lambda key: [key] if key in (only or []) else []
+        if 'RoW' not in self and key == 'RoW':
+            answer = [] + _('RoW') + _('GLO')
+            return list(reversed(answer)) if biggest_first else answer
 
-        if key == 'GLO':
-            return [x for x in possibles if x in ("GLO",)]
-        if key == 'RoW':
-            return [x for x in possibles if x in ("RoW", "GLO")]
+        possibles = self.topology if only is None else {k: self[k] for k in only}
 
         faces = self[key]
         lst = [
@@ -272,3 +247,26 @@ class Geomatcher:
 
 geomatcher = Geomatcher()
 geomatcher.add_definitions(IMAGE_TOPOLOGY, "IMAGE", relative=True)
+
+
+@contextmanager
+def resolved_row(objs, geomatcher=geomatcher):
+    """Temporarily insert ``RoW`` into ``geomatcher.topology``, defined by the topo faces not used in ``objs``.
+
+    Will overwrite any existing ``RoW``.
+
+    On exiting the context manager, ``RoW`` is deleted."""
+    def get_location(ds):
+        try:
+            return ds['location']
+        except TypeError:
+            return ds
+
+    geomatcher['RoW'] = geomatcher.faces.difference(
+        reduce(set.union, [
+            geomatcher[get_location(ds)]
+            for ds in objs if ds['location'] != 'GLO']
+        )
+    )
+    yield geomatcher
+    del geomatcher['RoW']
