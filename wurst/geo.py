@@ -1,11 +1,12 @@
 from .IMAGE import IMAGE_TOPOLOGY
+from collections.abc import MutableMapping
 from constructive_geometries import ConstructiveGeometries
 from contextlib import contextmanager
 from functools import reduce
 import country_converter as coco
 
 
-class Geomatcher:
+class Geomatcher(MutableMapping):
     """Object managing spatial relationships using the a world topology.
 
     ``Geomatcher`` takes as its base data a definition of the world split into topological faces. This definition is provided by the `constructive_geometries <>`__ library. A toplogical face is a polygon which does not overlap any other topological face. In ``constructive_geometries``, these faces are defined by integer ids, so e.g. Ireland is:
@@ -40,6 +41,7 @@ class Geomatcher:
     def __init__(self, topology='ecoinvent', default_namespace=None, use_coco=True):
         self.coco = use_coco
         if topology == 'ecoinvent':
+            self.default_namespace = 'ecoinvent'
             def ns(x):
                 if len(x) == 2 or x == 'RoW':
                     return x
@@ -49,11 +51,10 @@ class Geomatcher:
             cg = ConstructiveGeometries()
             self.topology = {ns(x): set(y) for x, y in cg.data.items()
                              if x != "__all__"}
-            self.topology['GLO'] = reduce(set.union, self.topology.values())
-            self.default_namespace = 'ecoinvent'
+            self['GLO'] = reduce(set.union, self.topology.values())
         else:
-            self.topology = topology
             self.default_namespace = default_namespace
+            self.topology = topology
         if not self.topology:
             self.topology = {}
             self.faces = set()
@@ -68,18 +69,34 @@ class Geomatcher:
             return set()
         return self.topology[self._actual_key(key)]
 
+    def __setitem__(self, key, value):
+        try:
+            key = self._actual_key(key)
+        except KeyError:
+            pass
+        self.topology[key] = value
+
+    def __delitem__(self, key):
+        del self.topology[key]
+
+    def __len__(self):
+        return len(self.topology)
+
+    def __iter__(self):
+        return iter(self.topology)
+
     def _actual_key(self, key):
         """Translate provided key into the key used in the topology. Tries the unmodified key, the key with the default namespace, and the country converter. Raises a ``KeyError`` if none of these finds a suitable definition in ``self.topology``."""
         if key == "RoW":
             return key
-        elif key in self.topology:
+        elif key in self:
             return key
-        elif (self.default_namespace, key) in self.topology:
+        elif (self.default_namespace, key) in self:
             return (self.default_namespace, key)
 
         if isinstance(key, str) and self.coco:
             new = coco.convert(names=[key], to='ISO2', not_found=None)
-            if new in self.topology:
+            if new in self:
                 if new not in self.__seen:
                     self.__seen.add(key)
                     print("Geomatcher: Used '{}' for '{}'".format(new, key))
@@ -98,7 +115,10 @@ class Geomatcher:
         lst.sort(key=lambda x: x[1], reverse=biggest_first)
         lst = [x for x, y in lst]
 
-        if exclusive:
+        # RoW in both key and lst, but not defined; only RoW remains if exclusive
+        if key == 'RoW' and 'RoW' not in self and exclusive:
+            return ['RoW'] if 'RoW' in lst else []
+        elif exclusive:
             removed, remaining = set(), []
             while lst:
                 current = lst.pop(0)
@@ -256,16 +276,17 @@ def resolved_row(objs, geomatcher=geomatcher):
     Will overwrite any existing ``RoW``.
 
     On exiting the context manager, ``RoW`` is deleted."""
-    def get_location(ds):
-        try:
-            return ds['location']
-        except TypeError:
-            return ds
+    def get_locations(lst):
+        for elem in lst:
+            try:
+                yield elem['location']
+            except TypeError:
+                yield elem
 
     geomatcher['RoW'] = geomatcher.faces.difference(
-        reduce(set.union, [
-            geomatcher[get_location(ds)]
-            for ds in objs if ds['location'] != 'GLO']
+        reduce(
+            set.union,
+            [geomatcher[obj] for obj in get_locations(objs)]
         )
     )
     yield geomatcher

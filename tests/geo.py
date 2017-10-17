@@ -1,7 +1,7 @@
 from constructive_geometries import ConstructiveGeometries
 from copy import deepcopy
 from wurst import geomatcher
-from wurst.geo import Geomatcher
+from wurst.geo import Geomatcher, resolved_row
 import pytest
 
 
@@ -182,8 +182,7 @@ def test_finish_filter_exclusive():
     assert result == ['A', 'D']
 
 def test_finish_filter_row_ordering():
-    # FIXME
-    return
+    # Test non-exclusive ordering of RoW; RoW not key
     given = {
         'A': set(range(10)),
         'B': {2, 3, 4},
@@ -193,30 +192,24 @@ def test_finish_filter_row_ordering():
     }
     g = Geomatcher(given)
     lst = [('B', 6), ('RoW', 7), ('D', 8), ('E', 9)]
-    result = g._finish_filter(lst, 'A', False, True, True)
+    result = g._finish_filter(lst, 'A', False, False, True)
+    assert result[-1] == 'RoW'
+    result = g._finish_filter(lst, 'A', False, False, False)
     assert result[0] == 'RoW'
-    # result = g._finish_filter(lst, 'A', False, True, False)
-    # print(result)
-    # assert result[-1] == 'RoW'
 
 def test_finish_filter_row_exclusive_row_key():
-    pass
+    g = Geomatcher()
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1)], 'RoW', False, True, True) == []
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1)], 'RoW', True, True, True) == []
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1), ('RoW', 0)], 'RoW', False, True, True) == []
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1), ('RoW', 0)], 'RoW', True, True, True) == ['RoW']
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1)], 'RoW', False, True, False) == []
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1)], 'RoW', True, True, False) == []
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1), ('RoW', 0)], 'RoW', False, True, False) == []
+    assert g._finish_filter([('NO', 4), ('LT', 3), ('LV', 2), ('EE', 1), ('RoW', 0)], 'RoW', True, True, False) == ['RoW']
 
 def test_finish_filter_row_exclusive():
     pass
-
-# def test_finish_filter_row_exclude_self():
-#     given = {
-#         'A': {1, 2, 3},
-#         'B': {2, 3, 4},
-#         'C': {3, 4, 5},
-#         'D': {10, 11},
-#         'E': {5, 6, 10},
-#     }
-#     g = Geomatcher(given)
-#     lst = [('A', 5), ('B', 6), ('RoW', 7), ('D', 8), ('E', 9)]
-#     result = g._finish_filter(lst, 'RoW', False, False, True)
-#     assert "RoW" not in result
 
 def test_intersects():
     g = Geomatcher()
@@ -338,6 +331,40 @@ def test_contained_row():
     assert g.contained("RoW", include_self=True, only=["RoW"]) == ["RoW"]
 
 def test_within_row():
-    #FIXME
-    return
+    pass
+
+def test_row_contextmanager_add_remove_row():
+    g_orig = Geomatcher()
+    assert 'RoW' not in g_orig
+    with resolved_row(['NO', 'LT', 'EE'], g_orig) as g:
+        assert 'RoW' in g
+        assert 'RoW' in g_orig
+        assert g is g_orig
+    assert 'RoW' not in g_orig
+
+def test_row_contextmanager_datasets_or_locations():
+    g_orig = Geomatcher()
+    with resolved_row(['NO', 'LT', 'EE'], g_orig) as g:
+        assert 'RoW' in g.intersects(('ecoinvent', 'BALTSO'))
+    given = [
+        {'location': 'NO'},
+        {'location': 'LT'},
+        {'location': 'EE'},
+    ]
+    with resolved_row(given, g_orig) as g:
+        assert 'RoW' in g.intersects(('ecoinvent', 'BALTSO'))
+
+def test_row_contextmanager_default_geomatcher():
+    with resolved_row(['NO', 'LT', 'EE']) as g:
+        assert g is geomatcher
+
+def test_row_contextmanager_intersects():
+    g_orig = Geomatcher()
+    with resolved_row(['NO', 'LT', 'EE'], g_orig) as g:
+        assert 'RoW' in g.intersects(('ecoinvent', 'BALTSO'))
+
+def test_row_contextmanager_contains():
+    pass
+
+def test_row_contextmanager_within():
     pass
