@@ -27,22 +27,6 @@ MOCK_MODULES = [
   "numpy",
   "pythonjsonlogger",
   "tqdm",
-  # "fiona.crs",
-  # "numpy",
-  # "pyproj",
-  # "rtree",
-  # "rasterio",
-  # "rasterio.rio.helpers",
-  # "rasterio.crs",
-  # "rasterio.features",
-  # "rasterio.warp",
-  # "rasterstats",
-  # "rasterstats.io",
-  # "rasterstats.utils",
-  # "shapely",
-  # "shapely.geometry",
-  # "shapely.geos",
-  # "shapely.ops",
 ]
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 

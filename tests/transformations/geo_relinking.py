@@ -53,7 +53,6 @@ def defaults():
 
 def test_relink_defaults(defaults):
     data, ds = defaults
-    return
     expected = {
         'location': ('ecoinvent', 'UN-NEUROPE'),
         'exchanges': [{
@@ -85,7 +84,6 @@ def test_relink_defaults(defaults):
     assert relink_technosphere_exchanges(ds, data) == expected
 
 def test_relink_no_row(defaults):
-    return
     data, ds = defaults
     ds['location'] = ('ecoinvent', 'BALTSO')
     data[0]['location'] = 'LT'
@@ -124,6 +122,51 @@ def test_relink_no_row(defaults):
             'name': 'D', 'product': 'E', 'unit': 'F',
             'amount': 100., 'loc': 100., 'uncertainty type': 0,
             'location': 'LV',
+            'type': 'technosphere',
+        }]
+    }
+    assert relink_technosphere_exchanges(ds, data) == expected
+
+def test_relink_multiple_row(defaults):
+    data, ds = defaults
+    data.append({
+        'name': 'A', 'reference product': 'B', 'unit': 'C',
+        'location': 'RoW',
+        'exchanges': [{
+            'type': 'production', 'amount': 1,
+            'production volume': 20,
+        }]
+    })
+    expected = {
+        'location': ('ecoinvent', 'UN-NEUROPE'),
+        'exchanges': [{
+            'name': 'D', 'product': 'E', 'unit': 'F',
+            'amount': 1,
+            'type': 'biosphere',
+        }, {
+            'name': 'A', 'product': 'B', 'unit': 'C',
+            'amount': 1 / 4 * 10, 'loc': 1 / 4 * 10, 'uncertainty type': 0,
+            'location': 'SE',
+            'type': 'technosphere',
+        }, {
+            'name': 'A', 'product': 'B', 'unit': 'C',
+            'amount': 1 / 4 * 10, 'loc': 1 / 4 * 10, 'uncertainty type': 0,
+            'location': 'NO',
+            'type': 'technosphere',
+        }, {
+            'name': 'A', 'product': 'B', 'unit': 'C',
+            'amount': 1 / 4 * 10, 'loc': 1 / 4 * 10, 'uncertainty type': 0,
+            'location': 'RoW',
+            'type': 'technosphere',
+        }, {
+            'name': 'A', 'product': 'B', 'unit': 'C',
+            'amount': 1 / 4 * 10, 'loc': 1 / 4 * 10, 'uncertainty type': 0,
+            'location': 'RoW',
+            'type': 'technosphere',
+        }, {
+            'name': 'D', 'product': 'E', 'unit': 'F',
+            'amount': 100., 'loc': 100., 'uncertainty type': 0,
+            'location': 'DK',
             'type': 'technosphere',
         }]
     }

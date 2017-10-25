@@ -40,9 +40,6 @@ Exchange iterators
 Geo functions
 -------------
 
-.. autoclass:: wurst.geo.Geomatcher
-    :members:
-
 .. autofunction:: wurst.transformations.geo.copy_to_new_location
 
 .. autofunction:: wurst.transformations.geo.relink_technosphere_exchanges

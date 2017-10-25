@@ -164,11 +164,13 @@ Spatial relationships
 
     Topological faces in Northeastern Canada, showing both political and geographical divisions.
 
-Wurst uses the `constructive_geometries <https://bitbucket.org/cmutel/py-constructive-geometries>`__ library to make spatial calculations easy. As shown above, ``constructive_geometries`` splits the world into a consistent set of `topological faces <https://postgis.net/docs/manual-2.2/Topology.html>`__, identified by integer ID values. This means that we can skip GIS functions like intersects, overlaps, etc. and instead use set algebra.
+Wurst uses the `constructive_geometries <https://github.com/cmutel/constructive_geometries>`__ library to make spatial calculations easy. As shown above, ``constructive_geometries`` splits the world into a consistent set of `topological faces <https://postgis.net/docs/manual-2.2/Topology.html>`__, identified by integer ID values. This means that we can skip GIS functions like intersects, overlaps, etc. and instead use set algebra.
 
 ``constructive_geometries`` is based on the `natural earth database <https://www.naturalearthdata.com>`__, and includes all countries, `UN regions and subregions <https://unstats.un.org/unsd/methodology/m49/>`__, some disputed areas, and a number of ecoinvent-specific regions; for full documentation, ; see the `ecoinvent report <https://geography.ecoinvent.org/report/>`__ for a complete list. Countries are identified by their two-letter `ISO 3166-2 codes <https://en.wikipedia.org/wiki/ISO_3166-2>`__.
 
-For documentation on the usage of the ``geomatcher``, see the :ref:`technical documentation <geom>` and `Matching and linking datasets in space <https://github.com/IndEcol/wurst-examples/blob/master/introduction/Matching%20and%20linking%20datasets%20in%20space.ipynb>`__.
+We recommend using the function `relink_technosphere_exchanges`, as this should be flexible enough for almost all cases, and has been tested to avoid common corner cases and possible hidden errors. See also the `Matching and linking datasets in space <https://github.com/IndEcol/wurst-examples/blob/master/introduction/Matching%20and%20linking%20datasets%20in%20space.ipynb>`__ example notebook.
+
+.. autofunction:: wurst.transformations.geo.relink_technosphere_exchanges
 
 Brightway2 IO
 =============

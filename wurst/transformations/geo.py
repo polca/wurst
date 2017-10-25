@@ -1,9 +1,10 @@
 from .. import log
 from ..errors import InvalidLink
 from ..geo import geomatcher
-from ..searching import reference_product, get_many, equals
+from ..searching import reference_product, get_many, equals, get_one
 from .uncertainty import rescale_exchange
 from .utils import copy_dataset
+from constructive_geometries import resolved_row
 from copy import deepcopy
 
 
@@ -60,22 +61,23 @@ def relink_technosphere_exchanges(ds, data, exclusive=True,
     technosphere = lambda x: x['type'] == 'technosphere'
 
     for exc in filter(technosphere, ds['exchanges']):
-        possibles = list(get_possibles(exc, data))
-        only = [obj['location'] for obj in possibles]
-        func = geomatcher.contained if contained else geomatcher.intersects
-        locations = func(ds['location'], include_self=True, exclusive=exclusive,
-            biggest_first=biggest_first, only=only)
+        possible_datasets = list(get_possibles(exc, data))
+        possible_locations = [obj['location'] for obj in possible_datasets]
+        with resolved_row(possible_locations, geomatcher) as g:
+            func = g.contained if contained else g.intersects
+            gis_match = func(ds['location'], include_self=True, exclusive=exclusive,
+                biggest_first=biggest_first, only=possible_locations)
 
-        if not locations or geomatcher[ds['location']].difference(set.union(
-                *[geomatcher[o] for o in locations])):
-            # Missing faces in providers, add RoW if present
-            locations.append('RoW')
+        kept = [ds for ds in possible_datasets if ds['location'] in gis_match]
 
-        kept = [ds for ds in possibles if ds['location'] in locations]
+        missing_faces = geomatcher[ds['location']].difference(
+            set.union(*[geomatcher[obj['location']] for obj in kept])
+        )
+        if missing_faces and "RoW" in possible_locations:
+            kept.extend([obj for obj in possible_datasets if obj['location'] == 'RoW'])
 
-        for place in ("RoW", "GLO"):
-            if not kept:
-                kept = [ds for ds in possibles if ds['location'] == place]
+        if not kept and "GLO" in possible_locations:
+            kept = [obj for obj in possible_datasets if obj['location'] == 'GLO']
 
         if not kept:
             if drop_invalid:

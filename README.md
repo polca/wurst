@@ -34,4 +34,6 @@ BSD 2-clause license. Contributions are welcome!
 
 * Review BW2 IO code to make sure all needed fields are present in newly-created and modified databases
 * Parameterized exchanges (e.g. electricity sector)
+* Check logging on all transformation functions
 * Log browser web app
+* Fill out geo linking tests
