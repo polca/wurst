@@ -173,7 +173,32 @@ def test_relink_multiple_row(defaults):
     assert relink_technosphere_exchanges(ds, data) == expected
 
 def test_relink_only_glo(defaults):
-    pass
+    data = [{
+        'name': 'A', 'reference product': 'B', 'unit': 'C',
+        'location': 'GLO',
+        'exchanges': [{
+            'type': 'production', 'amount': 1,
+            'production volume': 2,
+        }]
+    }]
+    ds = {
+        'location': ('ecoinvent', 'UN-NEUROPE'),
+        'exchanges': [{
+            'name': 'A', 'product': 'B', 'unit': 'C',
+            'amount': 10,
+            'type': 'technosphere',
+        }]
+    }
+    expected = {
+        'location': ('ecoinvent', 'UN-NEUROPE'),
+        'exchanges': [{
+            'name': 'A', 'product': 'B', 'unit': 'C',
+            'amount': 10, 'loc': 10, 'uncertainty type': 0,
+            'location': 'GLO',
+            'type': 'technosphere',
+        }]
+    }
+    assert relink_technosphere_exchanges(ds, data) == expected
 
 def test_relink_non_exclusive(defaults):
     pass

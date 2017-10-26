@@ -44,6 +44,8 @@ Geo functions
 
 .. autofunction:: wurst.transformations.geo.relink_technosphere_exchanges
 
+.. autofunction:: wurst.transformations.geo.allocate_inputs
+
 .. autofunction:: wurst.transformations.default_global_location
 
 Linking

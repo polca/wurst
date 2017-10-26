@@ -39,9 +39,9 @@ def relink_technosphere_exchanges(ds, data, exclusive=True,
 
     Will only search for providers contained within the location of ``ds``, unless ``contained`` is set to ``False``, all providers whose location intersects the location of ``ds`` will be used.
 
-    If no providers can be found, will try to use a ``RoW`` or ``GLO`` provider, in that order. If there are still no valid providers, a ``InvalidLink`` exception is raised, unless ``drop_invalid`` is ``True``, in which case the exchange will be deleted.
-
     A ``RoW`` provider will be added if there is a single topological face in the location of ``ds`` which isn't covered by the location of any providing activity.
+
+    If no providers can be found, `relink_technosphere_exchanes` will try to add a `RoW` or `GLO` providers, in that order, if available. If there are still no valid providers, a ``InvalidLink`` exception is raised, unless ``drop_invalid`` is ``True``, in which case the exchange will be deleted.
 
     Allocation between providers is done using ``allocate_inputs``; results seem strange if ``contained=False``, as production volumes for large regions would be used as allocation factors.
 
@@ -70,11 +70,14 @@ def relink_technosphere_exchanges(ds, data, exclusive=True,
 
         kept = [ds for ds in possible_datasets if ds['location'] in gis_match]
 
-        missing_faces = geomatcher[ds['location']].difference(
-            set.union(*[geomatcher[obj['location']] for obj in kept])
-        )
-        if missing_faces and "RoW" in possible_locations:
-            kept.extend([obj for obj in possible_datasets if obj['location'] == 'RoW'])
+        if kept:
+            missing_faces = geomatcher[ds['location']].difference(
+                set.union(*[geomatcher[obj['location']] for obj in kept])
+            )
+            if missing_faces and "RoW" in possible_locations:
+                kept.extend([obj for obj in possible_datasets if obj['location'] == 'RoW'])
+        elif 'RoW' in possible_locations:
+            kept = [obj for obj in possible_datasets if obj['location'] == 'RoW']
 
         if not kept and "GLO" in possible_locations:
             kept = [obj for obj in possible_datasets if obj['location'] == 'GLO']
@@ -130,12 +133,8 @@ def allocate_inputs(exc, lst):
         cp['location'] = location
         return rescale_exchange(cp, factor)
 
-    def _(factor, total):
-        print(factor, total)
-        return factor / total
-
     return [
-        new_exchange(exc, obj['location'], _(factor, total))
+        new_exchange(exc, obj['location'], factor / total)
         for obj, factor in zip(lst, pvs)
     ]
 
