@@ -36,4 +36,3 @@ BSD 2-clause license. Contributions are welcome!
 * Parameterized exchanges (e.g. electricity sector)
 * Check logging on all transformation functions
 * Log browser web app
-* Fill out geo linking tests
