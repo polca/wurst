@@ -25,3 +25,34 @@ def empty_market_dataset(ds, exclude=None):
         or exc['name'] in (exclude or [])
     ]
     return ds
+
+
+def add_metadata_to_production_exchanges(data, fields=('location', 'unit'),
+                                         matching_fields=('name', 'unit', 'location')):
+    """Add metadata to exchanges based on linked activities"""
+    get_key = lambda x: tuple([x.get(f) for f in matching_fields])
+    mapping = {get_key(ds): ds for ds in data}
+
+    for ds in data:
+        for exc in ds['exchanges']:
+            if all([field in exc for field in fields]):
+                continue
+            try:
+                if exc.get('type') == 'production':
+                    partner = ds
+                else:
+                    partner = mapping[get_key(exc)]
+            except KeyError:
+                continue
+            for field in fields:
+                if field not in exc and field in partner:
+                    exc[field] = partner[field]
+    return data
+
+
+def remove_exchange_fields_with_nones(data):
+    """Remove all keys from exchanges if their value is ``None``"""
+    clean = lambda dct: {k: v for k, v in dct.items() if v is not None}
+    for ds in data:
+        ds['exchanges'] = [clean(exc) for exc in ds['exchanges']]
+    return data
