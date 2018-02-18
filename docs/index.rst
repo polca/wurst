@@ -26,6 +26,15 @@ In general, a modification function will include the following steps:
 * Filter the external data source to get the relevant data used for modifications
 * Change the values of some of the exchanges in the filtered LCI database using the filtered external data
 
+Installation
+============
+
+Download and install `miniconda <https://conda.io/miniconda.html>`__, create and activate a `new environment <https://conda.io/docs/user-guide/tasks/manage-environments.html>`__, and then install:
+
+.. code-block:: bash
+
+    conda install -y -q -c conda-forge -c cmutel -c haasad -c konstantinstadler brightway2 jupyter wurst
+
 Documents versus matrices
 =========================
 

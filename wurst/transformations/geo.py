@@ -68,7 +68,8 @@ def relink_technosphere_exchanges(ds, data, exclusive=True,
             gis_match = func(ds['location'], include_self=True, exclusive=exclusive,
                 biggest_first=biggest_first, only=possible_locations)
 
-        kept = [ds for ds in possible_datasets if ds['location'] in gis_match]
+        kept = [ds for loc in gis_match for ds in possible_datasets
+                if ds['location'] == loc]
 
         if kept:
             missing_faces = geomatcher[ds['location']].difference(

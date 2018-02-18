@@ -35,9 +35,9 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 # built documents.
 #
 # The short X.Y version.
-version = '0.1.dev'
+version = '0.1'
 # The full version, including alpha/beta/rc tags.
-release = '0.1.dev'
+release = '0.1'
 
 # Make sure we use this copy of Wurst
 sys.path.insert(1, abspath(dirname(dirname(__file__))))

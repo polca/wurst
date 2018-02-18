@@ -16,10 +16,9 @@ See also the separate [wurst examples](https://github.com/IndEcol/wurst-examples
 
 ## Installation
 
-Wurst can be installed in its development version using Anaconda. First, follow the [Brightway2 installation instructions](https://docs.brightwaylca.org/installation.html#quickstart). Then, in the *same environment as Brightway*, do the following:
+Download and install [miniconda](https://conda.io/miniconda.html), create and activate a [new environment](https://conda.io/docs/user-guide/tasks/manage-environments.html), and then install::
 
-    conda install -c cmutel -c conda-forge -c konstantinstadler country_converter constructive_geometries
-    pip install https://github.com/IndEcol/wurst/archive/master.zip
+    conda install -y -q -c conda-forge -c cmutel -c haasad -c konstantinstadler brightway2 jupyter wurst
 
 ## License
 
@@ -36,4 +35,3 @@ BSD 2-clause license. Contributions are welcome!
 * Parameterized exchanges (e.g. electricity sector)
 * Check logging on all transformation functions
 * Log browser web app
-* Fill out geo linking tests
