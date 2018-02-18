@@ -16,7 +16,7 @@ for dirpath, dirnames, filenames in os.walk('wurst'):
 
 setup(
     name='wurst',
-    version="0.1.dev2",
+    version="0.1.1",
     packages=packages,
     author="Chris Mutel",
     author_email="cmutel@gmail.com",
@@ -40,7 +40,7 @@ setup(
         ]
     },
     url="https://github.com/cmutel/wurst",
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     description=('Wurst is a python package for linking and modifying '
                  'industrial ecology models'),
     classifiers=[
