@@ -12,3 +12,4 @@ MANIFEST
 .coverage
 ~*.*
 */.ipynb_checkpoints
+.pytest_cache
