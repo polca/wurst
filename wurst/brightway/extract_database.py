@@ -1,6 +1,18 @@
 from bw2data.database import DatabaseChooser
 from bw2data.backends.peewee import SQLiteBackend, ActivityDataset, ExchangeDataset
 from tqdm import tqdm
+import copy
+
+
+def _list_or_dict(obj):
+    if isinstance(obj, dict):
+        for key, value in obj.items():
+            cp = copy.deepcopy(value)
+            cp['name'] = key
+            yield cp
+    else:
+        for tmp in obj:
+            yield(tmp)
 
 
 def extract_activity(proxy):
@@ -17,8 +29,11 @@ def extract_activity(proxy):
         'reference product': proxy.product,
         'unit': proxy.data.get('unit', ''),
         'exchanges': [],
-        'parameters': {key: value['amount'] for
-                       key, value in proxy.data.get('parameters', {}).items()}
+        'parameters': {
+            obj['name']: obj['amount'] for obj in
+            _list_or_dict(proxy.data.get('parameters', []))
+        },
+        'parameters full': list(_list_or_dict(proxy.data.get('parameters', []))),
     }
 
 

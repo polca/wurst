@@ -62,7 +62,12 @@ try:
             'location': 'CH',
             'name': 'dinner',
             'type': 'process',
-            'unit': 'kg'
+            'unit': 'kg',
+            'parameters': [{
+                'name': 'rara',
+                'amount': 13,
+                'something': 'else',
+                }],
             },
         }
 

@@ -35,7 +35,11 @@ if test_bw2_database is not None:
                 'name': 'lunch',
                 'reference product': 'stuff',
                 'unit': 'kg',
-                'parameters': {'losses_gross_net': 0.01}
+                'parameters': {'losses_gross_net': 0.01},
+                'parameters full': [{
+                    'amount': 0.01,
+                    'name': 'losses_gross_net'
+                }],
             }, {
                 'classifications': [],
                 'code': '2',
@@ -63,7 +67,12 @@ if test_bw2_database is not None:
                 'name': 'dinner',
                 'reference product': None,
                 'unit': 'kg',
-                'parameters': {},
+                'parameters': {'rara': 13},
+                'parameters full': [{
+                  'name': 'rara',
+                  'amount': 13,
+                  'something': 'else',
+                }]
             }
         ]
 
