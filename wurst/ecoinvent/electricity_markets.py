@@ -58,6 +58,11 @@ high_voltage_providers = {
     'treatment of bagasse, from sweet sorghum, in heat and power co-generation unit, 6400kW thermal',
     'treatment of blast furnace gas, in power plant',
     'treatment of coal gas, in power plant',
+    # New in 3.5
+    'electricity production, hard coal, conventional',
+    'electricity production, hard coal, supercritical',
+    'electricity production, solar thermal parabolic trough, 50 MW',
+    'electricity production, solar tower power plant, 20 MW',
 }
 
 medium_voltage_providers = {
