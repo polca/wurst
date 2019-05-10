@@ -452,3 +452,84 @@ def test_move_all_generation_to_high_voltage():
         }
     ]
     assert move_all_generation_to_high_voltage(given) == expected
+
+def test_remove_electricity_trade():
+    given = [{
+        'location': 'CZ',
+        'name': 'market for electricity, high voltage',
+        'unit': 'kilowatt hour',
+        'exchanges': [
+            {'uncertainty type': 2,
+            'amount': 3,
+            'type': 'technosphere',
+            'name': 'market for transmission network, long-distance',
+            'unit': 'kilometer',
+            'location': 'GLO'},
+            {'uncertainty type': 0,
+            'loc': 1.0,
+            'amount': 1.0,
+            'type': 'production',
+            'name': 'market for electricity, high voltage',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+            {'uncertainty type': 0,
+            'amount': 0.4,
+            'type': 'technosphere',
+            'name': 'electricity production, hard coal',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+            {'uncertainty type': 0,
+            'amount': 0.3,
+            'type': 'technosphere',
+            'name': 'electricity production, wind, 1-3MW turbine, onshore',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+            {'uncertainty type': 0,
+            'amount': 0.05,
+            'type': 'technosphere',
+            'name': 'electricity, high voltage, import from AT',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+            {'uncertainty type': 0,
+            'amount': 0.05,
+            'type': 'technosphere',
+            'name': 'electricity, high voltage, import from DE',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'}
+        ]
+    }]
+    expected = [{
+        'location': 'CZ',
+        'name': 'market for electricity, high voltage',
+        'unit': 'kilowatt hour',
+        'exchanges': [
+            {'uncertainty type': 2,
+            'amount': 3,
+            'type': 'technosphere',
+            'name': 'market for transmission network, long-distance',
+            'unit': 'kilometer',
+            'location': 'GLO'},
+            {'uncertainty type': 0,
+            'loc': 1.0,
+            'amount': 1.0,
+            'type': 'production',
+            'name': 'market for electricity, high voltage',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+            {'uncertainty type': 0,
+            'amount': 0.4,
+            'type': 'technosphere',
+            'name': 'electricity production, hard coal',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+            {'uncertainty type': 0,
+            'amount': 0.3,
+            'type': 'technosphere',
+            'name': 'electricity production, wind, 1-3MW turbine, onshore',
+            'unit': 'kilowatt hour',
+            'location': 'CZ'},
+        ]
+    }]
+    assert remove_electricity_trade(given) == expected
+
+

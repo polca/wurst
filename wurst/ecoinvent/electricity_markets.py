@@ -148,6 +148,21 @@ def move_all_generation_to_high_voltage(data):
     return data
 
 
+def remove_electricity_trade(data):
+    """Delete all electricity trade exchanges.
+
+    Intended to be used when substituting in new trade mixes."""
+    MIXES = {low_voltage_mix, medium_voltage_mix, high_voltage_mix}
+    mix_filter = lambda ds: ds['name'] in MIXES
+    for ds in filter(mix_filter, data):
+        ds['exchanges'] = [
+            exc for exc in ds['exchanges']
+            if not ("electricity" in exc['name'] and
+                    "import from" in exc['name'])
+        ]
+    return data
+
+
 def include_filter(exc):
     return exc['unit'] != 'kilowatt hour' or (
         'import from' not in exc['name'] and exc['name'] not in all_providers)

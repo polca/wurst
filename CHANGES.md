@@ -4,6 +4,7 @@
 
 * Add functionality to write Brightway `IOTable` backend
 * Add `move_all_generation_to_high_voltage` function
+* Add `remove_electricity_trade` function
 * Update names for ecoinvent 3.5
 
 ## 0.1.2 (2018-08-21)
