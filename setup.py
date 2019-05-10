@@ -31,6 +31,7 @@ setup(
         "numpy",
         "pandas",
         "python-json-logger",
+        "toolz",
         "tqdm",
         "wrapt",
     ],

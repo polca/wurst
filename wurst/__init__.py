@@ -26,6 +26,7 @@ __all__ = (
     "resolved_row",
     "startswith",
     "technosphere",
+    "toolz",
     "write_brightway2_database",
 )
 
@@ -37,6 +38,12 @@ def log(message, ds):
               'unit', 'location')
     message.update({key: ds.get(key) for key in FIELDS})
     logger.info(message)
+
+
+try:
+    import cytoolz as toolz
+except ImportError:
+    import toolz
 
 
 from .brightway import extract_brightway2_databases, write_brightway2_database
