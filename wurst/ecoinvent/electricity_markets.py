@@ -1,4 +1,6 @@
+from .. import toolz
 from ..searching import get_many, equals
+from ..transformations import rescale_exchange
 from functools import partial
 
 
@@ -112,6 +114,38 @@ medium_voltage_mix = 'market for electricity, medium voltage'
 high_voltage_mix = 'market for electricity, high voltage'
 
 all_providers = high_voltage_providers.union(medium_voltage_providers).union(low_voltage_providers)
+
+
+def move_all_generation_to_high_voltage(data):
+    """Move all generation sources to the high voltage market.
+
+    Uses the relative shares in the low voltage market, **ignoring transmission losses**. In theory, using the production volumes would be more correct, but these numbers are no longer updated since ecoinvent 3.2.
+
+    Empties out the medium and low voltage mixes."""
+    MIXES = {low_voltage_mix, medium_voltage_mix, high_voltage_mix}
+    mix_filter = lambda ds: ds['name'] in MIXES
+    for group in toolz.groupby("location", filter(mix_filter, data)).values():
+        assert len(group) == 3
+        high, low, medium = sorted(group, key=lambda x: x['name'])
+        medium_in_low = [ex for ex in low['exchanges']
+                         if ex['name'] == medium_voltage_transformation][0]['amount']
+        high_in_low = [ex for ex in medium['exchanges']
+                          if ex['name'] == high_voltage_transformation][0]['amount'] * \
+                          medium_in_low
+        for exc in high['exchanges']:
+            if (exc['name'] in high_voltage_providers or (
+                "electricity" in exc['name'] and
+                "import from" in exc['name'])):
+                rescale_exchange(exc, high_in_low)
+        high['exchanges'].extend([rescale_exchange(exc, medium_in_low)
+                                  for exc in medium['exchanges']
+                                  if exc['name'] in medium_voltage_providers])
+        high['exchanges'].extend([exc
+                                  for exc in low['exchanges']
+                                  if exc['name'] in low_voltage_providers])
+    data = empty_medium_voltage_markets(data)
+    data = empty_low_voltage_markets(data)
+    return data
 
 
 def include_filter(exc):
