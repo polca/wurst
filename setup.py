@@ -16,11 +16,11 @@ for dirpath, dirnames, filenames in os.walk('wurst'):
 
 setup(
     name='wurst',
-    version="0.1.2",
+    version="0.2",
     packages=packages,
     author="Chris Mutel",
     author_email="cmutel@gmail.com",
-    license=open('LICENSE').read(),
+    license="BSD 3-clause",
     package_data={'wurst': [
         "IMAGE/metadata/*.*",
     ]},

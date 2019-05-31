@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2 (2019-05-XX)
+## 0.2 (2019-05-31)
 
 * Add functionality to write Brightway `IOTable` backend
 * Add `move_all_generation_to_high_voltage` function
