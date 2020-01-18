@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.2.1 (2020-01-18)
+
+* Update region topology (thanks @pbaustert!)
+
 ## 0.2 (2019-05-31)
 
 * Add functionality to write Brightway `IOTable` backend
