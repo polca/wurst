@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.2.2 (2020-12-02)
+
+* Add ability to add properties when extracting Brightway2 databases
+
 ### 0.2.1 (2020-01-18)
 
 * Update region topology (thanks @pbaustert!)

@@ -1,7 +1,7 @@
 from brightway_fixtures import test_bw2_database
 
 if test_bw2_database is not None:
-    from wurst.brightway import *
+    from wurst.brightway import extract_brightway2_databases
     from bw2data.tests import bw2test
     import pytest
 
@@ -91,6 +91,12 @@ if test_bw2_database is not None:
         assert extract_brightway2_databases({"food"})
         with pytest.raises(AssertionError):
             assert extract_brightway2_databases({"food": None})
+
+    def test_extraction_with_properties():
+        data = extract_brightway2_databases("food")
+        assert all('properties' not in exc for ds in data for exc in ds['exchanges'])
+        data = extract_brightway2_databases("food", add_properties=True)
+        assert all('properties' in exc for ds in data for exc in ds['exchanges'])
 
 else:
     pass

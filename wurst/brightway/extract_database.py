@@ -37,7 +37,7 @@ def extract_activity(proxy):
     }
 
 
-def extract_exchange(proxy):
+def extract_exchange(proxy, add_properties=False):
     """Get data in Wurtst internal format for an ``ExchangeDataset``"""
     assert isinstance(proxy, ExchangeDataset)
 
@@ -53,10 +53,12 @@ def extract_exchange(proxy):
     data['production volume'] = proxy.data.get("production volume")
     data['input'] = (proxy.input_database, proxy.input_code)
     data['output'] = (proxy.output_database, proxy.output_code)
+    if add_properties:
+        data['properties'] = proxy.data.get("properties", {})
     return data
 
 
-def add_exchanges_to_consumers(activities, exchange_qs):
+def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False):
     """Retrieve exchanges from database, and add to activities.
 
     Assumes that activities are single output, and that the exchange code is the same as the activity code. This assumption is valid for ecoinvent 3.3 cutoff imported into Brightway2."""
@@ -64,7 +66,7 @@ def add_exchanges_to_consumers(activities, exchange_qs):
 
     with tqdm(total=exchange_qs.count()) as pbar:
         for i, exc in enumerate(exchange_qs):
-            exc = extract_exchange(exc)
+            exc = extract_exchange(exc, add_properties=add_properties)
             output = tuple(exc.pop('output'))
             lookup[output]['exchanges'].append(exc)
             pbar.update(1)
@@ -113,7 +115,7 @@ def add_input_info_for_external_exchanges(activities, names):
                 exc['categories'] = obj.data['categories']
 
 
-def extract_brightway2_databases(database_names):
+def extract_brightway2_databases(database_names, add_properties=False):
     """Extract a Brightway2 SQLiteBackend database to the Wurst internal format.
 
     ``database_names`` is a list of database names. You should already be in the correct project.
@@ -138,7 +140,7 @@ def extract_brightway2_databases(database_names):
     activities = [extract_activity(o) for o in tqdm(activity_qs)]
     # Add each exchange to the activity list of exchanges
     print("Adding exchange data to activities")
-    add_exchanges_to_consumers(activities, exchange_qs)
+    add_exchanges_to_consumers(activities, exchange_qs, add_properties)
     # Add details on exchanges which come from our databases
     print("Filling out exchange data")
     add_input_info_for_indigenous_exchanges(activities, database_names)
