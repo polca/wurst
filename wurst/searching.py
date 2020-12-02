@@ -11,7 +11,7 @@ def contains(field, value):
 
 
 def startswith(field, value):
-    return lambda x: x.get(field, '').startswith(value)
+    return lambda x: x.get(field, "").startswith(value)
 
 
 def either(*funcs):
@@ -52,34 +52,31 @@ def get_one(data, *funcs):
 def _exchanges(ds, kind, *funcs):
     if funcs == [None]:
         funcs = []
-    return get_many(
-        filter(lambda x: x['type'] == kind, ds['exchanges']),
-        *funcs
-    )
+    return get_many(filter(lambda x: x["type"] == kind, ds["exchanges"]), *funcs)
 
 
 def technosphere(ds, *funcs):
     """Get all technosphere exchanges in ``ds`` that pass filtering functions ``funcs``"""
-    return _exchanges(ds, 'technosphere', *funcs)
+    return _exchanges(ds, "technosphere", *funcs)
 
 
 def biosphere(ds, *funcs):
     """Get all biosphere exchanges in ``ds`` that pass filtering functions ``funcs``"""
-    return _exchanges(ds, 'biosphere', *funcs)
+    return _exchanges(ds, "biosphere", *funcs)
 
 
 def production(ds, *funcs):
     """Get all production exchanges in ``ds`` that pass filtering functions ``funcs``"""
-    return _exchanges(ds, 'production', *funcs)
+    return _exchanges(ds, "production", *funcs)
 
 
 def reference_product(ds):
     """Get single reference product exchange from a dataset.
 
     Raises ``wurst.errors.NoResults`` or ``wurst.errors.MultipleResults`` if zero or multiple results are returned."""
-    excs = [exc for exc in ds['exchanges']
-            if exc['amount']
-            and exc['type'] == 'production']
+    excs = [
+        exc for exc in ds["exchanges"] if exc["amount"] and exc["type"] == "production"
+    ]
     if not excs:
         raise NoResults("No suitable production exchanges founds")
     elif len(excs) > 1:
@@ -97,7 +94,7 @@ def best_geo_match(possibles, ordered_locations):
     Returns an element from ``possibles``, or ``None``.
     """
     weights = {y: x for x, y in enumerate(ordered_locations)}
-    filtered = (obj for obj in possibles if obj['location'] in weights)
-    ordered = sorted(filtered, key=lambda x: weights[x['location']])
+    filtered = (obj for obj in possibles if obj["location"] in weights)
+    ordered = sorted(filtered, key=lambda x: weights[x["location"]])
     if ordered:
         return ordered[0]

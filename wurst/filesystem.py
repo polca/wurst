@@ -41,9 +41,9 @@ def create_log(run_id=None):
         run_id = get_uuid()
     filepath = get_log_filepath(run_id)
 
-    logger = logging.getLogger('wurst')
+    logger = logging.getLogger("wurst")
     logger.propagate = False
-    handler = logging.FileHandler(filepath, encoding='utf-8')
+    handler = logging.FileHandler(filepath, encoding="utf-8")
     formatter = jsonlogger.JsonFormatter()
     handler.setFormatter(formatter)
     logger.addHandler(handler)

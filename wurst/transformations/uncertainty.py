@@ -14,13 +14,13 @@ def rescale_exchange(exc, value, remove_uncertainty=True):
     assert isinstance(exc, dict), "Must pass exchange dictionary"
     assert isinstance(value, Number), "Constant factor ``value`` must be a number"
 
-    exc['amount'] *= value
+    exc["amount"] *= value
 
-    FIELDS = ('shape', 'size', 'minimum', 'maximum')
+    FIELDS = ("shape", "size", "minimum", "maximum")
 
     if remove_uncertainty:
-        exc['uncertainty type'] = 0
-        exc['loc'] = exc['amount']
+        exc["uncertainty type"] = 0
+        exc["loc"] = exc["amount"]
         for field in FIELDS:
             if field in exc:
                 del exc[field]

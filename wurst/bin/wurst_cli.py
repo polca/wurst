@@ -27,10 +27,10 @@ import sys
 
 def main():
     try:
-        args = docopt(__doc__, version='Wurst CLI 0.1.dev')
-        if args['cleanup']:
+        args = docopt(__doc__, version="Wurst CLI 0.1.dev")
+        if args["cleanup"]:
             cleanup_data_directory()
-        elif args['show']:
+        elif args["show"]:
             pass
         else:
             raise ValueError

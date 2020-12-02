@@ -8,11 +8,11 @@ def _list_or_dict(obj):
     if isinstance(obj, dict):
         for key, value in obj.items():
             cp = copy.deepcopy(value)
-            cp['name'] = key
+            cp["name"] = key
             yield cp
     else:
         for tmp in obj:
-            yield(tmp)
+            yield (tmp)
 
 
 def extract_activity(proxy):
@@ -20,20 +20,20 @@ def extract_activity(proxy):
     assert isinstance(proxy, ActivityDataset)
 
     return {
-        'classifications': proxy.data.get('classifications', []),
-        'comment': proxy.data.get('comment', ''),
-        'location': proxy.location,
-        'database': proxy.database,
-        'code': proxy.code,
-        'name': proxy.name,
-        'reference product': proxy.product,
-        'unit': proxy.data.get('unit', ''),
-        'exchanges': [],
-        'parameters': {
-            obj['name']: obj['amount'] for obj in
-            _list_or_dict(proxy.data.get('parameters', []))
+        "classifications": proxy.data.get("classifications", []),
+        "comment": proxy.data.get("comment", ""),
+        "location": proxy.location,
+        "database": proxy.database,
+        "code": proxy.code,
+        "name": proxy.name,
+        "reference product": proxy.product,
+        "unit": proxy.data.get("unit", ""),
+        "exchanges": [],
+        "parameters": {
+            obj["name"]: obj["amount"]
+            for obj in _list_or_dict(proxy.data.get("parameters", []))
         },
-        'parameters full': list(_list_or_dict(proxy.data.get('parameters', []))),
+        "parameters full": list(_list_or_dict(proxy.data.get("parameters", []))),
     }
 
 
@@ -41,20 +41,27 @@ def extract_exchange(proxy, add_properties=False):
     """Get data in Wurtst internal format for an ``ExchangeDataset``"""
     assert isinstance(proxy, ExchangeDataset)
 
-    uncertainty_fields = ('uncertainty type', 'loc', 'scale', 'shape',
-                          'minimum', 'maximum', 'amount', 'pedigree')
-    data = {key: proxy.data[key] for key in uncertainty_fields
-            if key in proxy.data}
-    assert 'amount' in data, "Exchange has no `amount` field"
-    if 'uncertainty type' not in data:
-        data['uncertainty type'] = 0
-        data['loc'] = data['amount']
-    data['type'] = proxy.type
-    data['production volume'] = proxy.data.get("production volume")
-    data['input'] = (proxy.input_database, proxy.input_code)
-    data['output'] = (proxy.output_database, proxy.output_code)
+    uncertainty_fields = (
+        "uncertainty type",
+        "loc",
+        "scale",
+        "shape",
+        "minimum",
+        "maximum",
+        "amount",
+        "pedigree",
+    )
+    data = {key: proxy.data[key] for key in uncertainty_fields if key in proxy.data}
+    assert "amount" in data, "Exchange has no `amount` field"
+    if "uncertainty type" not in data:
+        data["uncertainty type"] = 0
+        data["loc"] = data["amount"]
+    data["type"] = proxy.type
+    data["production volume"] = proxy.data.get("production volume")
+    data["input"] = (proxy.input_database, proxy.input_code)
+    data["output"] = (proxy.output_database, proxy.output_code)
     if add_properties:
-        data['properties'] = proxy.data.get("properties", {})
+        data["properties"] = proxy.data.get("properties", {})
     return data
 
 
@@ -62,13 +69,13 @@ def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False):
     """Retrieve exchanges from database, and add to activities.
 
     Assumes that activities are single output, and that the exchange code is the same as the activity code. This assumption is valid for ecoinvent 3.3 cutoff imported into Brightway2."""
-    lookup = {(o['database'], o['code']): o for o in activities}
+    lookup = {(o["database"], o["code"]): o for o in activities}
 
     with tqdm(total=exchange_qs.count()) as pbar:
         for i, exc in enumerate(exchange_qs):
             exc = extract_exchange(exc, add_properties=add_properties)
-            output = tuple(exc.pop('output'))
-            lookup[output]['exchanges'].append(exc)
+            output = tuple(exc.pop("output"))
+            lookup[output]["exchanges"].append(exc)
             pbar.update(1)
     return activities
 
@@ -76,20 +83,20 @@ def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False):
 def add_input_info_for_indigenous_exchanges(activities, names):
     """Add details on exchange inputs if these activities are already available"""
     names = set(names)
-    lookup = {(o['database'], o['code']): o for o in activities}
+    lookup = {(o["database"], o["code"]): o for o in activities}
 
     for ds in activities:
-        for exc in ds['exchanges']:
-            if 'input' not in exc or exc['input'][0] not in names:
+        for exc in ds["exchanges"]:
+            if "input" not in exc or exc["input"][0] not in names:
                 continue
-            obj = lookup[exc['input']]
-            exc['product'] = obj['reference product']
-            exc['name'] = obj['name']
-            exc['unit'] = obj['unit']
-            exc['location'] = obj['location']
-            if exc['type'] == 'biosphere':
-                exc['categories'] = obj['categories']
-            exc.pop('input')
+            obj = lookup[exc["input"]]
+            exc["product"] = obj["reference product"]
+            exc["name"] = obj["name"]
+            exc["unit"] = obj["unit"]
+            exc["location"] = obj["location"]
+            if exc["type"] == "biosphere":
+                exc["categories"] = obj["categories"]
+            exc.pop("input")
 
 
 def add_input_info_for_external_exchanges(activities, names):
@@ -98,21 +105,21 @@ def add_input_info_for_external_exchanges(activities, names):
     cache = {}
 
     for ds in tqdm(activities):
-        for exc in ds['exchanges']:
-            if 'input' not in exc or exc['input'][0] in names:
+        for exc in ds["exchanges"]:
+            if "input" not in exc or exc["input"][0] in names:
                 continue
-            if exc['input'] not in cache:
-                cache[exc['input']] = ActivityDataset.get(
-                    ActivityDataset.database == exc['input'][0],
-                    ActivityDataset.code == exc['input'][1],
+            if exc["input"] not in cache:
+                cache[exc["input"]] = ActivityDataset.get(
+                    ActivityDataset.database == exc["input"][0],
+                    ActivityDataset.code == exc["input"][1],
                 )
-            obj = cache[exc['input']]
-            exc['name'] = obj.name
-            exc['product'] = obj.product
-            exc['unit'] = obj.data['unit']
-            exc['location'] = obj.location
-            if exc['type'] == 'biosphere':
-                exc['categories'] = obj.data['categories']
+            obj = cache[exc["input"]]
+            exc["name"] = obj.name
+            exc["product"] = obj.product
+            exc["unit"] = obj.data["unit"]
+            exc["location"] = obj.location
+            if exc["type"] == "biosphere":
+                exc["categories"] = obj.data["categories"]
 
 
 def extract_brightway2_databases(database_names, add_properties=False):
@@ -132,8 +139,12 @@ def extract_brightway2_databases(database_names, add_properties=False):
 
     # Construct generators for both activities and exchanges
     # Need to be clever to minimize copying and memory use
-    activity_qs = ActivityDataset.select().where(ActivityDataset.database << database_names)
-    exchange_qs = ExchangeDataset.select().where(ExchangeDataset.output_database << database_names)
+    activity_qs = ActivityDataset.select().where(
+        ActivityDataset.database << database_names
+    )
+    exchange_qs = ExchangeDataset.select().where(
+        ExchangeDataset.output_database << database_names
+    )
 
     # Retrieve all activity data
     print("Getting activity data")

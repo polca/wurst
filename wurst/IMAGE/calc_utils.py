@@ -6,8 +6,9 @@ def relative_change(dataset, years, start, end):
 
     Assumes years are the last axis of the array. Normalizes by the starting value."""
     years = list(years)
-    return (dataset[..., years.index(end)] - dataset[..., years.index(start)]) / \
-        dataset[..., years.index(start)]
+    return (
+        dataset[..., years.index(end)] - dataset[..., years.index(start)]
+    ) / dataset[..., years.index(start)]
 
 
 def convert_to_location_dictionary(array, locations=REGIONS):
@@ -21,9 +22,7 @@ def convert_to_location_dictionary(array, locations=REGIONS):
     size = array.shape[0]
     if len(array.shape) == 1:
         return {
-            loc: array[index]
-            for index, loc in enumerate(locations)
-            if index < size
+            loc: array[index] for index, loc in enumerate(locations) if index < size
         }
     else:
         return {

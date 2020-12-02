@@ -4,11 +4,12 @@ from numbers import Number
 import logging
 
 
-logger = logging.getLogger('wurst')
+logger = logging.getLogger("wurst")
 
 
-def change_exchanges_by_constant_factor(ds, value,
-        technosphere_filters=None, biosphere_filters=None):
+def change_exchanges_by_constant_factor(
+    ds, value, technosphere_filters=None, biosphere_filters=None
+):
     """Change some or all inputs and biosphere flows by a constant factor.
 
     * ``ds`` is a dataset document.

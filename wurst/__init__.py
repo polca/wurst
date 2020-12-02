@@ -31,11 +31,12 @@ __all__ = (
 )
 
 import logging
-logger = logging.getLogger('wurst')
+
+logger = logging.getLogger("wurst")
+
 
 def log(message, ds):
-    FIELDS = ('database', 'code', 'name', 'reference product',
-              'unit', 'location')
+    FIELDS = ("database", "code", "name", "reference product", "unit", "location")
     message.update({key: ds.get(key) for key in FIELDS})
     logger.info(message)
 

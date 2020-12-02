@@ -13,7 +13,7 @@ class WurstImporter(LCIImporter):
         self.db_name = db_name
         self.data = data
         for act in self.data:
-            act['database'] = self.db_name
+            act["database"] = self.db_name
 
     def write_database(self):
         assert not self.statistics()[2], "Not all exchanges are linked"
@@ -41,9 +41,10 @@ def write_brightway2_database(data, name):
 
     # Restore parameters to Brightway2 format which allows for uncertainty and comments
     for ds in data:
-        if 'parameters' in ds:
-            ds['parameters'] = {name: {'amount': amount}
-                                for name, amount in ds['parameters'].items()}
+        if "parameters" in ds:
+            ds["parameters"] = {
+                name: {"amount": amount} for name, amount in ds["parameters"].items()
+            }
 
     change_db_name(data, name)
     link_internal(data)
@@ -72,9 +73,10 @@ def write_brightway2_array_database(data, name):
 
     # Restore parameters to Brightway2 format which allows for uncertainty and comments
     for ds in data:
-        if 'parameters' in ds:
-            ds['parameters'] = {name: {'amount': amount}
-                                for name, amount in ds['parameters'].items()}
+        if "parameters" in ds:
+            ds["parameters"] = {
+                name: {"amount": amount} for name, amount in ds["parameters"].items()
+            }
 
     change_db_name(data, name)
     link_internal(data)
@@ -84,11 +86,12 @@ def write_brightway2_array_database(data, name):
     exchanges = []
 
     for ds in data:
-        ds['key'] = (name, ds['code'])
-        for exc in ds['exchanges']:
-            exc['output'] = ds['key']
+        ds["key"] = (name, ds["code"])
+        for exc in ds["exchanges"]:
+            exc["output"] = ds["key"]
             exchanges.append(exc)
-        ds['exchanges'] = []
+        ds["exchanges"] = []
 
-    Database(name, "iotable").write({ds['key']: ds for ds in data}, exchanges,
-                                    includes_production=True)
+    Database(name, "iotable").write(
+        {ds["key"]: ds for ds in data}, exchanges, includes_production=True
+    )

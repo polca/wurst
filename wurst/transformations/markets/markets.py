@@ -1,6 +1,6 @@
 import logging
 
-logger = logging.getLogger('wurst')
+logger = logging.getLogger("wurst")
 
 
 # add new market participants - manual mapping
