@@ -1,5 +1,8 @@
 from bw2data.database import DatabaseChooser
-from bw2data.backends.peewee import SQLiteBackend, ActivityDataset, ExchangeDataset
+try:
+    from bw2data.backends.peewee import SQLiteBackend, ActivityDataset, ExchangeDataset
+except ImportError:
+    from bw2data.backends import SQLiteBackend, ActivityDataset, ExchangeDataset
 from tqdm import tqdm
 import copy
 
@@ -38,7 +41,7 @@ def extract_activity(proxy):
 
 
 def extract_exchange(proxy, add_properties=False):
-    """Get data in Wurtst internal format for an ``ExchangeDataset``"""
+    """Get data in Wurst internal format for an ``ExchangeDataset``"""
     assert isinstance(proxy, ExchangeDataset)
 
     uncertainty_fields = (
@@ -90,12 +93,13 @@ def add_input_info_for_indigenous_exchanges(activities, names):
             if "input" not in exc or exc["input"][0] not in names:
                 continue
             obj = lookup[exc["input"]]
-            exc["product"] = obj["reference product"]
-            exc["name"] = obj["name"]
-            exc["unit"] = obj["unit"]
-            exc["location"] = obj["location"]
+            exc["product"] = obj.get("reference product")
+            exc["name"] = obj.get("name")
+            exc["unit"] = obj.get("unit")
+            exc["location"] = obj.get("location")
+            exc["database"] = obj.get("database")
             if exc["type"] == "biosphere":
-                exc["categories"] = obj["categories"]
+                exc["categories"] = obj.get("categories")
             exc.pop("input")
 
 
@@ -116,10 +120,11 @@ def add_input_info_for_external_exchanges(activities, names):
             obj = cache[exc["input"]]
             exc["name"] = obj.name
             exc["product"] = obj.product
-            exc["unit"] = obj.data["unit"]
+            exc["unit"] = obj.data.get("unit")
             exc["location"] = obj.location
+            exc["database"] = obj.database
             if exc["type"] == "biosphere":
-                exc["categories"] = obj.data["categories"]
+                exc["categories"] = obj.data.get("categories")
 
 
 def extract_brightway2_databases(database_names, add_properties=False):
