@@ -70,10 +70,11 @@ Transformations
 
 .. autofunction:: wurst.transformations.empty_market_dataset
 
-Brightway2 IO
--------------
+Brightway IO
+------------
 
 .. autofunction:: wurst.brightway.extract_database.extract_brightway2_databases
 
 .. autofunction:: wurst.brightway.write_database.write_brightway2_database
 
+.. autofunction:: wurst.brightway25.write_database.write_brightway25_database
