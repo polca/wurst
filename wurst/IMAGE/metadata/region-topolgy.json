@@ -1,18 +1,18 @@
 {
-  "Russia Region": [
+  "RUS": [
     "AM",
     "AZ",
     "GE",
     "RU"
   ],
-  "China Region": [
+  "CHN": [
     "CN",
     "HK",
     "MN",
     "MO",
     "TW"
   ],
-  "Rest of Southern Africa": [
+  "RSAF": [
     "AO",
     "BW",
     "LS",
@@ -24,18 +24,18 @@
     "ZM",
     "ZW"
   ],
-  "Mexico": [
+  "MEX": [
     "MX"
   ],
-  "Indonesia Region": [
+  "INDO": [
     "ID",
     "PG",
     "TL"
   ],
-  "Japan": [
+  "JAP": [
     "JP"
   ],
-  "Rest of South America": [
+  "RSAM": [
     "AR",
     "BO",
     "CL",
@@ -49,7 +49,7 @@
     "UY",
     "VE"
   ],
-  "Western Africa": [
+  "WAF": [
     "BF",
     "BJ",
     "CF",
@@ -76,15 +76,15 @@
     "TD",
     "TG"
   ],
-  "Ukraine region": [
+  "UKR": [
     "BY",
     "MD",
     "UA"
   ],
-  "India": [
+  "INDIA": [
     "IN"
   ],
-  "Middle east": [
+  "ME": [
     "AE",
     "BH",
     "IL",
@@ -99,7 +99,7 @@
     "SY",
     "YE"
   ],
-  "Western Europe": [
+  "WEU": [
     "AD",
     "AT",
     "BE",
@@ -127,7 +127,7 @@
     "SM",
     "VA"
   ],
-  "Northern Africa": [
+  "NAF": [
     "DZ",
     "EG",
     "EH",
@@ -135,11 +135,11 @@
     "MA",
     "TN"
   ],
-  "Korea Region": [
+  "KOR": [
     "KP",
     "KR"
   ],
-  "Eastern Africa": [
+  "EAF": [
     "BI",
     "DJ",
     "ER",
@@ -156,14 +156,14 @@
     "UG",
     "SS"
   ],
-  "Central Asia": [
+  "STAN": [
     "KZ",
     "KG",
     "TJ",
     "TM",
     "UZ"
   ],
-  "Central Europe": [
+  "CEU": [
     "AL",
     "BA",
     "BG",
@@ -182,7 +182,7 @@
     "SK",
     "XK"
   ],
-  "Central America": [
+  "RCAM": [
     "AI",
     "AW",
     "BB",
@@ -217,10 +217,10 @@
     "VI",
     "CU"
   ],
-  "Canada": [
+  "CAN": [
     "CA"
   ],
-  "Rest of South Asia": [
+  "RSAS": [
     "AF",
     "BD",
     "BT",
@@ -229,16 +229,16 @@
     "NP",
     "PK"
   ],
-  "South Africa": [
+  "SAF": [
     "ZA"
   ],
-  "Brazil": [
+  "BRA": [
     "BR"
   ],
-  "Turkey": [
+  "TUR": [
     "TR"
   ],
-  "Oceania": [
+  "OCE": [
     "AS",
     "AU",
     "CK",
@@ -264,7 +264,7 @@
     "US",
     "PM"
   ],
-  "South Asia": [
+  "SEAS": [
     "BN",
     "KH",
     "LA",
@@ -274,5 +274,6 @@
     "SG",
     "TH",
     "VN"
-  ]
+  ],
+  "World": ["GLO", "RoW"]
 }
