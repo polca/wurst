@@ -21,6 +21,11 @@ def test_default_setup():
 
 
 def test_image_added():
-    assert ("IMAGE", "Oceania") in geomatcher
+    assert ("IMAGE", "OCE") in geomatcher
     g = Geomatcher()
-    assert ("IMAGE", "Oceania") not in g
+    assert ("IMAGE", "OCE") not in g
+
+def test_remind_added():
+    assert ("REMIND", "EUR") in geomatcher
+    g = Geomatcher()
+    assert ("REMIND", "EUR") not in g
