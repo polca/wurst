@@ -1,5 +1,3 @@
-__version__ = (0, 2, 1)
-
 __all__ = (
     "best_geo_match",
     "biosphere",
@@ -30,6 +28,7 @@ __all__ = (
     "write_brightway2_database",
 )
 
+
 import logging
 
 logger = logging.getLogger("wurst")
@@ -46,8 +45,11 @@ try:
 except ImportError:
     import toolz
 
-
-from .brightway import extract_brightway2_databases, write_brightway2_database
+from .version import version as __version__
+try:
+    from .brightway import extract_brightway2_databases, write_brightway2_database
+except ImportError:
+    extract_brightway2_databases = write_brightway2_database = None
 from .filesystem import create_log, create_dir
 from .searching import (
     best_geo_match,

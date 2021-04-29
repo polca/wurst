@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3 (2021-04-29)
+
+* Compatibility with Brightway 2.5
+* Added REMIND IAM region labels
+* Update IMAGE IAM region labels
+
 ### 0.2.2 (2020-12-02)
 
 * Add ability to add properties when extracting Brightway2 databases
