@@ -13,26 +13,10 @@ def test_change_exchanges_by_constant_factor():
     given = {
         "foo": "bar",
         "exchanges": [
-            {
-                "filter me": "found",
-                "foo": "baz",
-                "amount": 6,
-                "type": "technosphere",
-            },
-            {
-                "filter me": "found",
-                "amount": 5,
-                "type": "biosphere",
-            },
-            {
-                "foo": "baz",
-                "amount": 4,
-                "type": "technosphere",
-            },
-            {
-                "amount": 3,
-                "type": None,
-            },
+            {"filter me": "found", "foo": "baz", "amount": 6, "type": "technosphere"},
+            {"filter me": "found", "amount": 5, "type": "biosphere"},
+            {"foo": "baz", "amount": 4, "type": "technosphere"},
+            {"amount": 3, "type": None},
         ],
     }
     expected = {
@@ -53,15 +37,8 @@ def test_change_exchanges_by_constant_factor():
                 "amount": 2.5,
                 "type": "biosphere",
             },
-            {
-                "foo": "baz",
-                "amount": 4,
-                "type": "technosphere",
-            },
-            {
-                "amount": 3,
-                "type": None,
-            },
+            {"foo": "baz", "amount": 4, "type": "technosphere"},
+            {"amount": 3, "type": None},
         ],
     }
     filters = [equals("filter me", "found")]

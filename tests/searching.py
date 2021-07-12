@@ -92,10 +92,7 @@ def test_technosphere():
 
 def test_biosphere():
     given = {
-        "exchanges": [
-            {"type": "nope", "n": "foo"},
-            {"type": "biosphere", "n": "bar"},
-        ]
+        "exchanges": [{"type": "nope", "n": "foo"}, {"type": "biosphere", "n": "bar"}]
     }
     expected = [{"type": "biosphere", "n": "bar"}]
     assert list(biosphere(given)) == expected
@@ -113,10 +110,7 @@ def test_biosphere():
 
 def test_production():
     given = {
-        "exchanges": [
-            {"type": "nope", "n": "foo"},
-            {"type": "production", "n": "bar"},
-        ]
+        "exchanges": [{"type": "nope", "n": "foo"}, {"type": "production", "n": "bar"}]
     }
     expected = [{"type": "production", "n": "bar"}]
     assert list(production(given)) == expected

@@ -10,52 +10,28 @@ def defaults():
             "reference product": "B",
             "unit": "C",
             "location": "SE",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         },
         {
             "name": "A",
             "reference product": "B",
             "unit": "C",
             "location": "NO",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 4,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 4}],
         },
         {
             "name": "A",
             "reference product": "B",
             "unit": "C",
             "location": "RoW",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 14,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 14}],
         },
         {
             "name": "D",
             "reference product": "E",
             "unit": "F",
             "location": "DK",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 1,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 1}],
         },
     ]
     ds = {
@@ -156,13 +132,7 @@ def test_relink_no_row(defaults):
             "reference product": "B",
             "unit": "C",
             "location": "EE",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 14,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 14}],
         }
     )
     expected = {
@@ -228,13 +198,7 @@ def test_relink_multiple_row(defaults):
             "reference product": "B",
             "unit": "C",
             "location": "RoW",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 20,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 20}],
         }
     )
     expected = {
@@ -309,13 +273,7 @@ def test_relink_only_glo():
             "reference product": "B",
             "unit": "C",
             "location": "GLO",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         }
     ]
     ds = {
@@ -355,26 +313,14 @@ def test_relink_only_row_and_glo():
             "reference product": "B",
             "unit": "C",
             "location": "GLO",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         },
         {
             "name": "A",
             "reference product": "B",
             "unit": "C",
             "location": "RoW",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         },
     ]
     ds = {
@@ -414,26 +360,14 @@ def test_relink_non_exclusive():
             "reference product": "B",
             "unit": "C",
             "location": ("ecoinvent", "UN-NEUROPE"),
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         },
         {
             "name": "A",
             "reference product": "B",
             "unit": "C",
             "location": "NO",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 6,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 6}],
         },
     ]
     ds = {
@@ -483,26 +417,14 @@ def test_relink_exclusive():
             "reference product": "B",
             "unit": "C",
             "location": ("ecoinvent", "UN-NEUROPE"),
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         },
         {
             "name": "A",
             "reference product": "B",
             "unit": "C",
             "location": "NO",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 6,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 6}],
         },
     ]
     ds = {
@@ -542,13 +464,7 @@ def test_relink_invalid_error():
             "reference product": "B",
             "unit": "C",
             "location": "FR",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         }
     ]
     ds = {
@@ -574,13 +490,7 @@ def test_relink_invalid_drop():
             "reference product": "B",
             "unit": "C",
             "location": "FR",
-            "exchanges": [
-                {
-                    "type": "production",
-                    "amount": 1,
-                    "production volume": 2,
-                }
-            ],
+            "exchanges": [{"type": "production", "amount": 1, "production volume": 2}],
         }
     ]
     ds = {

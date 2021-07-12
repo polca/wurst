@@ -110,20 +110,9 @@ def test_delete_zero_amount_exchanges():
         }
     ]
     first = [
-        {
-            "exchanges": [
-                {"type": "foo", "amount": 0},
-                {"type": "bar", "amount": 1},
-            ]
-        }
+        {"exchanges": [{"type": "foo", "amount": 0}, {"type": "bar", "amount": 1}]}
     ]
-    second = [
-        {
-            "exchanges": [
-                {"type": "bar", "amount": 1},
-            ]
-        }
-    ]
+    second = [{"exchanges": [{"type": "bar", "amount": 1}]}]
     assert delete_zero_amount_exchanges(given, drop_types=["baz"]) == first
     assert delete_zero_amount_exchanges(given) == second
 

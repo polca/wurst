@@ -71,13 +71,7 @@ try:
             "name": "dinner",
             "type": "process",
             "unit": "kg",
-            "parameters": [
-                {
-                    "name": "rara",
-                    "amount": 13,
-                    "something": "else",
-                }
-            ],
+            "parameters": [{"name": "rara", "amount": 13, "something": "else"}],
         },
     }
 

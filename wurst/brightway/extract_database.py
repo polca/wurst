@@ -1,4 +1,5 @@
 from bw2data.database import DatabaseChooser
+
 try:
     from bw2data.backends.peewee import SQLiteBackend, ActivityDataset, ExchangeDataset
 except ImportError:

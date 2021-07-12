@@ -1,9 +1,5 @@
 """Export inventories compatible with the dev release of Brightway 2.5. The functions in ``brightway/extract_database.py`` will work without modification."""
-from ..linking import (
-    check_duplicate_codes,
-    check_internal_linking,
-    link_internal,
-)
+from ..linking import check_duplicate_codes, check_internal_linking, link_internal
 from bw2data.backends import ActivityDataset
 from bw2io.importers.base_lci import LCIImporter
 from copy import copy
@@ -28,11 +24,7 @@ def strip_exchanges(ds):
     return o
 
 
-PRODUCTION = (
-    "production",
-    "substitution",
-    "generic production",
-)
+PRODUCTION = ("production", "substitution", "generic production")
 
 
 def write_brightway25_database(data, name):
@@ -87,9 +79,11 @@ def write_brightway25_database(data, name):
     DeltaImporter(name, new_activities).write_database()
 
     # Exchanges in new activities don't have to have database yet
-    dependents = {obj.get("database") for obj in data}.union(
-        {exc["database"] for ds in data for exc in ds.get("exchanges", [])}
-    ).difference({None})
+    dependents = (
+        {obj.get("database") for obj in data}
+        .union({exc["database"] for ds in data for exc in ds.get("exchanges", [])})
+        .difference({None})
+    )
 
     id_mapping = {
         (t[0], t[1]): t[2]
@@ -107,7 +101,14 @@ def write_brightway25_database(data, name):
         for exc in ds["exchanges"]:
             if ds.get("modified") or exc.get("modified"):
                 if exc["type"] == "biosphere":
-                    print("Bio exchange:", {"row": exc["input"], "col": (ds["database"], ds["code"]), "amount": exc["amount"]})
+                    print(
+                        "Bio exchange:",
+                        {
+                            "row": exc["input"],
+                            "col": (ds["database"], ds["code"]),
+                            "amount": exc["amount"],
+                        },
+                    )
                     bio_exchanges.append(
                         {
                             "row": id_mapping[exc["input"]],
@@ -117,7 +118,14 @@ def write_brightway25_database(data, name):
                         }
                     )
                 else:
-                    print("Tech exchange:", {"row": exc["input"], "col": (ds["database"], ds["code"]), "amount": exc["amount"]})
+                    print(
+                        "Tech exchange:",
+                        {
+                            "row": exc["input"],
+                            "col": (ds["database"], ds["code"]),
+                            "amount": exc["amount"],
+                        },
+                    )
                     flip = exc["type"] not in PRODUCTION
                     tech_exchanges.append(
                         {

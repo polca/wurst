@@ -46,6 +46,7 @@ except ImportError:
     import toolz
 
 from .version import version as __version__
+
 try:
     from .brightway import extract_brightway2_databases, write_brightway2_database
 except ImportError:

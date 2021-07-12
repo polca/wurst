@@ -34,14 +34,8 @@ def test_empty_low_voltage_markets():
                     "name": "electricity production, photovoltaic, 3kWp slanted-roof installation, a-Si, panel, mounted",
                     "unit": "kilowatt hour",
                 },
-                {
-                    "name": "burnt shale production",
-                    "unit": "kilowatt hour",
-                },
-                {
-                    "name": "petroleum refinery operation",
-                    "unit": "kilowatt hour",
-                },
+                {"name": "burnt shale production", "unit": "kilowatt hour"},
+                {"name": "petroleum refinery operation", "unit": "kilowatt hour"},
             ],
             "name": "market for electricity, low voltage",
         }
@@ -114,14 +108,8 @@ def test_empty_medium_voltage_markets():
                     "name": "electricity production, photovoltaic, 3kWp slanted-roof installation, a-Si, panel, mounted",
                     "unit": "kilowatt hour",
                 },
-                {
-                    "name": "burnt shale production",
-                    "unit": "kilowatt hour",
-                },
-                {
-                    "name": "petroleum refinery operation",
-                    "unit": "kilowatt hour",
-                },
+                {"name": "burnt shale production", "unit": "kilowatt hour"},
+                {"name": "petroleum refinery operation", "unit": "kilowatt hour"},
             ],
             "name": "market for electricity, medium voltage",
         }
@@ -197,14 +185,8 @@ def test_empty_high_voltage_markets():
                     "name": "electricity production, photovoltaic, 3kWp slanted-roof installation, a-Si, panel, mounted",
                     "unit": "kilowatt hour",
                 },
-                {
-                    "name": "burnt shale production",
-                    "unit": "kilowatt hour",
-                },
-                {
-                    "name": "petroleum refinery operation",
-                    "unit": "kilowatt hour",
-                },
+                {"name": "burnt shale production", "unit": "kilowatt hour"},
+                {"name": "petroleum refinery operation", "unit": "kilowatt hour"},
             ],
             "name": "market for electricity, high voltage",
         }

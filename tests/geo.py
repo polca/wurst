@@ -25,6 +25,7 @@ def test_image_added():
     g = Geomatcher()
     assert ("IMAGE", "OCE") not in g
 
+
 def test_remind_added():
     assert ("REMIND", "EUR") in geomatcher
     g = Geomatcher()

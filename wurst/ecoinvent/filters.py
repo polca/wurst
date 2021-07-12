@@ -24,19 +24,9 @@ gas_combined_cycle_electricity = [
 
 gas_chp_electricity = [_ng, _heat_and_power, _kwh]
 
-oil_open_cycle_electricity = [
-    _oil,
-    _electricity,
-    _kwh,
-    exclude(_combined_cycle),
-]
+oil_open_cycle_electricity = [_oil, _electricity, _kwh, exclude(_combined_cycle)]
 
-oil_combined_cycle_electricity = [
-    _oil,
-    _kwh,
-    _electricity,
-    _combined_cycle,
-]
+oil_combined_cycle_electricity = [_oil, _kwh, _electricity, _combined_cycle]
 
 oil_chp_electricity = [_oil, _heat_and_power, _kwh]
 

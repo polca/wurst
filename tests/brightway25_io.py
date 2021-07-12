@@ -2,6 +2,7 @@ import pytest
 
 try:
     from wurst.brightway25 import write_brightway25_database
+
     # from wurst.brightway import extract_brightway2_databases
     from bw2data import Database, Method, prepare_lca_inputs, get_id
     from bw2data.tests import bw2test
@@ -29,8 +30,8 @@ def bw25_setup():
     # Biosphere database - won't be extracted
     Database("b").write(
         {
-            ("b", "1"): {"type": "emission", "exchanges": [],},
-            ("b", "2"): {"type": "emission", "exchanges": [],},
+            ("b", "1"): {"type": "emission", "exchanges": []},
+            ("b", "2"): {"type": "emission", "exchanges": []},
         }
     )
 
@@ -41,14 +42,14 @@ def bw25_setup():
                 "exchanges": [
                     {"input": ("a", "1"), "amount": 1, "type": "production"},
                     {"input": ("b", "1"), "amount": 1, "type": "biosphere"},
-                ],
+                ]
             },
             ("a", "2"): {
                 "exchanges": [
                     {"input": ("a", "2"), "amount": 1, "type": "production"},
                     {"input": ("b", "2"), "amount": 2, "type": "biosphere"},
                     {"input": ("a", "1"), "amount": 1, "type": "technosphere"},
-                ],
+                ]
             },
         }
     )
@@ -246,10 +247,52 @@ def test_bw25_integration_simple(bw25_setup):
 
     assert not np.allclose(lca.score, 44)
 
-    assert lca.technosphere_matrix[lca.dicts.product[get_id(("a", "2"))], lca.dicts.activity[get_id(("c", "1"))]] == -2
-    assert lca.technosphere_matrix[lca.dicts.product[get_id(("a", "1"))], lca.dicts.activity[get_id(("c", "1"))]] == -2
-    assert lca.technosphere_matrix[lca.dicts.product[get_id(("c", "1"))], lca.dicts.activity[get_id(("c", "2"))]] == -5
-    assert lca.biosphere_matrix[lca.dicts.biosphere[get_id(("b", "1"))], lca.dicts.activity[get_id(("c", "2"))]] == 14
-    assert lca.biosphere_matrix[lca.dicts.biosphere[get_id(("b", "2"))], lca.dicts.activity[get_id(("c", "2"))]] == 0
-    assert lca.technosphere_matrix[lca.dicts.product[get_id(("c", "2"))], lca.dicts.activity[get_id(("new", "1"))]] == -1
-    assert lca.technosphere_matrix[lca.dicts.product[get_id(("new", "1"))], lca.dicts.activity[get_id(("new", "1"))]] == 1
+    assert (
+        lca.technosphere_matrix[
+            lca.dicts.product[get_id(("a", "2"))],
+            lca.dicts.activity[get_id(("c", "1"))],
+        ]
+        == -2
+    )
+    assert (
+        lca.technosphere_matrix[
+            lca.dicts.product[get_id(("a", "1"))],
+            lca.dicts.activity[get_id(("c", "1"))],
+        ]
+        == -2
+    )
+    assert (
+        lca.technosphere_matrix[
+            lca.dicts.product[get_id(("c", "1"))],
+            lca.dicts.activity[get_id(("c", "2"))],
+        ]
+        == -5
+    )
+    assert (
+        lca.biosphere_matrix[
+            lca.dicts.biosphere[get_id(("b", "1"))],
+            lca.dicts.activity[get_id(("c", "2"))],
+        ]
+        == 14
+    )
+    assert (
+        lca.biosphere_matrix[
+            lca.dicts.biosphere[get_id(("b", "2"))],
+            lca.dicts.activity[get_id(("c", "2"))],
+        ]
+        == 0
+    )
+    assert (
+        lca.technosphere_matrix[
+            lca.dicts.product[get_id(("c", "2"))],
+            lca.dicts.activity[get_id(("new", "1"))],
+        ]
+        == -1
+    )
+    assert (
+        lca.technosphere_matrix[
+            lca.dicts.product[get_id(("new", "1"))],
+            lca.dicts.activity[get_id(("new", "1"))],
+        ]
+        == 1
+    )

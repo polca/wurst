@@ -83,11 +83,7 @@ if test_bw2_database is not None:
                 "unit": "kg",
                 "parameters": {"rara": 13},
                 "parameters full": [
-                    {
-                        "name": "rara",
-                        "amount": 13,
-                        "something": "else",
-                    }
+                    {"name": "rara", "amount": 13, "something": "else"}
                 ],
             },
         ]
