@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 (2022-04-29)
+
+* ecoinvent now uses `US-PR` instead of `PR`.
+
 ## 0.3.1 (2021-07-12)
 
 * Merge PR [#25](https://github.com/polca/wurst/pull/25) to add additional regions in Europe
