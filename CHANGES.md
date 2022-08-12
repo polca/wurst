@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3 (2022-088-12)
+
+* Add `add_identifiers` flag for Brightway extraction
+
 ## 0.3.2 (2022-04-29)
 
 * ecoinvent now uses `US-PR` instead of `PR`.
