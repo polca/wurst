@@ -19,11 +19,11 @@ def _list_or_dict(obj):
             yield (tmp)
 
 
-def extract_activity(proxy):
+def extract_activity(proxy, add_identifiers=False):
     """Get data in Wurst internal format for an ``ActivityDataset``"""
     assert isinstance(proxy, ActivityDataset)
 
-    return {
+    obj = {
         "classifications": proxy.data.get("classifications", []),
         "comment": proxy.data.get("comment", ""),
         "location": proxy.location,
@@ -39,6 +39,9 @@ def extract_activity(proxy):
         },
         "parameters full": list(_list_or_dict(proxy.data.get("parameters", []))),
     }
+    if add_identifiers:
+        obj["id"] = proxy.id
+    return obj
 
 
 def extract_exchange(proxy, add_properties=False):
@@ -69,7 +72,7 @@ def extract_exchange(proxy, add_properties=False):
     return data
 
 
-def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False):
+def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False, add_identifiers=False):
     """Retrieve exchanges from database, and add to activities.
 
     Assumes that activities are single output, and that the exchange code is the same as the activity code. This assumption is valid for ecoinvent 3.3 cutoff imported into Brightway2."""
@@ -84,7 +87,7 @@ def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False):
     return activities
 
 
-def add_input_info_for_indigenous_exchanges(activities, names):
+def add_input_info_for_indigenous_exchanges(activities, names, add_identifiers=False):
     """Add details on exchange inputs if these activities are already available"""
     names = set(names)
     lookup = {(o["database"], o["code"]): o for o in activities}
@@ -99,12 +102,15 @@ def add_input_info_for_indigenous_exchanges(activities, names):
             exc["unit"] = obj.get("unit")
             exc["location"] = obj.get("location")
             exc["database"] = obj.get("database")
+            if add_identifiers:
+                exc["id"] = obj['id']
+                exc['code'] = obj['code']
             if exc["type"] == "biosphere":
                 exc["categories"] = obj.get("categories")
             exc.pop("input")
 
 
-def add_input_info_for_external_exchanges(activities, names):
+def add_input_info_for_external_exchanges(activities, names, add_identifiers=False):
     """Add details on exchange inputs from other databases"""
     names = set(names)
     cache = {}
@@ -124,11 +130,14 @@ def add_input_info_for_external_exchanges(activities, names):
             exc["unit"] = obj.data.get("unit")
             exc["location"] = obj.location
             exc["database"] = obj.database
+            if add_identifiers:
+                exc["id"] = obj.id
+                exc['code'] = obj.code
             if exc["type"] == "biosphere":
                 exc["categories"] = obj.data.get("categories")
 
 
-def extract_brightway2_databases(database_names, add_properties=False):
+def extract_brightway2_databases(database_names, add_properties=False, add_identifiers=False):
     """Extract a Brightway2 SQLiteBackend database to the Wurst internal format.
 
     ``database_names`` is a list of database names. You should already be in the correct project.
@@ -154,12 +163,12 @@ def extract_brightway2_databases(database_names, add_properties=False):
 
     # Retrieve all activity data
     print("Getting activity data")
-    activities = [extract_activity(o) for o in tqdm(activity_qs)]
+    activities = [extract_activity(o, add_identifiers=add_identifiers) for o in tqdm(activity_qs)]
     # Add each exchange to the activity list of exchanges
     print("Adding exchange data to activities")
     add_exchanges_to_consumers(activities, exchange_qs, add_properties)
     # Add details on exchanges which come from our databases
     print("Filling out exchange data")
-    add_input_info_for_indigenous_exchanges(activities, database_names)
-    add_input_info_for_external_exchanges(activities, database_names)
+    add_input_info_for_indigenous_exchanges(activities, database_names, add_identifiers=add_identifiers)
+    add_input_info_for_external_exchanges(activities, database_names, add_identifiers=add_identifiers)
     return activities

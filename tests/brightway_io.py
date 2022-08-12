@@ -3,6 +3,7 @@ from brightway_fixtures import test_bw2_database
 if test_bw2_database is not None:
     from wurst.brightway import extract_brightway2_databases
     from bw2data.tests import bw2test
+    from bw2data import Database
     import pytest
 
     def test_extraction(test_bw2_database):
@@ -111,6 +112,13 @@ if test_bw2_database is not None:
         data = extract_brightway2_databases("food", add_properties=True)
         assert all("properties" in exc for ds in data for exc in ds["exchanges"])
 
+    def test_extraction_with_identifiers():
+        data = extract_brightway2_databases("food")
+        assert all("properties" not in exc for ds in data for exc in ds["exchanges"])
+        data = extract_brightway2_databases("food", add_identifiers=True)
+        assert all("id" in ds for ds in data)
+        assert all("id" in exc for ds in data for exc in ds["exchanges"])
+        assert all("code" in exc for ds in data for exc in ds["exchanges"])
 
 else:
     pass
