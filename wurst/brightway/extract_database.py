@@ -29,6 +29,7 @@ def extract_activity(proxy, add_identifiers=False):
         "location": proxy.location,
         "database": proxy.database,
         "code": proxy.code,
+        "categories": proxy.data.get("categories"),
         "name": proxy.name,
         "reference product": proxy.product,
         "unit": proxy.data.get("unit", ""),
