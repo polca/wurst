@@ -70,6 +70,7 @@ The internal data format for Wurst is a subset of the implied internal format fo
         'location': str,
         'unit': str,
         'classifications': [tuple],
+        'categories': tuple or None,
         'comment': str,
         'parameters': {'parameter name (str)': float},
         'exchanges': [

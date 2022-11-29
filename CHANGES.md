@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.3.3 (2022-088-12)
+## 0.3.4 (2022-11-29)
+
+* Fix IMAGE using an [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-2:ME) for the region "Middle East"
+* Extract "categories" from Brightway databases when available
+
+## 0.3.3 (2022-08-12)
 
 * Add `add_identifiers` flag for Brightway extraction
 
