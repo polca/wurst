@@ -1,5 +1,6 @@
 from constructive_geometries import Geomatcher, ConstructiveGeometries
 from wurst import geomatcher
+from wurst.geo import IMAGE_TOPOLOGY, REMIND_TOPOLOGY
 import pytest
 
 
@@ -21,12 +22,14 @@ def test_default_setup():
 
 
 def test_image_added():
+    geomatcher.add_definitions(IMAGE_TOPOLOGY, "IMAGE", relative=True)
     assert ("IMAGE", "OCE") in geomatcher
     g = Geomatcher()
     assert ("IMAGE", "OCE") not in g
 
 
 def test_remind_added():
+    geomatcher.add_definitions(REMIND_TOPOLOGY, "REMIND", relative=True)
     assert ("REMIND", "EUR") in geomatcher
     g = Geomatcher()
     assert ("REMIND", "EUR") not in g
