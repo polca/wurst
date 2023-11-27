@@ -16,7 +16,7 @@ setup(
     package_data={"wurst": ["IMAGE/metadata/*.*", "REMIND/metadata/*.*",]},
     install_requires=[
         "appdirs",
-        "constructive_geometries>=0.9.2",
+        "constructive_geometries>=0.9.3",
         "docopt",
         "numpy",
         "pandas",

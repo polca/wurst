@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.5 (2023-11-27)
+
+* Compatibility with `constructive_geomatries` `backwards_compatible` flag and pin to ">=0.9.3"
+
 ## 0.3.4 (2022-11-29)
 
 * Fix IMAGE using an [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-2:ME) for the region "Middle East"
