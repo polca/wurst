@@ -2,7 +2,7 @@
 
 ## 0.3.5 (2023-11-27)
 
-* Compatibility with `constructive_geomatries` `backwards_compatible` flag and pin to ">=0.9.3"
+* Compatibility with `constructive_geometries` `backwards_compatible` flag and pin to ">=0.9.4"
 
 ## 0.3.4 (2022-11-29)
 
