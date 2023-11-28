@@ -1,6 +1,6 @@
 # Wurst
 
-[![Build Status](https://travis-ci.org/IndEcol/wurst.svg?branch=master)](https://travis-ci.org/IndEcol/wurst) [![Coverage Status](https://coveralls.io/repos/github/IndEcol/wurst/badge.svg?branch=master)](https://coveralls.io/github/IndEcol/wurst?branch=master) [![Docs](https://readthedocs.org/projects/wurst/badge/?version=latest)](https://wurst.readthedocs.io/)
+[![PyPi Version](https://img.shields.io/pypi/v/wurst.svg)](https://pypi.org/project/wurst/) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/wurst.svg)](https://anaconda.org/conda-forge/wurst) [![Build Status](https://travis-ci.org/IndEcol/wurst.svg?branch=master)](https://travis-ci.org/IndEcol/wurst) [![Coverage Status](https://coveralls.io/repos/github/IndEcol/wurst/badge.svg?branch=master)](https://coveralls.io/github/IndEcol/wurst?branch=master) [![Docs](https://readthedocs.org/projects/wurst/badge/?version=latest)](https://wurst.readthedocs.io/)
 
 Show how the sausage is made!
 
@@ -18,7 +18,7 @@ See also the separate [wurst examples](https://github.com/IndEcol/wurst-examples
 
 Download and install [miniconda](https://conda.io/miniconda.html), create and activate a [new environment](https://conda.io/docs/user-guide/tasks/manage-environments.html), and then install::
 
-    conda install -y -q -c conda-forge -c cmutel -c haasad -c konstantinstadler brightway2 jupyter wurst
+    conda install -c conda-forge brightway2 jupyter wurst
 
 ## License
 
