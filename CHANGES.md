@@ -1,8 +1,15 @@
 # Changelog
 
-## 0.3.5 (2023-11-27)
+## 0.4 (2023-11-27)
 
-* Compatibility with `constructive_geometries` `backwards_compatible` flag and pin to ">=0.9.4"
+* [#30 - Remove definition of IAM topologies](https://github.com/polca/wurst/pull/30)
+* [#30 - Add uncertainty handling when rescaling](https://github.com/polca/wurst/pull/30)
+
+(Yes, #30 did two things...)
+
+## 0.3.5 (2023-11-26)
+
+* Compatibility with `constructive_geometries` `backwards_compatible` flag
 
 ## 0.3.4 (2022-11-29)
 
