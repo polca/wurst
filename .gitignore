@@ -9,7 +9,7 @@ MANIFEST
 *.egg-info
 *.pickle
 .cache
-.coverage
+.coverage*
 ~*.*
 */.ipynb_checkpoints
 .pytest_cache
