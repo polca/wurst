@@ -1,0 +1,123 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wurst"
+authors = [
+  { name="Chris Mutel", email="cmutel@gmail.com" },
+  { name="Romain Sacchi", email="r_s@me.com" },
+]
+maintainers = [
+  { name="Chris Mutel", email="cmutel@gmail.com" }
+]
+license-files = ["LICENSE"]
+description = "Wurst is a python package for linking and modifying industrial ecology models"
+readme = "README.md"
+dynamic = ["version"]
+# Add here all kinds of additional classifiers as defined under
+# https://pypi.org/classifiers/
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering"
+]
+requires-python = ">=3.9"
+dependencies = [
+    "platformdirs",
+    "constructive_geometries>=0.9.4",
+    "docopt",
+    "numpy",
+    "pandas",
+    "python-json-logger",
+    "toolz",
+    "tqdm",
+    "wrapt",
+]
+
+[project.urls]
+source = "https://github.com/polca/wurst"
+homepage = "https://github.com/polca/wurst"
+tracker = "https://github.com/polca/wurst/issues"
+
+[project.optional-dependencies]
+# Getting recursive dependencies to work is a pain, this
+# seems to work, at least for now
+testing = [
+    "wurst",
+    "pytest",
+    "pytest-cov",
+    "pytest-randomly",
+    "python-coveralls"
+]
+dev = [
+    "build",
+    "pylint",
+    "pytest",
+    "pytest-cov",
+    "pytest-randomly",
+    "setuptools",
+]
+
+[tool.setuptools]
+include-package-data = true
+package-dir = {"" = "src"}
+packages = [
+    "wurst",
+    "wurst.brightway",
+    "wurst.brightway25",
+    "wurst.ecoinvent",
+    "wurst.IMAGE",
+    "wurst.REMIND",
+    "wurst.transformations",
+    "wurst.transformations.markets",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "wurst.__version__"}
+
+[tool.pytest.ini_options]
+addopts = "--cov wurst --cov-report term-missing --verbose"
+norecursedirs = [
+    "dist",
+    "build",
+    ".tox"
+]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.flake8]
+# Some sane defaults for the code style checker flake8
+max_line_length = 88
+extend_ignore = ["E203", "W503"]
+# ^  Black-compatible
+#    E203 and W503 have edge cases handled by black
+exclude = [
+    ".tox",
+    "build",
+    "dist",
+    ".eggs",
+    "docs/conf.py",
+    "src/wurst/__pycache__",
+]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+ensure_newline_before_comments = true

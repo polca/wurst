@@ -3,12 +3,12 @@ from brightway_fixtures import test_bw2_database
 if test_bw2_database is not None:
     from wurst.brightway import extract_brightway2_databases
     from bw2data.tests import bw2test
-    from bw2data import Database
     import pytest
 
     def test_extraction(test_bw2_database):
         expected = [
             {
+                "categories": ["stuff", "meals"],
                 "classifications": [42],
                 "code": "1",
                 "comment": "Yep",
@@ -48,6 +48,7 @@ if test_bw2_database is not None:
                 "parameters full": [{"amount": 0.01, "name": "losses_gross_net"}],
             },
             {
+                "categories": ["stuff", "meals"],
                 "classifications": [],
                 "code": "2",
                 "comment": "",

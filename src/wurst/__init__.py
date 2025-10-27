@@ -27,7 +27,7 @@ __all__ = (
     "toolz",
     "write_brightway2_database",
 )
-
+__version__ = "0.5"
 
 import logging
 
@@ -44,8 +44,6 @@ try:
     import cytoolz as toolz
 except ImportError:
     import toolz
-
-from .version import version as __version__
 
 try:
     from .brightway import extract_brightway2_databases, write_brightway2_database

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from pythonjsonlogger import jsonlogger
-import appdirs
+import platformdirs
 import logging
 import os
 import time
@@ -23,7 +23,7 @@ def get_base_directory():
     """Return base directory where cache and output data are saved.
 
     Creates directory if it is not already present."""
-    return create_dir(appdirs.user_data_dir("Wurst", "WurstTeam"))
+    return create_dir(platformdirs.PlatformDirs("Wurst", "WurstTeam").user_data_dir)
 
 
 def get_uuid():

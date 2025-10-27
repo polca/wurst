@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5 (2025-10-27)
+
+* Revamp packaging
+* Fix broken tests
+
 ## 0.4 (2023-11-27)
 
 * [#30 - Remove definition of IAM topologies](https://github.com/polca/wurst/pull/30)

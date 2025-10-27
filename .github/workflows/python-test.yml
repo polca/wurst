@@ -1,0 +1,62 @@
+---
+# This workflow will install Python dependencies and run tests
+# across operating systems, select versions of Python, and user + dev environments
+# For more info see:
+# https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python 🐍 CI/CD tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths-ignore: # prevents workflow execution when only these types of files are modified
+      - "**.md" # wildcards prevent file in any repo dir from trigering workflow
+      - "**.bib"
+      - "**.ya?ml" # captures both .yml and .yaml
+      - "LICENSE"
+      - ".gitignore"
+  pull_request:
+    branches: [main, develop]
+    types: [opened, reopened] # excludes syncronize to avoid redundant trigger from commits on PRs
+    paths-ignore:
+      - "**.md"
+      - "**.bib"
+      - "**.ya?ml"
+      - "LICENSE"
+      - ".gitignore"
+  workflow_dispatch: # also allow manual trigger, for testing purposes
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        py-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # general Python setup
+      - name: Set up Python ${{ matrix.py-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.py-version }}
+
+      - name: Update pip & install testing pkgs
+        run: |
+          python -VV
+          python -m pip install --upgrade pip setuptools wheel
+
+      # install testing
+      - name: Install package and test deps
+        run: |
+          pip install .[testing] # install the package and the testing deps
+
+      - name: Test with pytest
+        run: |
+          pytest
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
