@@ -1,7 +1,7 @@
 """Export inventories compatible with the dev release of Brightway 2.5. The functions in ``brightway/extract_database.py`` will work without modification."""
 import datetime
 from copy import copy
-from typing import List
+from typing import List, Optional
 
 import bw2data as bd
 import bw_processing as bwp
@@ -17,7 +17,8 @@ class DeltaImporter(LCIImporter):
         self.db_name = db_name
         self.data = data
 
-    def write_database(self):
+    def write_database(self, metadata: Optional[dict] = None):
+        self.metadata.update(metadata or {})
         super().write_database(process=False)
 
 
@@ -30,7 +31,7 @@ def strip_exchanges(ds):
 PRODUCTION = ("production", "substitution", "generic production")
 
 
-def write_brightway25_database(data: List[dict], name: str) -> bd.Database:
+def write_brightway25_database(data: List[dict], name: str, metadata: Optional[dict] = None) -> bd.Database:
     """Write a new database compatible with Brightway 2.5 functionality.
 
     Instead of aggregating everything into a new database, we take a new approach. New activities are stored as a new database (``name``), but for exchanges that are modified, we use the 2.5 functionality to write processed arrays which override values in the original database. In other words, the previous approach was to write as much as possible; here we write as little as possible. The end calculation results are the same either way.
@@ -79,7 +80,7 @@ def write_brightway25_database(data: List[dict], name: str) -> bd.Database:
     check_duplicate_codes(new_activities)
 
     new_activities = [strip_exchanges(x) for x in data if x.get("modified")]
-    DeltaImporter(name, new_activities).write_database()
+    DeltaImporter(name, new_activities).write_database(metadata)
 
     # Exchanges in new activities don't have to have database yet
     dependents = (

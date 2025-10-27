@@ -2,6 +2,7 @@
 
 ## 0.5 (2025-10-27)
 
+* Allow passing Brightway `Database` metadata on writing
 * Revamp packaging with `pyproject.toml` and `src` layout
 * Fix broken tests
 * Move to absolute imports and `pathlib` instead of `os.path`

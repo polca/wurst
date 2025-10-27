@@ -22,6 +22,8 @@ class WurstImporter(LCIImporter):
         if metadata is None:
             metadata = {}
 
+        self.metadata.update(metadata or {})
+
         assert not self.statistics()[2], "Not all exchanges are linked"
         assert self.db_name not in databases, "This database already exists"
         super().write_database()
