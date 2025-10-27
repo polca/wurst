@@ -1,5 +1,6 @@
 """Export inventories compatible with the dev release of Brightway 2.5. The functions in ``brightway/extract_database.py`` will work without modification."""
 from ..linking import check_duplicate_codes, check_internal_linking, link_internal
+from typing import List
 from bw2data.backends import ActivityDataset
 from bw2io.importers.base_lci import LCIImporter
 from copy import copy
@@ -27,7 +28,7 @@ def strip_exchanges(ds):
 PRODUCTION = ("production", "substitution", "generic production")
 
 
-def write_brightway25_database(data, name):
+def write_brightway25_database(data: List[dict], name: str) -> bd.Database:
     """Write a new database compatible with Brightway 2.5 functionality.
 
     Instead of aggregating everything into a new database, we take a new approach. New activities are stored as a new database (``name``), but for exchanges that are modified, we use the 2.5 functionality to write processed arrays which override values in the original database. In other words, the previous approach was to write as much as possible; here we write as little as possible. The end calculation results are the same either way.
@@ -42,11 +43,11 @@ def write_brightway25_database(data, name):
     Inputs:
 
     * ``data``: list. Datasets in the standard Wurst format
-    * ``name``: str. Name of the new database. Will raise an ``AssertionError`` is ``name`` already exists.
+    * ``name``: str. Name of the new database. Will raise an ``AssertionError`` if ``name`` already exists.
 
     Returns:
 
-        ``None``
+        ``bw2data.Database``
 
     This function will also do the following:
 
@@ -151,6 +152,7 @@ def write_brightway25_database(data, name):
         #         )
 
     process_delta_database(name, tech_exchanges, bio_exchanges, dependents)
+    return bd.Database(name)
 
 
 def process_delta_database(name, tech, bio, dependents):

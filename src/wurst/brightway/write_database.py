@@ -1,10 +1,12 @@
+from typing import Optional, List
+
 from ..linking import (
     change_db_name,
     check_duplicate_codes,
     check_internal_linking,
     link_internal,
 )
-from bw2data import databases, Database
+from bw2data import ProcessedDataStore, databases, Database
 from bw2io.importers.base_lci import LCIImporter
 
 
@@ -15,13 +17,17 @@ class WurstImporter(LCIImporter):
         for act in self.data:
             act["database"] = self.db_name
 
-    def write_database(self):
+    def write_database(self, metadata: Optional[dict] = None) -> ProcessedDataStore:
+        if metadata is None:
+            metadata = {}
+
         assert not self.statistics()[2], "Not all exchanges are linked"
         assert self.db_name not in databases, "This database already exists"
         super().write_database()
+        return Database(self.db_name)
 
 
-def write_brightway2_database(data, name):
+def write_brightway2_database(data: List[dict], name: str, metadata: Optional[dict] = None) -> None:
     """Write a new database as a new Brightway2 database named ``name``.
 
     You should be in the correct project already.
@@ -50,10 +56,10 @@ def write_brightway2_database(data, name):
     link_internal(data)
     check_internal_linking(data)
     check_duplicate_codes(data)
-    WurstImporter(name, data).write_database()
+    WurstImporter(name, data).write_database(metadata)
 
 
-def write_brightway2_array_database(data, name):
+def write_brightway2_array_database(data: List[dict], name: str) -> None:
     """Write a new database using the ``IOTable`` backend that saves exchange values only as processed arrays.
 
     You should be in the correct project already.
