@@ -1,5 +1,5 @@
-from .IMAGE import IMAGE_TOPOLOGY
-from .REMIND import REMIND_TOPOLOGY
+from wurst.IMAGE import IMAGE_TOPOLOGY
+from wurst.REMIND import REMIND_TOPOLOGY
 from constructive_geometries import Geomatcher
 
 

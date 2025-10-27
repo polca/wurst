@@ -1,4 +1,4 @@
-from ..searching import *
+from wurst.searching import *
 
 _combined_cycle = contains("name", "combined cycle")
 _electricity = contains("name", "electricity")

@@ -1,4 +1,4 @@
-from .errors import MultipleResults, NoResults
+from wurst.errors import MultipleResults, NoResults
 
 
 def equals(field, value):

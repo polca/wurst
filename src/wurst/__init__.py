@@ -46,11 +46,11 @@ except ImportError:
     import toolz
 
 try:
-    from .brightway import extract_brightway2_databases, write_brightway2_database
+    from wurst.brightway import extract_brightway2_databases, write_brightway2_database
 except ImportError:
     extract_brightway2_databases = write_brightway2_database = None
-from .filesystem import create_log, create_dir
-from .searching import (
+from wurst.filesystem import create_log, create_dir
+from wurst.searching import (
     best_geo_match,
     biosphere,
     contains,
@@ -64,7 +64,7 @@ from .searching import (
     startswith,
     technosphere,
 )
-from .transformations import (
+from wurst.transformations import (
     change_exchanges_by_constant_factor,
     copy_to_new_location,
     default_global_location,
@@ -73,5 +73,5 @@ from .transformations import (
     relink_technosphere_exchanges,
     rescale_exchange,
 )
-from .geo import geomatcher
+from wurst.geo import geomatcher
 from constructive_geometries import resolved_row

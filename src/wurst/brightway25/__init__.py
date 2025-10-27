@@ -1,5 +1,5 @@
 """Export inventories compatible with the dev release of Brightway 2.5. The functions in ``brightway/extract_database.py`` will work without modification."""
-from ..linking import check_duplicate_codes, check_internal_linking, link_internal
+from wurst.linking import check_duplicate_codes, check_internal_linking, link_internal
 from typing import List
 from bw2data.backends import ActivityDataset
 from bw2io.importers.base_lci import LCIImporter

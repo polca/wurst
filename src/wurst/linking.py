@@ -1,5 +1,5 @@
-from .errors import InvalidLink, NonuniqueCode
-from .searching import reference_product
+from wurst.errors import InvalidLink, NonuniqueCode
+from wurst.searching import reference_product
 from pprint import pformat
 
 

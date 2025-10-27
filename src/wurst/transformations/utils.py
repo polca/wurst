@@ -1,5 +1,5 @@
 from copy import deepcopy
-from ..filesystem import get_uuid
+from wurst.filesystem import get_uuid
 
 
 def copy_dataset(ds):

@@ -1,5 +1,5 @@
-from ..searching import *
-from . import load_image_data_file, REGIONS
+from wurst.searching import *
+from wurst.REMIND import load_image_data_file, REGIONS
 from pathlib import Path
 import pandas as pd
 

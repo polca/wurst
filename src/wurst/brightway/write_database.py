@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from ..linking import (
+from wurst.linking import (
     change_db_name,
     check_duplicate_codes,
     check_internal_linking,

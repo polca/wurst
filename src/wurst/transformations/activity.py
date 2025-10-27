@@ -1,5 +1,5 @@
-from ..searching import technosphere, biosphere
-from .uncertainty import rescale_exchange
+from wurst.searching import technosphere, biosphere
+from wurst.transformations.uncertainty import rescale_exchange
 from numbers import Number
 import logging
 

@@ -1,6 +1,6 @@
-from .. import toolz
-from ..searching import get_many, equals
-from ..transformations import rescale_exchange
+from wurst import toolz
+from wurst.searching import get_many, equals
+from wurst.transformations import rescale_exchange
 from functools import partial
 
 

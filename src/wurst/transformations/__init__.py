@@ -1,8 +1,8 @@
-from .activity import change_exchanges_by_constant_factor
-from .cleaning import delete_zero_amount_exchanges, empty_market_dataset
-from .geo import (
+from wurst.transformations.activity import change_exchanges_by_constant_factor
+from wurst.transformations.cleaning import delete_zero_amount_exchanges, empty_market_dataset
+from wurst.transformations.geo import (
     copy_to_new_location,
     default_global_location,
     relink_technosphere_exchanges,
 )
-from .uncertainty import rescale_exchange
+from wurst.transformations.uncertainty import rescale_exchange

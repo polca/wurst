@@ -1,4 +1,4 @@
-from .metadata import REGIONS
+from wurst.IMAGE import REGIONS
 
 
 def relative_change(dataset, years, start, end):

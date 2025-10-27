@@ -1,9 +1,9 @@
-from .. import log
-from ..errors import InvalidLink
-from ..geo import geomatcher
-from ..searching import reference_product, get_many, equals, get_one
-from .uncertainty import rescale_exchange
-from .utils import copy_dataset
+from wurst import log
+from wurst.errors import InvalidLink
+from wurst.geo import geomatcher
+from wurst.searching import reference_product, get_many, equals, get_one
+from wurst.transformations.uncertainty import rescale_exchange
+from wurst.transformations.utils import copy_dataset
 from constructive_geometries import resolved_row
 from copy import deepcopy
 
