@@ -1,5 +1,6 @@
-from wurst.transformations.geo import *
 import pytest
+
+from wurst.transformations.geo import *
 
 
 def test_copy_to_new_location():

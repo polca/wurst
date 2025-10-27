@@ -1,11 +1,13 @@
+from copy import deepcopy
+
+from constructive_geometries import resolved_row
+
 from wurst import log
 from wurst.errors import InvalidLink
 from wurst.geo import geomatcher
-from wurst.searching import reference_product, get_many, equals, get_one
+from wurst.searching import equals, get_many, get_one, reference_product
 from wurst.transformations.uncertainty import rescale_exchange
 from wurst.transformations.utils import copy_dataset
-from constructive_geometries import resolved_row
-from copy import deepcopy
 
 
 def copy_to_new_location(ds, location):
@@ -175,7 +177,8 @@ def get_possibles(exchange, data):
 def default_global_location(database):
     """Set missing locations to ```GLO``` for datasets in ``database``.
 
-    Changes location if ``location`` is missing or ``None``. Will add key ``location`` if missing."""
+    Changes location if ``location`` is missing or ``None``. Will add key ``location`` if missing.
+    """
     for ds in get_many(database, *[equals("location", None)]):
         ds["location"] = "GLO"
     return database

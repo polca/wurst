@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from pythonjsonlogger import jsonlogger
-import platformdirs
 import logging
 import os
 import time
 import uuid
+
+import platformdirs
+from pythonjsonlogger import jsonlogger
 
 
 def create_dir(dirpath):

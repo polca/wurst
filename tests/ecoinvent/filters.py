@@ -1,5 +1,5 @@
-from wurst.ecoinvent.filters import _oil
 from wurst import get_many
+from wurst.ecoinvent.filters import _oil
 
 
 def test_oil():

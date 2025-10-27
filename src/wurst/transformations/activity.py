@@ -1,8 +1,8 @@
-from wurst.searching import technosphere, biosphere
-from wurst.transformations.uncertainty import rescale_exchange
-from numbers import Number
 import logging
+from numbers import Number
 
+from wurst.searching import biosphere, technosphere
+from wurst.transformations.uncertainty import rescale_exchange
 
 logger = logging.getLogger("wurst")
 

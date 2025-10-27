@@ -1,5 +1,8 @@
 from wurst.transformations.activity import change_exchanges_by_constant_factor
-from wurst.transformations.cleaning import delete_zero_amount_exchanges, empty_market_dataset
+from wurst.transformations.cleaning import (
+    delete_zero_amount_exchanges,
+    empty_market_dataset,
+)
 from wurst.transformations.geo import (
     copy_to_new_location,
     default_global_location,

@@ -1,7 +1,7 @@
-from wurst.errors import InvalidLink, NonuniqueCode
-from wurst.searching import reference_product
 from pprint import pformat
 
+from wurst.errors import InvalidLink, NonuniqueCode
+from wurst.searching import reference_product
 
 get_input_databases = lambda data: {ds["database"] for ds in data}
 
@@ -51,7 +51,8 @@ def check_internal_linking(data):
 def change_db_name(data, name):
     """Change the database of all datasets in ``data`` to ``name``.
 
-    Raises errors if each dataset does not have exactly one reference production exchange."""
+    Raises errors if each dataset does not have exactly one reference production exchange.
+    """
     old_names = get_input_databases(data)
     for ds in data:
         ds["database"] = name

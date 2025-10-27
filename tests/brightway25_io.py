@@ -1,13 +1,14 @@
 import pytest
 
 try:
-    from wurst.brightway25 import write_brightway25_database
+    import numpy as np
+    from bw2calc import LCA
 
     # from wurst.brightway import extract_brightway2_databases
-    from bw2data import Database, Method, prepare_lca_inputs, get_id
+    from bw2data import Database, Method, get_id, prepare_lca_inputs
     from bw2data.tests import bw2test
-    from bw2calc import LCA
-    import numpy as np
+
+    from wurst.brightway25 import write_brightway25_database
 
     bw25 = True
 except ImportError:

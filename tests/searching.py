@@ -1,6 +1,7 @@
-from wurst.searching import *
-from wurst.errors import MultipleResults, NoResults
 import pytest
+
+from wurst.errors import MultipleResults, NoResults
+from wurst.searching import *
 
 
 def test_contains():

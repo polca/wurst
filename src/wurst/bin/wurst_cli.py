@@ -19,10 +19,12 @@ Options:
   --version          Show version.
 
 """
-from docopt import docopt
-from wurst.filesystem import cleanup_data_directory
 import os
 import sys
+
+from docopt import docopt
+
+from wurst.filesystem import cleanup_data_directory
 
 
 def main():

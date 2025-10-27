@@ -1,7 +1,8 @@
 def market_like(ds):
     """Find market activities which aren't called markets.
 
-    Check to see if there are inputs with the same product as the reference product which sum to between the production amount and the production amount * 1.5."""
+    Check to see if there are inputs with the same product as the reference product which sum to between the production amount and the production amount * 1.5.
+    """
     rp = ds["reference product"]
     similar_inputs = (
         exc

@@ -1,7 +1,8 @@
-from wurst import toolz
-from wurst.searching import get_many, equals
-from wurst.transformations import rescale_exchange
 from functools import partial
+
+from wurst import toolz
+from wurst.searching import equals, get_many
+from wurst.transformations import rescale_exchange
 
 
 def get_generators_in_mix(db, name="market for electricity, high voltage"):

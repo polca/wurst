@@ -73,7 +73,8 @@ def production(ds, *funcs):
 def reference_product(ds):
     """Get single reference product exchange from a dataset.
 
-    Raises ``wurst.errors.NoResults`` or ``wurst.errors.MultipleResults`` if zero or multiple results are returned."""
+    Raises ``wurst.errors.NoResults`` or ``wurst.errors.MultipleResults`` if zero or multiple results are returned.
+    """
     excs = [
         exc for exc in ds["exchanges"] if exc["amount"] and exc["type"] == "production"
     ]

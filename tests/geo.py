@@ -1,7 +1,8 @@
-from constructive_geometries import Geomatcher, ConstructiveGeometries
+import pytest
+from constructive_geometries import ConstructiveGeometries, Geomatcher
+
 from wurst import geomatcher
 from wurst.geo import IMAGE_TOPOLOGY, REMIND_TOPOLOGY
-import pytest
 
 
 def test_default_setup():

@@ -1,11 +1,13 @@
 from bw2data.database import DatabaseChooser
 
 try:
-    from bw2data.backends.peewee import SQLiteBackend, ActivityDataset, ExchangeDataset
+    from bw2data.backends.peewee import ActivityDataset, ExchangeDataset, SQLiteBackend
 except ImportError:
     from bw2data.backends import SQLiteBackend, ActivityDataset, ExchangeDataset
-from tqdm import tqdm
+
 import copy
+
+from tqdm import tqdm
 
 
 def _list_or_dict(obj):
@@ -73,10 +75,13 @@ def extract_exchange(proxy, add_properties=False):
     return data
 
 
-def add_exchanges_to_consumers(activities, exchange_qs, add_properties=False, add_identifiers=False):
+def add_exchanges_to_consumers(
+    activities, exchange_qs, add_properties=False, add_identifiers=False
+):
     """Retrieve exchanges from database, and add to activities.
 
-    Assumes that activities are single output, and that the exchange code is the same as the activity code. This assumption is valid for ecoinvent 3.3 cutoff imported into Brightway2."""
+    Assumes that activities are single output, and that the exchange code is the same as the activity code. This assumption is valid for ecoinvent 3.3 cutoff imported into Brightway2.
+    """
     lookup = {(o["database"], o["code"]): o for o in activities}
 
     with tqdm(total=exchange_qs.count()) as pbar:
@@ -104,8 +109,8 @@ def add_input_info_for_indigenous_exchanges(activities, names, add_identifiers=F
             exc["location"] = obj.get("location")
             exc["database"] = obj.get("database")
             if add_identifiers:
-                exc["id"] = obj['id']
-                exc['code'] = obj['code']
+                exc["id"] = obj["id"]
+                exc["code"] = obj["code"]
             if exc["type"] == "biosphere":
                 exc["categories"] = obj.get("categories")
             exc.pop("input")
@@ -133,12 +138,14 @@ def add_input_info_for_external_exchanges(activities, names, add_identifiers=Fal
             exc["database"] = obj.database
             if add_identifiers:
                 exc["id"] = obj.id
-                exc['code'] = obj.code
+                exc["code"] = obj.code
             if exc["type"] == "biosphere":
                 exc["categories"] = obj.data.get("categories")
 
 
-def extract_brightway2_databases(database_names, add_properties=False, add_identifiers=False):
+def extract_brightway2_databases(
+    database_names, add_properties=False, add_identifiers=False
+):
     """Extract a Brightway2 SQLiteBackend database to the Wurst internal format.
 
     ``database_names`` is a list of database names. You should already be in the correct project.
@@ -164,12 +171,18 @@ def extract_brightway2_databases(database_names, add_properties=False, add_ident
 
     # Retrieve all activity data
     print("Getting activity data")
-    activities = [extract_activity(o, add_identifiers=add_identifiers) for o in tqdm(activity_qs)]
+    activities = [
+        extract_activity(o, add_identifiers=add_identifiers) for o in tqdm(activity_qs)
+    ]
     # Add each exchange to the activity list of exchanges
     print("Adding exchange data to activities")
     add_exchanges_to_consumers(activities, exchange_qs, add_properties)
     # Add details on exchanges which come from our databases
     print("Filling out exchange data")
-    add_input_info_for_indigenous_exchanges(activities, database_names, add_identifiers=add_identifiers)
-    add_input_info_for_external_exchanges(activities, database_names, add_identifiers=add_identifiers)
+    add_input_info_for_indigenous_exchanges(
+        activities, database_names, add_identifiers=add_identifiers
+    )
+    add_input_info_for_external_exchanges(
+        activities, database_names, add_identifiers=add_identifiers
+    )
     return activities

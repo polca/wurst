@@ -1,4 +1,5 @@
 from copy import deepcopy
+
 from wurst.filesystem import get_uuid
 
 

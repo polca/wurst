@@ -16,7 +16,8 @@ def delete_zero_amount_exchanges(data, drop_types=None):
 def empty_market_dataset(ds, exclude=None):
     """Remove input exchanges from a market dataset, in preparation for input exchanges defined by an external data source.
 
-    Removes all exchanges which have the same flow as the reference product of the exchange. ``exclude`` is an iterable of activity names to exclude."""
+    Removes all exchanges which have the same flow as the reference product of the exchange. ``exclude`` is an iterable of activity names to exclude.
+    """
     ds["exchanges"] = [
         exc
         for exc in ds["exchanges"]

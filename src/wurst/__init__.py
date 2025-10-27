@@ -49,7 +49,10 @@ try:
     from wurst.brightway import extract_brightway2_databases, write_brightway2_database
 except ImportError:
     extract_brightway2_databases = write_brightway2_database = None
-from wurst.filesystem import create_log, create_dir
+from constructive_geometries import resolved_row
+
+from wurst.filesystem import create_dir, create_log
+from wurst.geo import geomatcher
 from wurst.searching import (
     best_geo_match,
     biosphere,
@@ -73,5 +76,3 @@ from wurst.transformations import (
     relink_technosphere_exchanges,
     rescale_exchange,
 )
-from wurst.geo import geomatcher
-from constructive_geometries import resolved_row

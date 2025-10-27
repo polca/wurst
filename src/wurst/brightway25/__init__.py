@@ -1,13 +1,15 @@
 """Export inventories compatible with the dev release of Brightway 2.5. The functions in ``brightway/extract_database.py`` will work without modification."""
-from wurst.linking import check_duplicate_codes, check_internal_linking, link_internal
-from typing import List
-from bw2data.backends import ActivityDataset
-from bw2io.importers.base_lci import LCIImporter
+import datetime
 from copy import copy
-from fs.zipfs import ZipFS
+from typing import List
+
 import bw2data as bd
 import bw_processing as bwp
-import datetime
+from bw2data.backends import ActivityDataset
+from bw2io.importers.base_lci import LCIImporter
+from fs.zipfs import ZipFS
+
+from wurst.linking import check_duplicate_codes, check_internal_linking, link_internal
 
 
 class DeltaImporter(LCIImporter):

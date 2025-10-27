@@ -1,7 +1,8 @@
 import collections
 import functools
-import numpy as np
 import operator
+
+import numpy as np
 
 IMAGEOutput = collections.namedtuple(
     "IMAGEOutput", ("data", "years", "header", "unit", "label")

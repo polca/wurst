@@ -1,5 +1,6 @@
-from wurst import change_exchanges_by_constant_factor, equals
 import pytest
+
+from wurst import change_exchanges_by_constant_factor, equals
 
 
 def test_change_exchanges_by_constant_factor_errors():

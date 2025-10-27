@@ -1,9 +1,10 @@
 from brightway_fixtures import test_bw2_database
 
 if test_bw2_database is not None:
-    from wurst.brightway import extract_brightway2_databases
-    from bw2data.tests import bw2test
     import pytest
+    from bw2data.tests import bw2test
+
+    from wurst.brightway import extract_brightway2_databases
 
     def test_extraction(test_bw2_database):
         expected = [

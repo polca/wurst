@@ -1,7 +1,7 @@
 try:
-    from bw2data.tests import bw2test
-    from bw2data import Database
     import pytest
+    from bw2data import Database
+    from bw2data.tests import bw2test
 
     biosphere = {
         ("biosphere", "1"): {
@@ -82,7 +82,6 @@ try:
         d.write(biosphere)
         d = Database("food")
         d.write(food)
-
 
 except ImportError:
     test_bw2_database = None

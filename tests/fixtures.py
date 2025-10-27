@@ -1,5 +1,6 @@
-import pytest
 import tempfile
+
+import pytest
 
 
 @pytest.fixture(scope="function")

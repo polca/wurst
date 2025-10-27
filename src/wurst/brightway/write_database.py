@@ -1,4 +1,7 @@
-from typing import Optional, List
+from typing import List, Optional
+
+from bw2data import Database, ProcessedDataStore, databases
+from bw2io.importers.base_lci import LCIImporter
 
 from wurst.linking import (
     change_db_name,
@@ -6,8 +9,6 @@ from wurst.linking import (
     check_internal_linking,
     link_internal,
 )
-from bw2data import ProcessedDataStore, databases, Database
-from bw2io.importers.base_lci import LCIImporter
 
 
 class WurstImporter(LCIImporter):
@@ -27,7 +28,9 @@ class WurstImporter(LCIImporter):
         return Database(self.db_name)
 
 
-def write_brightway2_database(data: List[dict], name: str, metadata: Optional[dict] = None) -> None:
+def write_brightway2_database(
+    data: List[dict], name: str, metadata: Optional[dict] = None
+) -> None:
     """Write a new database as a new Brightway2 database named ``name``.
 
     You should be in the correct project already.

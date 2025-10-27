@@ -1,7 +1,9 @@
-from wurst.searching import *
-from wurst.REMIND import load_image_data_file, REGIONS
 from pathlib import Path
+
 import pandas as pd
+
+from wurst.REMIND import REGIONS, load_image_data_file
+from wurst.searching import *
 
 
 def read_pfc_emissions(scenario_base, gas):

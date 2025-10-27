@@ -1,5 +1,5 @@
-from numbers import Number
 import math
+from numbers import Number
 
 
 def rescale_exchange(exc, value, remove_uncertainty=True):
@@ -46,7 +46,11 @@ def rescale_exchange(exc, value, remove_uncertainty=True):
 
     # If remove_uncertainty is True, then remove all uncertainty info
     elif remove_uncertainty:
-        FIELDS = ("scale", "minimum", "maximum", )
+        FIELDS = (
+            "scale",
+            "minimum",
+            "maximum",
+        )
         exc["uncertainty type"] = 0
         exc["loc"] = exc["amount"]
         for field in FIELDS:
