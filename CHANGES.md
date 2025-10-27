@@ -2,8 +2,9 @@
 
 ## 0.5 (2025-10-27)
 
-* Revamp packaging
+* Revamp packaging with `pyproject.toml` and `src` layout
 * Fix broken tests
+* Move to absolute imports and `pathlib` instead of `os.path`
 
 ## 0.4 (2023-11-27)
 

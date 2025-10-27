@@ -3,6 +3,7 @@ import logging
 import os
 import time
 import uuid
+from pathlib import Path
 
 import platformdirs
 from pythonjsonlogger import jsonlogger
@@ -10,14 +11,16 @@ from pythonjsonlogger import jsonlogger
 
 def create_dir(dirpath):
     """Create directory tree to `dirpath`; ignore if already exists"""
-    if not os.path.isdir(dirpath):
-        os.makedirs(dirpath)
+    path = Path(dirpath)
+    if not path.is_dir():
+        path.mkdir(parents=True, exist_ok=True)
     return dirpath
 
 
 def check_dir(directory):
     """Returns ``True`` if given path is a directory and writeable, ``False`` otherwise."""
-    return os.path.isdir(directory) and os.access(directory, os.W_OK)
+    path = Path(directory)
+    return path.is_dir() and os.access(path, os.W_OK)
 
 
 def get_base_directory():
@@ -33,7 +36,7 @@ def get_uuid():
 
 def get_log_filepath(run_id):
     """Get filepath for Wurst run log"""
-    return os.path.join(get_base_directory(), run + ".wurst.log")
+    return Path(get_base_directory()) / (run_id + ".wurst.log")
 
 
 def create_log(run_id=None):
@@ -53,14 +56,14 @@ def create_log(run_id=None):
 
 
 def cleanup_data_directory():
-    base_dir = get_base_directory()
+    base_dir = Path(get_base_directory())
     one_week, now, to_delete = 7 * 24 * 60 * 60, time.time(), []
 
     print("\nCleaning up data directory {}".format(base_dir))
     is_sausage = lambda x: x.endswith(".wurst.log")
     for file in filter(is_sausage, os.listdir(base_dir)):
-        filepath = os.path.join(base_dir, file)
-        created = os.path.getctime(filepath)
+        filepath = base_dir / file
+        created = os.path.getctime(str(filepath))
         if created < now - one_week:
             to_delete.append(filepath)
 
@@ -72,4 +75,4 @@ def cleanup_data_directory():
     print("Deleting {count} runs".format(len(to_delete)))
 
     for filepath in to_delete:
-        os.remove(filepath)
+        Path(filepath).unlink()

@@ -5,11 +5,11 @@ __all__ = (
 )
 
 import json
-import os
+from pathlib import Path
 
 from wurst.REMIND.io import load_image_data_file
 
 REMIND_TOPOLOGY = json.load(
-    open(os.path.join(os.path.dirname(__file__), "metadata", "region-topology.json"))
+    open(Path(__file__).parent / "metadata" / "region-topology.json")
 )
 REGIONS = sorted(REMIND_TOPOLOGY)
