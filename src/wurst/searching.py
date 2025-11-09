@@ -78,6 +78,8 @@ def reference_product(ds):
     excs = [
         exc for exc in ds["exchanges"] if exc["amount"] and exc["type"] == "production"
     ]
+    if any(exc.get("functional") for exc in excs):
+        excs = [exc for exc in excs if exc.get("functional")]
     if not excs:
         raise NoResults("No suitable production exchanges found")
     elif len(excs) > 1:

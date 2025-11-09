@@ -158,6 +158,90 @@ def test_reference_product():
         reference_product(given)
 
 
+def test_reference_product_functional():
+    """Test reference_product with functional field logic.
+    
+    This covers the new code added in searching.py lines 81-82 that filters
+    to functional exchanges when any exchange has a functional field.
+    """
+    # Case 1: Single production exchange with functional=True
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 1, "functional": True},
+        ]
+    }
+    expected = {"type": "production", "n": "foo", "amount": 1, "functional": True}
+    assert reference_product(given) == expected
+
+    # Case 2: Multiple production exchanges, one with functional=True
+    # Should select the one with functional=True
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 1},
+            {"type": "production", "n": "bar", "amount": 1, "functional": True},
+            {"type": "production", "n": "baz", "amount": 1},
+        ]
+    }
+    expected = {"type": "production", "n": "bar", "amount": 1, "functional": True}
+    assert reference_product(given) == expected
+
+    # Case 3: Multiple production exchanges with functional=True
+    # Should raise MultipleResults
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 1, "functional": True},
+            {"type": "production", "n": "bar", "amount": 1, "functional": True},
+        ]
+    }
+    with pytest.raises(MultipleResults):
+        reference_product(given)
+
+    # Case 4: All production exchanges have functional=False or missing
+    # Should fall back to selecting from all (no filtering)
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 1, "functional": False},
+            {"type": "production", "n": "bar", "amount": 1},
+        ]
+    }
+    with pytest.raises(MultipleResults):
+        reference_product(given)
+
+    # Case 5: Mix of functional=True and functional=False
+    # Should filter to only functional=True
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 1, "functional": False},
+            {"type": "production", "n": "bar", "amount": 1, "functional": True},
+            {"type": "production", "n": "baz", "amount": 1, "functional": False},
+        ]
+    }
+    expected = {"type": "production", "n": "bar", "amount": 1, "functional": True}
+    assert reference_product(given) == expected
+
+    # Case 6: Production exchange with functional=True but amount=0
+    # Should be filtered out by amount check first
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 0, "functional": True},
+            {"type": "production", "n": "bar", "amount": 1},
+        ]
+    }
+    expected = {"type": "production", "n": "bar", "amount": 1}
+    assert reference_product(given) == expected
+
+    # Case 7: Only functional=False exchanges, no functional=True
+    # Should fall back to all (multiple should raise error)
+    given = {
+        "exchanges": [
+            {"type": "production", "n": "foo", "amount": 1, "functional": False},
+            {"type": "production", "n": "bar", "amount": 1, "functional": False},
+        ]
+    }
+    with pytest.raises(MultipleResults):
+        reference_product(given)
+
+
 def test_best_geo_match():
     given = [
         {"location": "one"},
