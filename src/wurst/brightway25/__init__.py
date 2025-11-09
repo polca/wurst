@@ -31,7 +31,9 @@ def strip_exchanges(ds):
 PRODUCTION = ("production", "substitution", "generic production")
 
 
-def write_brightway25_database(data: List[dict], name: str, metadata: Optional[dict] = None) -> bd.Database:
+def write_brightway25_database(
+    data: List[dict], name: str, metadata: Optional[dict] = None
+) -> bd.Database:
     """Write a new database compatible with Brightway 2.5 functionality.
 
     Instead of aggregating everything into a new database, we take a new approach. New activities are stored as a new database (``name``), but for exchanges that are modified, we use the 2.5 functionality to write processed arrays which override values in the original database. In other words, the previous approach was to write as much as possible; here we write as little as possible. The end calculation results are the same either way.

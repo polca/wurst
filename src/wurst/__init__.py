@@ -38,7 +38,15 @@ logger = configure_structlog(name="wurst", level=logging.INFO)
 
 
 def log(message, ds):
-    FIELDS = ("database", "code", "name", "reference product", "unit", "location", "type")
+    FIELDS = (
+        "database",
+        "code",
+        "name",
+        "reference product",
+        "unit",
+        "location",
+        "type",
+    )
     message.update({key: ds.get(key) for key in FIELDS})
     logger.info(**message)
 

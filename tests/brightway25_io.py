@@ -393,11 +393,11 @@ def test_database_name_collision_error(bw25_setup):
 
 def test_brightway25_with_metadata(bw25_setup):
     """Test that write_brightway25_database accepts and stores metadata.
-    
+
     This covers the metadata parameter in brightway25/__init__.py line 83.
     """
     import bw2data as bd
-    
+
     # Create a simple modified dataset
     modified = [
         {
@@ -429,20 +429,20 @@ def test_brightway25_with_metadata(bw25_setup):
             ],
         }
     ]
-    
+
     # Define custom metadata
     metadata = {
         "description": "Test database with metadata",
         "version": "2.0",
-        "author": "test_user_25"
+        "author": "test_user_25",
     }
-    
+
     # Write database with metadata
     write_brightway25_database(modified, "test_meta_25", metadata=metadata)
-    
+
     # Verify database was created
     assert "test_meta_25" in bd.databases
-    
+
     # Retrieve database and check metadata was stored
     db = bd.Database("test_meta_25")
     assert "description" in db.metadata

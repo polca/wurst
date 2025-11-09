@@ -160,7 +160,7 @@ def test_reference_product():
 
 def test_reference_product_functional():
     """Test reference_product with functional field logic.
-    
+
     This covers the new code added in searching.py lines 81-82 that filters
     to functional exchanges when any exchange has a functional field.
     """

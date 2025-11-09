@@ -1,7 +1,7 @@
 """Unit tests for link_internal_products_processes function."""
 import pytest
-
 from bw2data import labels
+
 from wurst.brightway.write_database import link_internal_products_processes
 
 
@@ -13,7 +13,7 @@ class TestLinkInternalProductsProcesses:
         # Create a product node using actual Brightway product type
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         product = {
             "database": "test_db",
             "code": "prod_1",
@@ -51,7 +51,7 @@ class TestLinkInternalProductsProcesses:
         # Create a biosphere flow using actual Brightway flow type
         flow_type = labels.biosphere_node_default
         process_type = labels.process_node_default
-        
+
         flow = {
             "database": "biosphere",
             "code": "flow_1",
@@ -88,7 +88,7 @@ class TestLinkInternalProductsProcesses:
         """Test that exchanges with existing input are skipped."""
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         product = {
             "database": "test_db",
             "code": "prod_1",
@@ -124,7 +124,7 @@ class TestLinkInternalProductsProcesses:
     def test_unlinked_exchanges_remain_unlinked(self):
         """Test that exchanges without matching products/flows remain unlinked."""
         process_type = labels.process_node_default
-        
+
         process = {
             "database": "test_db",
             "code": "proc_1",
@@ -151,7 +151,7 @@ class TestLinkInternalProductsProcesses:
         """Test linking with custom biosphere field list."""
         flow_type = labels.biosphere_node_default
         process_type = labels.process_node_default
-        
+
         flow = {
             "database": "biosphere",
             "code": "flow_1",
@@ -190,7 +190,7 @@ class TestLinkInternalProductsProcesses:
         """Test linking with custom technosphere field list."""
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         product = {
             "database": "test_db",
             "code": "prod_1",
@@ -230,7 +230,7 @@ class TestLinkInternalProductsProcesses:
         product_type = labels.product_node_default
         flow_type = labels.biosphere_node_default
         process_type = labels.process_node_default
-        
+
         product1 = {
             "database": "test_db",
             "code": "prod_1",
@@ -300,7 +300,7 @@ class TestLinkInternalProductsProcesses:
         """Test linking exchanges across multiple processes."""
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         product = {
             "database": "test_db",
             "code": "prod_1",
@@ -353,7 +353,7 @@ class TestLinkInternalProductsProcesses:
         """Test that the function returns the correct count of linked edges."""
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         products = [
             {
                 "database": "test_db",
@@ -391,7 +391,7 @@ class TestLinkInternalProductsProcesses:
     def test_natural_resource_flow_type(self):
         """Test that natural resource flows are recognized."""
         process_type = labels.process_node_default
-        
+
         flow = {
             "database": "biosphere",
             "code": "flow_1",
@@ -426,7 +426,7 @@ class TestLinkInternalProductsProcesses:
     def test_resource_flow_type(self):
         """Test that resource flows are recognized."""
         process_type = labels.process_node_default
-        
+
         flow = {
             "database": "biosphere",
             "code": "flow_1",
@@ -461,7 +461,7 @@ class TestLinkInternalProductsProcesses:
     def test_social_flow_type(self):
         """Test that social flows are recognized."""
         process_type = labels.process_node_default
-        
+
         flow = {
             "database": "biosphere",
             "code": "flow_1",
@@ -497,7 +497,7 @@ class TestLinkInternalProductsProcesses:
         """Test process with mix of linked and unlinked exchanges."""
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         product = {
             "database": "test_db",
             "code": "prod_1",
@@ -549,7 +549,7 @@ class TestLinkInternalProductsProcesses:
     def test_empty_exchanges_list(self):
         """Test process with empty exchanges list."""
         process_type = labels.process_node_default
-        
+
         process = {
             "database": "test_db",
             "code": "proc_1",
@@ -565,12 +565,12 @@ class TestLinkInternalProductsProcesses:
 
     def test_missing_exchanges_key(self):
         """Test process without exchanges key.
-        
+
         Note: The function accesses ds["exchanges"] directly, so this will raise KeyError.
         This test documents the current behavior - processes must have an exchanges key.
         """
         process_type = labels.process_node_default
-        
+
         process = {
             "database": "test_db",
             "code": "proc_1",
@@ -587,7 +587,7 @@ class TestLinkInternalProductsProcesses:
         """Test that mismatched fields prevent linking."""
         product_type = labels.product_node_default
         process_type = labels.process_node_default
-        
+
         product = {
             "database": "test_db",
             "code": "prod_1",
@@ -618,4 +618,3 @@ class TestLinkInternalProductsProcesses:
 
         assert count == 0
         assert "input" not in process["exchanges"][0]
-

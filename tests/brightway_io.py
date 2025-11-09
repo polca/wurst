@@ -127,11 +127,11 @@ if test_bw2_database is not None:
     @bw2test
     def test_extraction_custom_node_type():
         """Test that extract_brightway2_databases correctly extracts custom node types.
-        
+
         This covers the type attribute extraction in extract_database.py line 44.
         """
         from bw2data import Database
-        
+
         # Create a database with a custom node type (not "process" or "emission")
         custom_db = {
             ("custom_test", "1"): {
@@ -147,13 +147,13 @@ if test_bw2_database is not None:
                 "unit": "kg",
             },
         }
-        
+
         d = Database("custom_test")
         d.write(custom_db)
-        
+
         # Extract the database
         data = extract_brightway2_databases("custom_test")
-        
+
         # Verify the custom type was correctly extracted
         assert len(data) == 1
         assert data[0]["type"] == "transformation"
@@ -168,7 +168,7 @@ if test_bw2_database is not None:
     @bw2test
     def test_write_brightway2_database_with_metadata(test_bw2_database):
         """Test that write_brightway2_database accepts and stores metadata.
-        
+
         This covers the metadata parameter in write_database.py line 22.
         """
         from bw2data import Database
@@ -197,20 +197,20 @@ if test_bw2_database is not None:
                 ],
             }
         ]
-        
+
         # Define custom metadata
         metadata = {
             "description": "Test database with metadata",
             "version": "1.0",
-            "author": "test_user"
+            "author": "test_user",
         }
-        
+
         # Write database with metadata
         write_brightway2_database(data, "test_meta_db", metadata=metadata)
-        
+
         # Verify database was created by trying to retrieve it
         db = Database("test_meta_db")
-        
+
         # Check metadata was stored
         assert "description" in db.metadata
         assert db.metadata["description"] == "Test database with metadata"
@@ -269,9 +269,17 @@ if test_bw2_database is not None:
 
         # Create test data with products and processes structure
         # Use actual Brightway node types from labels
-        product_type = labels.product_node_default if labels.product_node_types else "product"
-        process_type = labels.process_node_default if labels.process_node_types else "process"
-        emission_type = labels.biosphere_node_default if hasattr(labels, 'biosphere_node_default') else "emission"
+        product_type = (
+            labels.product_node_default if labels.product_node_types else "product"
+        )
+        process_type = (
+            labels.process_node_default if labels.process_node_types else "process"
+        )
+        emission_type = (
+            labels.biosphere_node_default
+            if hasattr(labels, "biosphere_node_default")
+            else "emission"
+        )
 
         # Create a product node
         product = {
@@ -345,11 +353,11 @@ if test_bw2_database is not None:
         # The exchanges should have input fields set
         techno_exc = next(
             (exc for exc in process_data["exchanges"] if exc["type"] == "technosphere"),
-            None
+            None,
         )
         bio_exc = next(
             (exc for exc in process_data["exchanges"] if exc["type"] == "biosphere"),
-            None
+            None,
         )
 
         # Note: After extraction, the input field format may differ, but the linking
@@ -359,7 +367,9 @@ if test_bw2_database is not None:
         assert bio_exc is not None, "Biosphere exchange should exist"
 
     @bw2test
-    def test_write_brightway2_database_products_and_processes_comparison(test_bw2_database):
+    def test_write_brightway2_database_products_and_processes_comparison(
+        test_bw2_database,
+    ):
         """Test that products_and_processes=True produces different linking than False.
 
         This verifies that the two linking methods behave differently.
@@ -369,8 +379,12 @@ if test_bw2_database is not None:
         from wurst.brightway import write_brightway2_database
 
         # Use actual Brightway node types
-        product_type = labels.product_node_default if labels.product_node_types else "product"
-        process_type = labels.process_node_default if labels.process_node_types else "process"
+        product_type = (
+            labels.product_node_default if labels.product_node_types else "product"
+        )
+        process_type = (
+            labels.process_node_default if labels.process_node_types else "process"
+        )
 
         # Create data with product and process structure
         product = {
@@ -404,7 +418,9 @@ if test_bw2_database is not None:
         data = [product, process]
 
         # Write with products_and_processes=True
-        write_brightway2_database(data, "test_pp_comparison_true", products_and_processes=True)
+        write_brightway2_database(
+            data, "test_pp_comparison_true", products_and_processes=True
+        )
 
         # Verify it was created successfully
         db_true = Database("test_pp_comparison_true")

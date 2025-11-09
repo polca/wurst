@@ -9,11 +9,11 @@ import structlog
 
 def configure_structlog(name: str = "wurst", level: int = logging.INFO):
     """Configure and return a named structlog logger.
-    
+
     Args:
         name: Logger name (default: "wurst")
         level: Minimum log level (default: INFO, filters out DEBUG)
-    
+
     Returns:
         Configured structlog logger bound to the given name
     """
@@ -34,18 +34,18 @@ def configure_structlog(name: str = "wurst", level: int = logging.INFO):
         logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
     )
-    
+
     # Configure standard library logging to output to STDOUT
     handler = logging.StreamHandler(sys.stdout)
     handler.setLevel(level)
-    
+
     # Get the standard library logger and configure it
     stdlib_logger = logging.getLogger(name)
     stdlib_logger.setLevel(level)
     stdlib_logger.handlers = []  # Clear any existing handlers
     stdlib_logger.addHandler(handler)
     stdlib_logger.propagate = False
-    
+
     # Return the structlog logger bound to the name
     return structlog.get_logger(name)
 
@@ -53,10 +53,10 @@ def configure_structlog(name: str = "wurst", level: int = logging.INFO):
 @contextmanager
 def debug_logging(name: str = "wurst"):
     """Context manager that temporarily enables DEBUG level logging to STDOUT.
-    
+
     Args:
         name: Logger name (default: "wurst")
-    
+
     Example:
         >>> from wurst.logging_config import debug_logging
         >>> with debug_logging():
@@ -64,17 +64,17 @@ def debug_logging(name: str = "wurst"):
     """
     stdlib_logger = logging.getLogger(name)
     handler = None
-    
+
     # Find the StreamHandler that outputs to STDOUT
     for h in stdlib_logger.handlers:
         if isinstance(h, logging.StreamHandler) and h.stream == sys.stdout:
             handler = h
             break
-    
+
     # Store original levels
     original_logger_level = stdlib_logger.level
     original_handler_level = handler.level if handler else logging.NOTSET
-    
+
     try:
         # Set both logger and handler to DEBUG level
         stdlib_logger.setLevel(logging.DEBUG)
@@ -86,4 +86,3 @@ def debug_logging(name: str = "wurst"):
         stdlib_logger.setLevel(original_logger_level)
         if handler:
             handler.setLevel(original_handler_level)
-
