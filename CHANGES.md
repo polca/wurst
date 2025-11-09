@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1 (2025-11-04)
+
+* `reference_product` will filter for `functional` edges where available
+
 ## 0.5 (2025-10-27)
 
 * Allow passing Brightway `Database` metadata on writing
