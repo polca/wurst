@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.2 (2025-11-09)
+
+* Add node `type` during Brightway extraction
+
 ## 0.5.1 (2025-11-04)
 
 * `reference_product` will filter for `functional` edges where available
