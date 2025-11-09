@@ -1,10 +1,15 @@
 # Changelog
 
-## 0.5.2 (2025-11-09)
+### 0.5.3 (2025-11-09)
+
+* Allow writing Brightway databases with products and processes
+* Add `structlog` and logging configuration
+
+### 0.5.2 (2025-11-09)
 
 * Add node `type` during Brightway extraction
 
-## 0.5.1 (2025-11-04)
+### 0.5.1 (2025-11-04)
 
 * `reference_product` will filter for `functional` edges where available
 
@@ -22,24 +27,24 @@
 
 (Yes, #30 did two things...)
 
-## 0.3.5 (2023-11-26)
+### 0.3.5 (2023-11-26)
 
 * Compatibility with `constructive_geometries` `backwards_compatible` flag
 
-## 0.3.4 (2022-11-29)
+### 0.3.4 (2022-11-29)
 
 * Fix IMAGE using an [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-2:ME) for the region "Middle East"
 * Extract "categories" from Brightway databases when available
 
-## 0.3.3 (2022-08-12)
+### 0.3.3 (2022-08-12)
 
 * Add `add_identifiers` flag for Brightway extraction
 
-## 0.3.2 (2022-04-29)
+### 0.3.2 (2022-04-29)
 
 * ecoinvent now uses `US-PR` instead of `PR`.
 
-## 0.3.1 (2021-07-12)
+### 0.3.1 (2021-07-12)
 
 * Merge PR [#25](https://github.com/polca/wurst/pull/25) to add additional regions in Europe
 
