@@ -1,8 +1,9 @@
 from typing import List, Optional
 
-from bw2data import Database, ProcessedDataStore, databases
+from bw2data import Database, ProcessedDataStore, databases, labels
 from bw2io.importers.base_lci import LCIImporter
 
+from wurst import logger
 from wurst.linking import (
     change_db_name,
     check_duplicate_codes,
@@ -30,8 +31,80 @@ class WurstImporter(LCIImporter):
         return Database(self.db_name)
 
 
+def link_internal_products_processes(
+    data: list[dict],
+    biosphere_fields: list[str] = ["name", "unit", "categories"],
+    technosphere_fields: list[str] = ["name", "unit", "location"],
+) -> int:
+    """Do internal linking for both technosphere and biosphere edges"""
+    count = 0
+
+    products = [ds for ds in data if ds["type"] in labels.product_node_types]
+    flows = [
+        ds
+        for ds in data
+        if ds["type"]
+        in [labels.biosphere_node_default, "natural resource", "resource", "social"]
+    ]
+    processes = [ds for ds in data if ds["type"] in labels.process_node_types]
+
+    product_mapping = {
+        tuple([ds.get(field) for field in technosphere_fields]): (
+            ds["database"],
+            ds["code"],
+        )
+        for ds in products
+    }
+    flow_mapping = {
+        tuple([ds.get(field) for field in biosphere_fields]): (
+            ds["database"],
+            ds["code"],
+        )
+        for ds in flows
+    }
+
+    technosphere_labels = (
+        labels.technosphere_negative_edge_types
+        + labels.technosphere_positive_edge_types
+    )
+
+    for ds in processes:
+        for edge in ds["exchanges"]:
+            if edge.get("input"):
+                continue
+            elif edge["type"] in labels.biosphere_edge_types:
+                if (
+                    key := tuple([edge.get(field) for field in biosphere_fields])
+                ) in flow_mapping:
+                    edge["input"] = flow_mapping[key]
+                    count += 1
+            elif edge["type"] in technosphere_labels:
+                if (
+                    key := tuple([edge.get(field) for field in technosphere_fields])
+                ) in product_mapping:
+                    edge["input"] = product_mapping[key]
+                    count += 1
+
+    missing = sum(
+        [
+            1
+            for ds in processes
+            for edge in ds.get("exchanges", [])
+            if not edge.get("input")
+        ]
+    )
+
+    logger.info(
+        f"link_internal_products_processes added {count} edges; {missing} edges still unlinked"
+    )
+    return count
+
+
 def write_brightway2_database(
-    data: List[dict], name: str, metadata: Optional[dict] = None
+    data: List[dict],
+    name: str,
+    metadata: Optional[dict] = None,
+    products_and_processes: bool = False,
 ) -> None:
     """Write a new database as a new Brightway2 database named ``name``.
 
@@ -58,7 +131,10 @@ def write_brightway2_database(
             }
 
     change_db_name(data, name)
-    link_internal(data)
+    if products_and_processes:
+        link_internal_products_processes(data)
+    else:
+        link_internal(data)
     check_internal_linking(data)
     check_duplicate_codes(data)
     WurstImporter(name, data).write_database(metadata)

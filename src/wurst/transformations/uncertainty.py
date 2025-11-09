@@ -1,6 +1,6 @@
 import math
-from numbers import Number
 from copy import copy
+from numbers import Number
 
 from wurst import logger
 
@@ -62,6 +62,8 @@ def rescale_exchange(exc, value, remove_uncertainty=True):
             if field in exc:
                 del exc[field]
 
-    logger.debug(f"Changed exchange amount from {previous_value} to {exc['amount']} {exc.get('unit')} and {'removed' if remove_uncertainty else 'adjusted'} uncertainty values for {exc.get('name')}")
+    logger.debug(
+        f"Changed exchange amount from {previous_value} to {exc['amount']} {exc.get('unit')} and {'removed' if remove_uncertainty else 'adjusted'} uncertainty values for {exc.get('name')}"
+    )
 
     return exc
