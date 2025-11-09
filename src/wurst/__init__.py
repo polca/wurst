@@ -6,6 +6,7 @@ __all__ = (
     "copy_to_new_location",
     "create_dir",
     "create_log",
+    "debug_logging",
     "default_global_location",
     "delete_zero_amount_exchanges",
     "doesnt_contain_any",
@@ -31,13 +32,15 @@ __version__ = "0.5.2"
 
 import logging
 
-logger = logging.getLogger("wurst")
+from wurst.logging_config import configure_structlog, debug_logging
+
+logger = configure_structlog(name="wurst", level=logging.INFO)
 
 
 def log(message, ds):
-    FIELDS = ("database", "code", "name", "reference product", "unit", "location")
+    FIELDS = ("database", "code", "name", "reference product", "unit", "location", "type")
     message.update({key: ds.get(key) for key in FIELDS})
-    logger.info(message)
+    logger.info(**message)
 
 
 try:

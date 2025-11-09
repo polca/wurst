@@ -38,6 +38,7 @@ dependencies = [
     "numpy",
     "pandas",
     "python-json-logger",
+    "structlog",
     "toolz",
     "tqdm",
     "wrapt",

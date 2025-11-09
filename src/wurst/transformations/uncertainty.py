@@ -1,5 +1,8 @@
 import math
 from numbers import Number
+from copy import copy
+
+from wurst import logger
 
 
 def rescale_exchange(exc, value, remove_uncertainty=True):
@@ -16,6 +19,8 @@ def rescale_exchange(exc, value, remove_uncertainty=True):
     Returns the modified exchange."""
     assert isinstance(exc, dict), "Must pass exchange dictionary"
     assert isinstance(value, Number), "Constant factor ``value`` must be a number"
+
+    previous_value = copy(exc["amount"])
 
     # Scale the amount
     exc["amount"] *= value
@@ -56,5 +61,7 @@ def rescale_exchange(exc, value, remove_uncertainty=True):
         for field in FIELDS:
             if field in exc:
                 del exc[field]
+
+    logger.debug(f"Changed exchange amount from {previous_value} to {exc['amount']} {exc.get('unit')} and {'removed' if remove_uncertainty else 'adjusted'} uncertainty values for {exc.get('name')}")
 
     return exc
