@@ -44,6 +44,7 @@ if test_bw2_database is not None:
                 "location": "CA",
                 "name": "lunch",
                 "reference product": "stuff",
+                "type": "processwithreferenceproduct",
                 "unit": "kg",
                 "parameters": {"losses_gross_net": 0.01},
                 "parameters full": [{"amount": 0.01, "name": "losses_gross_net"}],
@@ -83,6 +84,7 @@ if test_bw2_database is not None:
                 "location": "CH",
                 "name": "dinner",
                 "reference product": None,
+                "type": "processwithreferenceproduct",
                 "unit": "kg",
                 "parameters": {"rara": 13},
                 "parameters full": [
@@ -121,6 +123,47 @@ if test_bw2_database is not None:
         assert all("id" in ds for ds in data)
         assert all("id" in exc for ds in data for exc in ds["exchanges"])
         assert all("code" in exc for ds in data for exc in ds["exchanges"])
+
+    @bw2test
+    def test_extraction_custom_node_type():
+        """Test that extract_brightway2_databases correctly extracts custom node types.
+        
+        This covers the type attribute extraction in extract_database.py line 44.
+        """
+        from bw2data import Database
+        
+        # Create a database with a custom node type (not "process" or "emission")
+        custom_db = {
+            ("custom_test", "1"): {
+                "categories": ["custom", "category"],
+                "code": "1",
+                "classifications": [],
+                "comment": "Custom type test",
+                "reference product": "custom_product",
+                "exchanges": [],
+                "location": "GLO",
+                "name": "custom_activity",
+                "type": "transformation",
+                "unit": "kg",
+            },
+        }
+        
+        d = Database("custom_test")
+        d.write(custom_db)
+        
+        # Extract the database
+        data = extract_brightway2_databases("custom_test")
+        
+        # Verify the custom type was correctly extracted
+        assert len(data) == 1
+        assert data[0]["type"] == "transformation"
+        assert data[0]["name"] == "custom_activity"
+        assert data[0]["code"] == "1"
+        assert data[0]["reference product"] == "custom_product"
+        assert data[0]["location"] == "GLO"
+        assert data[0]["unit"] == "kg"
+        assert data[0]["comment"] == "Custom type test"
+        assert data[0]["categories"] == ["custom", "category"]
 
     @bw2test
     def test_write_brightway2_database_with_metadata(test_bw2_database):

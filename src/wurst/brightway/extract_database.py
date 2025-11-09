@@ -41,6 +41,7 @@ def extract_activity(proxy, add_identifiers=False):
             for obj in _list_or_dict(proxy.data.get("parameters", []))
         },
         "parameters full": list(_list_or_dict(proxy.data.get("parameters", []))),
+        "type": proxy.type,
     }
     if add_identifiers:
         obj["id"] = proxy.id
